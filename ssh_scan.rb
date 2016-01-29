@@ -1,6 +1,5 @@
 require 'protocol'
 require 'socket'
-require 'pry'
 
 # Usage: ruby -I ./ ssh_scan.rb
 
@@ -27,11 +26,12 @@ sock = TCPSocket.new(ip, port)
 server_protocol = sock.gets
 sock.puts(client_protocol)
 
-# Perform key initialization change
+# Perform Key Initialization Exchange
 sock.write(key_init_raw)
 resp = sock.read(4)
 resp += sock.read(resp.unpack("N").first)
 kex_init_response = SSH::KeyExchangeInit.read(resp)
+sock.close
 
 # Assemble and print results
 result = {
@@ -40,4 +40,4 @@ result = {
   :server_banner => server_protocol.chomp
 }
 result.merge!(kex_init_response.to_hash)
-puts result.to_json
+puts JSON.pretty_generate(result)
