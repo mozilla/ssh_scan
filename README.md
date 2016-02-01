@@ -6,7 +6,7 @@ Example run:
     $ ruby -I ./ ssh_scan.rb 192.168.1.1
     {
       "ip": "192.168.1.1",
-      "port": "22",
+      "port": 22,
       "server_banner": "SSH-2.0-OpenSSH_5.3",
       "key_algorithms": [
         "diffie-hellman-group-exchange-sha256",
