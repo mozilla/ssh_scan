@@ -8,7 +8,7 @@ require 'scan_engine'
 
 # Populate the info we need to perform a scan
 ip = ARGV[0].chomp
-port = ARGV[1].to_i || 22
+port = ARGV[1].nil? ? 22 : ARGV[1]
 policy = SSH::IntermediatePolicy.new
 
 # Perform scan and get results
