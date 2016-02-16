@@ -9,7 +9,8 @@ A Ruby-based SSH configuration and policy scanner
 
 - **Minimal Dependancies** - Uses native Ruby and BinData to do it's work, no heavy dependancies.
 - **Not Just a Script** - Implementation is portable for use in another project or for automation of tasks.
-- **Simple** - It is a small project so the interfaces are simple and easy to use.
+- **Simple** - Just point ssh_scan at an SSH service and get a JSON report of what is supports and it's policy status
+- **Configurable** - Make your own custom policies that fit your unique policy requirements.
 
 ## Setup
 
