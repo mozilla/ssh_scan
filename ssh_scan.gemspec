@@ -15,9 +15,8 @@ Gem::Specification.new do |s|
              ".travis.yml",
              "CONTRIBUTING.md",
              "Gemfile",
-             "LICENSE",
-             "README.md",
              "Rakefile",
+             "README.md",
              "ssh_scan.gemspec"]
   s.license       = "ruby"
   s.require_paths = ["lib"]
