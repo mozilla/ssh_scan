@@ -1,7 +1,6 @@
 # ssh_scan
 
 [![Build Status](https://secure.travis-ci.org/claudijd/ssh_scan.png)](http://travis-ci.org/claudijd/ssh_scan)
-[![Dependency Status](https://gemnasium.com/claudijd/ssh_scan.png)](https://gemnasium.com/claudijd/ssh_scan)
 [![Code Climate](https://codeclimate.com/github/claudijd/ssh_scan.png)](https://codeclimate.com/github/claudijd/ssh_scan)
 
 A Ruby-based SSH configuration and policy scanner
