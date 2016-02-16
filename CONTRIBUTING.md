@@ -1,4 +1,4 @@
-# Contributing to C7Decrypt
+# Contributing to ssh_scan
 
 Thanks for your interest in contributing to ssh_scan.
 
