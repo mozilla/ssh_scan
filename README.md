@@ -30,6 +30,8 @@ Run `ssh_scan -h` to get this
     Example: ssh_scan 192.168.1.1
     Example: ssh_scan 192.168.1.1 22
 
+See here for [example output](https://github.com/claudijd/ssh_scan/blob/master/examples/192.168.1.1.json)
+
 ## Rubies Supported
 
 This project is integrated with [travis-ci](http://about.travis-ci.org/) and is regularly tested to work with the following rubies:
