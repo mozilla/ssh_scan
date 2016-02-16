@@ -1,0 +1,27 @@
+#!/usr/bin/env ruby
+
+# Path setting slight of hand
+$:.unshift File.join(File.dirname(__FILE__), "../lib")
+
+require 'ssh_scan'
+
+# Usage: ruby ssh_scan.rb 192.168.1.1
+if ARGV[0].nil? || ARGV[0] == "-h" || ARGV[0] == "--help"
+  puts "ssh_scan #{SSHScan::VERSION} (https://github.com/claudijd/ssh_scan)\n\n" +
+       "Usage: ssh_scan [ip] [port]\n" +
+       "   -h, --help        Show this message\n\n" +
+       "Example: ssh_scan 192.168.1.1\n" +
+       "Example: ssh_scan 192.168.1.1 22\n\n"
+  exit
+end
+
+# Populate the info we need to perform a scan
+ip = ARGV[0].chomp
+port = ARGV[1].nil? ? 22 : ARGV[1].to_i
+policy = SSHScan::IntermediatePolicy.new
+
+# Perform scan and get results
+scan_engine = SSHScan::ScanEngine.new()
+result = scan_engine.scan(ip, port, policy)
+
+puts JSON.pretty_generate(result)

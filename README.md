@@ -9,14 +9,25 @@ A Ruby-based SSH configuration and policy scanner
 
 - **Minimal Dependancies** - Uses native Ruby and BinData to do it's work, no heavy dependancies.
 - **Not Just a Script** - Implementation is portable for use in another project or for automation of tasks.
-- **Simple** - It is a small project so the interfaces are simple and easy to use.
+- **Simple** - Just point ssh_scan at an SSH service and get a JSON report of what is supports and it's policy status
+- **Configurable** - Make your own custom policies that fit your unique policy requirements.
 
 ## Setup
 
-To install, type
+To install as a gem, type
 
 ```bash
 gem install ssh_scan
+ssh_scan
+```
+
+To install from source, type
+
+```bash
+git clone https://github.com/claudijd/ssh_scan.git
+cd ssh_scan
+gem install bindata
+./bin/ssh_scan
 ```
 
 ## Example Command-Line Usage
@@ -28,6 +39,8 @@ Run `ssh_scan -h` to get this
 
     Example: ssh_scan 192.168.1.1
     Example: ssh_scan 192.168.1.1 22
+
+See here for [example output](https://github.com/claudijd/ssh_scan/blob/master/examples/192.168.1.1.json)
 
 ## Rubies Supported
 
