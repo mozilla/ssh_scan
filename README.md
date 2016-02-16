@@ -14,11 +14,20 @@ A Ruby-based SSH configuration and policy scanner
 
 ## Setup
 
-To install, type
+To install as a gem, type
 
 ```bash
 gem install ssh_scan
+ssh_scan
 ```
+
+To install from source, type
+
+```bash
+git clone https://github.com/claudijd/ssh_scan.git
+cd ssh_scan
+gem install bindata
+./bin/ssh_scan```
 
 ## Example Command-Line Usage
 
