@@ -1,4 +1,4 @@
-module SSH
+module SSHScan
   module Constants
     DEFAULT_PROTOCOL = "SSH-2.0-client"
     DEFAULT_KEY_INIT_RAW = "d8eb97b11b6cacbc3285473f08004500019ceccf40004006663fc0a80a7c3ff" +

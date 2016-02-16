@@ -1,96 +1,55 @@
 # ssh_scan
-A prototype/PoC for an SSH scanner
 
-Example run:
+[![Build Status](https://secure.travis-ci.org/claudijd/ssh_scan.png)](http://travis-ci.org/claudijd/ssh_scan)
+[![Dependency Status](https://gemnasium.com/claudijd/ssh_scan.png)](https://gemnasium.com/claudijd/ssh_scan)
+[![Code Climate](https://codeclimate.com/github/claudijd/ssh_scan.png)](https://codeclimate.com/github/claudijd/ssh_scan)
 
-    $ ruby -I ./ ssh_scan.rb 192.168.1.1
-    {
-      "ip": "192.168.1.1",
-      "port": 22,
-      "server_banner": "SSH-2.0-OpenSSH_5.3",
-      "key_algorithms": [
-        "diffie-hellman-group-exchange-sha256",
-        "diffie-hellman-group-exchange-sha1",
-        "diffie-hellman-group14-sha1",
-        "diffie-hellman-group1-sha1"
-      ],
-      "server_host_key_algorithms": [
-        "ssh-rsa",
-        "ssh-dss"
-      ],
-      "encryption_algorithms_client_to_server": [
-        "aes128-ctr",
-        "aes192-ctr",
-        "aes256-ctr",
-        "arcfour256",
-        "arcfour128",
-        "aes128-cbc",
-        "3des-cbc",
-        "blowfish-cbc",
-        "cast128-cbc",
-        "aes192-cbc",
-        "aes256-cbc",
-        "arcfour",
-        "rijndael-cbc@lysator.liu.se"
-      ],
-      "encryption_algorithms_server_to_client": [
-        "aes128-ctr",
-        "aes192-ctr",
-        "aes256-ctr",
-        "arcfour256",
-        "arcfour128",
-        "aes128-cbc",
-        "3des-cbc",
-        "blowfish-cbc",
-        "cast128-cbc",
-        "aes192-cbc",
-        "aes256-cbc",
-        "arcfour",
-        "rijndael-cbc@lysator.liu.se"
-      ],
-      "mac_algorithms_client_to_server": [
-        "hmac-md5",
-        "hmac-sha1",
-        "umac-64@openssh.com",
-        "hmac-sha2-256",
-        "hmac-sha2-512",
-        "hmac-ripemd160",
-        "hmac-ripemd160@openssh.com",
-        "hmac-sha1-96",
-        "hmac-md5-96"
-      ],
-      "mac_algorithms_server_to_client": [
-        "hmac-md5",
-        "hmac-sha1",
-        "umac-64@openssh.com",
-        "hmac-sha2-256",
-        "hmac-sha2-512",
-        "hmac-ripemd160",
-        "hmac-ripemd160@openssh.com",
-        "hmac-sha1-96",
-        "hmac-md5-96"
-      ],
-      "compression_algorithms_client_to_server": [
-        "none",
-        "zlib@openssh.com"
-      ],
-      "compression_algorithms_server_to_client": [
-        "none",
-        "zlib@openssh.com"
-      ],
-      "languages_client_to_server": [
+A Ruby-based SSH configuration and policy scanner
 
-      ],
-      "languages_server_to_client": [
+## Key Benefits
 
-      ],
-      "compliance": {
-        "policy": "SSH::IntermediatePolicy",
-        "compliant": false,
-        "recommendations": [
-          "Remove these Key Exchange Algos: diffie-hellman-group-exchange-sha1, diffie-hellman-group14-sha1, diffie-hellman-group1-sha1",
-          "Remove these MAC Algos: hmac-md5, hmac-sha1, umac-64@openssh.com, hmac-ripemd160, hmac-ripemd160@openssh.com, hmac-sha1-96, hmac-md5-96",
-          "Remove these Encryption Ciphers: arcfour256, arcfour128, aes128-cbc, 3des-cbc, blowfish-cbc, cast128-cbc, aes192-cbc, aes256-cbc, arcfour, rijndael-cbc@lysator.liu.se"
-        ]
-      }
-    }
+- **Minimal Dependancies** - Uses native Ruby and BinData to do it's work, no heavy dependancies.
+- **Not Just a Script** - Implementation is portable for use in another project or for automation of tasks.
+- **Simple** - It is a small project so the interfaces are simple and easy to use.
+
+## Setup
+
+To install, type
+
+```bash
+gem install ssh_scan
+```
+
+## Example Command-Line Usage
+
+Run `ssh_scan -h` to get this
+
+    Usage: ssh_scan [ip] [port]
+        -h, --help                       Show this message
+
+    Example: ssh_scan 192.168.1.1
+    Example: ssh_scan 192.168.1.1 22
+
+## Rubies Supported
+
+This project is integrated with [travis-ci](http://about.travis-ci.org/) and is regularly tested to work with the following rubies:
+
+* [2.1.3](https://github.com/ruby/ruby/tree/ruby_2_1)
+* [2.1.0](https://github.com/ruby/ruby/tree/ruby_2_1)
+* [2.0.0](https://github.com/ruby/ruby/tree/ruby_2_0_0)
+* [1.9.3](https://github.com/ruby/ruby/tree/ruby_1_9_3)
+* [ruby-head](https://github.com/ruby/ruby)
+* [jruby-head](http://jruby.org/)
+* [jruby-19mode](http://jruby.org/)
+
+To checkout the current build status for these rubies, click [here](https://travis-ci.org/#!/claudijd/ssh_scan).
+
+## Contributing
+
+If you are interested in contributing to this project, please see [CONTRIBUTING.md](https://github.com/claudijd/ssh_scan/blob/master/CONTRIBUTING.md)
+
+## Credits
+
+**Sources of Inspiration for ssh_scan**
+
+- [**Mozilla OpenSSH Security Guide**](https://wiki.mozilla.org/Security/Guidelines/OpenSSH) - For providing a sane baseline policy recommendation for SSH configuration parameters (eg. Ciphers, Macs, and KexAlgos).

@@ -1,7 +1,7 @@
 require 'rspec'
-require 'protocol'
+require 'ssh_scan/protocol'
 
-describe SSH::KeyExchangeInit do
+describe SSHScan::KeyExchangeInit do
   context "when parsing raw client SSH Key Exchange Initialization messages on the wire" do
     raw_kex_client_init = ("000001640414e33f813f8cdcc6b00a3d852ec1aea4980000001a6" +
                             "469666669652d68656c6c6d616e2d67726f7570312d7368613100" +
@@ -17,7 +17,7 @@ describe SSH::KeyExchangeInit do
                             "00021686d61632d6d64352c686d61632d736861312c686d61632d" +
                             "726970656d64313630000000046e6f6e65000000046e6f6e65000" +
                             "000000000000000000000006e05b3b4").unhexify
-    kex_init = SSH::KeyExchangeInit.read(raw_kex_client_init)
+    kex_init = SSHScan::KeyExchangeInit.read(raw_kex_client_init)
 
     it "should properly parse a raw client KeyExchangeInit from the wire" do
       # Attribute values
@@ -128,7 +128,7 @@ describe SSH::KeyExchangeInit do
                            "156e6f6e652c7a6c6962406f70656e7373682e636f6d000000156e6" +
                            "f6e652c7a6c6962406f70656e7373682e636f6d0000000000000000" +
                            "000000000000000000000000000000").unhexify
-    kex_init = SSH::KeyExchangeInit.read(raw_server_kex_init)
+    kex_init = SSHScan::KeyExchangeInit.read(raw_server_kex_init)
 
     it "should properly parse a raw server KeyExchangeInit from the wire" do
       expect(kex_init.packet_length).to eql(836)

@@ -1,4 +1,4 @@
-module SSH
+module SSHScan
   class IntermediatePolicy
     def name
       self.class.to_s

@@ -2,7 +2,7 @@ require 'bindata'
 require 'string_ext'
 require 'json'
 
-module SSH
+module SSHScan
   # SSHv2 KexInit
   class KeyExchangeInit < BinData::Record
     endian :big
