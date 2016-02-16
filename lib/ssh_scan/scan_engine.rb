@@ -1,4 +1,6 @@
-module SSH
+require 'socket'
+
+module SSHScan
   class ScanEngine
 
     # TODO: this is pretty crude, clean this up a bit
@@ -7,13 +9,13 @@ module SSH
       # Do initial protocol exchange
       sock = TCPSocket.new(ip, port)
       server_protocol = sock.gets
-      sock.puts(SSH::Constants::DEFAULT_PROTOCOL)
+      sock.puts(SSHScan::Constants::DEFAULT_PROTOCOL)
 
       # Perform Key Initialization Exchange
-      sock.write(SSH::Constants::DEFAULT_KEY_INIT_RAW)
+      sock.write(SSHScan::Constants::DEFAULT_KEY_INIT_RAW)
       resp = sock.read(4)
       resp += sock.read(resp.unpack("N").first)
-      kex_init_response = SSH::KeyExchangeInit.read(resp)
+      kex_init_response = SSHScan::KeyExchangeInit.read(resp)
       sock.close
 
       # Assemble and print results
@@ -25,8 +27,8 @@ module SSH
       result.merge!(kex_init_response.to_hash)
 
       # Evaluate for Policy Compliance
-      policy = SSH::IntermediatePolicy.new
-      policy_mgr = SSH::PolicyManager.new(result, policy)
+      policy = SSHScan::IntermediatePolicy.new
+      policy_mgr = SSHScan::PolicyManager.new(result, policy)
       result['compliance'] = policy_mgr.compliance_results
 
       return result
