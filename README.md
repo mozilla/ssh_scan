@@ -27,7 +27,8 @@ To install from source, type
 git clone https://github.com/claudijd/ssh_scan.git
 cd ssh_scan
 gem install bindata
-./bin/ssh_scan```
+./bin/ssh_scan
+```
 
 ## Example Command-Line Usage
 
