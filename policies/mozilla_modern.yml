@@ -1,5 +1,5 @@
 ---
-name: Mozilla Intermediate
+name: Mozilla Modern
 kex:
 - curve25519-sha256@libssh.org
 - ecdh-sha2-nistp521

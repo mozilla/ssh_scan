@@ -19,7 +19,7 @@ end
 ip = ARGV[0].chomp
 port = ARGV[1].nil? ? 22 : ARGV[1].to_i
 
-policy = SSHScan::Policy.from_file(File.expand_path("../../policies/mozilla_intermediate.yml", __FILE__))
+policy = SSHScan::Policy.from_file(File.expand_path("../../policies/mozilla_modern.yml", __FILE__))
 
 # Perform scan and get results
 scan_engine = SSHScan::ScanEngine.new()
