@@ -1,0 +1,14 @@
+---
+name: Mozilla Intermediate
+kex:
+- diffie-hellman-group-exchange-sha256
+encryption:
+- aes256-ctr
+- aes192-ctr
+- aes128-ctr
+macs:
+- hmac-sha2-512
+- hmac-sha2-256
+compression:
+- none
+- zlib@openssh.com

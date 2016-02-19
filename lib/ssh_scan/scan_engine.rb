@@ -27,7 +27,6 @@ module SSHScan
       result.merge!(kex_init_response.to_hash)
 
       # Evaluate for Policy Compliance
-      policy = SSHScan::IntermediatePolicy.new
       policy_mgr = SSHScan::PolicyManager.new(result, policy)
       result['compliance'] = policy_mgr.compliance_results
 

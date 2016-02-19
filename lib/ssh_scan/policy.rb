@@ -1,19 +1,20 @@
+require 'yaml'
+
 module SSHScan
-  class IntermediatePolicy
-    def name
-      self.class.to_s
+  class Policy
+    attr_reader :name, :kex, :macs, :encryption, :compression
+
+    def initialize(opts = {})
+      @name = opts['name'] || []
+      @kex = opts['kex'] || []
+      @macs = opts['macs'] || []
+      @encryption = opts['encryption'] || []
+      @compression = opts['compression'] || []
     end
 
-    def macs
-      ["hmac-sha2-512","hmac-sha2-256"]
-    end
-
-    def encryption
-      ["aes256-ctr","aes192-ctr","aes128-ctr"]
-    end
-
-    def kexs
-      ["diffie-hellman-group-exchange-sha256"]
+    def self.from_file(file)
+      opts = YAML.load_file(file)
+      self.new(opts)
     end
   end
 
@@ -45,7 +46,16 @@ module SSHScan
       target_kexs = @result[:key_algorithms]
       outliers = []
       target_kexs.each do |target_kex|
-        outliers << target_kex unless @policy.kexs.include?(target_kex)
+        outliers << target_kex unless @policy.kex.include?(target_kex)
+      end
+      return outliers
+    end
+
+    def out_of_policy_compression
+      target_compressions = @result[:compression_algorithms_server_to_client] | @result[:compression_algorithms_client_to_server]
+      outliers = []
+      target_compressions.each do |target_compression|
+        outliers << target_compression unless @policy.compression.include?(target_compression)
       end
       return outliers
     end
@@ -53,7 +63,8 @@ module SSHScan
     def compliant?
       out_of_policy_encryption.empty? &&
       out_of_policy_macs.empty? &&
-      out_of_policy_kex.empty?
+      out_of_policy_kex.empty? &&
+      out_of_policy_compression.empty?
     end
 
     def recommendations
@@ -61,6 +72,7 @@ module SSHScan
       recommendations << "Remove these Key Exchange Algos: #{out_of_policy_kex.join(", ")}" unless out_of_policy_kex.empty?
       recommendations << "Remove these MAC Algos: #{out_of_policy_macs.join(", ")}" unless out_of_policy_macs.empty?
       recommendations << "Remove these Encryption Ciphers: #{out_of_policy_encryption.join(", ")}" unless out_of_policy_encryption.empty?
+      recommendations << "Remove these Compression Algos: #{out_of_policy_compression.join(", ")}" unless out_of_policy_compression.empty?
       return recommendations
     end
 
