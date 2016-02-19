@@ -1,5 +1,6 @@
 require 'rspec'
 require 'ssh_scan/policy'
+require 'tempfile'
 
 describe SSHScan::Policy do
   context "when parsing a policy via YAML string" do
