@@ -49,6 +49,7 @@ Run `ssh_scan -h` to get this
       ssh_scan -t 192.168.1.1 -P custom_policy.yml
 
 See here for [example output](https://github.com/claudijd/ssh_scan/blob/master/examples/192.168.1.1.json)
+See here for [example policies](https://github.com/claudijd/ssh_scan/blob/master/policies)
 
 ## Rubies Supported
 
