@@ -4,25 +4,67 @@
 $:.unshift File.join(File.dirname(__FILE__), "../lib")
 
 require 'ssh_scan'
+require 'optparse'
 
-# Usage: ruby ssh_scan.rb 192.168.1.1
-if ARGV[0].nil? || ARGV[0] == "-h" || ARGV[0] == "--help"
-  puts "ssh_scan #{SSHScan::VERSION} (https://github.com/claudijd/ssh_scan)\n\n" +
-       "Usage: ssh_scan [ip] [port]\n" +
-       "   -h, --help        Show this message\n\n" +
-       "Example: ssh_scan 192.168.1.1\n" +
-       "Example: ssh_scan 192.168.1.1 22\n\n"
+#Default options
+options = {
+  :target => nil,
+  :port => 22,
+  :policy => File.expand_path("../../policies/mozilla_modern.yml", __FILE__)
+}
+opt_parser = OptionParser.new do |opts|
+  opts.banner = "ssh_scan v#{SSHScan::VERSION} (https://github.com/claudijd/ssh_scan)\n\n" +
+                "Usage: ssh_scan [options]"
+
+  opts.on("-t", "--target [IP]",
+          "IP") do |ip|
+    options[:target] = ip
+  end
+
+  opts.on("-p", "--port [PORT]",
+          "Port (Default: 22)") do |port|
+    options[:port] = port.to_i
+  end
+
+  opts.on("-P", "--policy [FILE]",
+          "Policy file (Default: Mozilla Modern)") do |policy|
+    options[:policy] = policy
+  end
+
+  opts.on_tail("-h", "--help", "Show this message") do
+    puts opts
+    puts "\nExamples:"
+    puts "\n  ssh_scan -t 192.168.1.1"
+    puts "  ssh_scan -t 192.168.1.1 -p 22222"
+    puts "  ssh_scan -t 192.168.1.1 -P custom_policy.yml"
+    exit
+  end
+end
+
+opt_parser.parse!
+
+if options[:target].nil?
+  puts opt_parser.help
+  puts "\nReason: no target specified"
   exit
 end
 
-# Populate the info we need to perform a scan
-ip = ARGV[0].chomp
-port = ARGV[1].nil? ? 22 : ARGV[1].to_i
+unless (0..65535).include?(options[:port])
+  puts opt_parser.help
+  puts "\nReason: port supplied is not within acceptable range"
+  exit
+end
 
-policy = SSHScan::Policy.from_file(File.expand_path("../../policies/mozilla_modern.yml", __FILE__))
+unless File.exists?(options[:policy])
+  puts opt_parser.help
+  puts "\nReason: policy file supplied is not a file"
+  exit
+end
+
+policy = SSHScan::Policy.from_file(options[:policy])
 
 # Perform scan and get results
 scan_engine = SSHScan::ScanEngine.new()
-result = scan_engine.scan(ip, port, policy)
+result = scan_engine.scan(options[:target], options[:port], policy)
 
 puts JSON.pretty_generate(result)
