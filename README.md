@@ -50,6 +50,8 @@ Run `ssh_scan -h` to get this
 
 See here for [example output](https://github.com/claudijd/ssh_scan/blob/master/examples/192.168.1.1.json)
 
+See here for [example policies](https://github.com/claudijd/ssh_scan/blob/master/policies)
+
 ## Rubies Supported
 
 This project is integrated with [travis-ci](http://about.travis-ci.org/) and is regularly tested to work with the following rubies:
