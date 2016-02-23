@@ -1,7 +1,6 @@
 require 'rspec'
 require 'ssh_scan/client'
 require 'ssh_scan/constants'
-require 'rspec/mocks'
 
 describe SSHScan::Client do
   context "when connecting as a client" do
