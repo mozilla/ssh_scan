@@ -46,13 +46,14 @@ describe SSHScan::Client do
       allow(io).to receive(:close).and_return(nil)
 
       # Do the client get_kex_result action
-      client.get_kex_result
+      result = client.get_kex_result
 
       # Verify the client behaved as expected
       expect(io).to have_received(:write).once.with(SSHScan::Constants::DEFAULT_KEY_INIT_RAW)
       expect(io).to have_received(:read).with(4)
       expect(io).to have_received(:read).with(836)
       expect(io).to have_received(:close).once
+      expect(result).to be_kind_of(::Hash)
     end
 
   end
