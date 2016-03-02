@@ -35,6 +35,7 @@ module SSHScan
 
       # Assemble and print results
       result = {}
+      result[:ssh_scan_version] = SSHScan::VERSION
       result[:hostname] = @target.fqdn? ? @target : ""
       result[:ip] = @ip
       result[:port] = @port
