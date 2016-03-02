@@ -31,6 +31,12 @@ opt_parser = OptionParser.new do |opts|
     options[:policy] = policy
   end
 
+  opts.on("-v", "--version",
+          "Policy file (Default: Mozilla Modern)") do
+    puts SSHScan::VERSION
+    exit
+  end
+
   opts.on_tail("-h", "--help", "Show this message") do
     puts opts
     puts "\nExamples:"
@@ -38,6 +44,7 @@ opt_parser = OptionParser.new do |opts|
     puts "  ssh_scan -t server.example.com"
     puts "  ssh_scan -t 192.168.1.1 -p 22222"
     puts "  ssh_scan -t 192.168.1.1 -P custom_policy.yml"
+    puts ""
     exit
   end
 end
