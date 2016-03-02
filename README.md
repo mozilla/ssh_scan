@@ -46,8 +46,8 @@ Run `ssh_scan -h` to get this
 
       ssh_scan -t 192.168.1.1
       ssh_scan -t server.example.com
-      ssh_scan -t 192.168.1.1 -p 22222
-      ssh_scan -t 192.168.1.1 -P custom_policy.yml
+      ssh_scan -t server.example.com -p 22222
+      ssh_scan -t server.example.com -P custom_policy.yml
 
 See here for [example output](https://github.com/claudijd/ssh_scan/blob/master/examples/192.168.1.1.json)
 
