@@ -37,7 +37,7 @@ Run `ssh_scan -h` to get this
     ssh_scan v0.0.5 (https://github.com/claudijd/ssh_scan)
 
     Usage: ssh_scan [options]
-        -t, --target [IP]                IP
+        -t, --target [IP/Hostname]       IP/Hostname
         -p, --port [PORT]                Port (Default: 22)
         -P, --policy [FILE]              Policy file (Default: Mozilla Modern)
         -h, --help                       Show this message
@@ -45,6 +45,7 @@ Run `ssh_scan -h` to get this
     Examples:
 
       ssh_scan -t 192.168.1.1
+      ssh_scan -t server.example.com
       ssh_scan -t 192.168.1.1 -p 22222
       ssh_scan -t 192.168.1.1 -P custom_policy.yml
 

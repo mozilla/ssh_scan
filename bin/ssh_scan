@@ -16,8 +16,8 @@ opt_parser = OptionParser.new do |opts|
   opts.banner = "ssh_scan v#{SSHScan::VERSION} (https://github.com/claudijd/ssh_scan)\n\n" +
                 "Usage: ssh_scan [options]"
 
-  opts.on("-t", "--target [IP]",
-          "IP") do |ip|
+  opts.on("-t", "--target [IP/Hostname]",
+          "IP/Hostname") do |ip|
     options[:target] = ip
   end
 
@@ -35,6 +35,7 @@ opt_parser = OptionParser.new do |opts|
     puts opts
     puts "\nExamples:"
     puts "\n  ssh_scan -t 192.168.1.1"
+    puts "  ssh_scan -t server.example.com"
     puts "  ssh_scan -t 192.168.1.1 -p 22222"
     puts "  ssh_scan -t 192.168.1.1 -P custom_policy.yml"
     exit
@@ -46,6 +47,12 @@ opt_parser.parse!
 if options[:target].nil?
   puts opt_parser.help
   puts "\nReason: no target specified"
+  exit
+end
+
+unless options[:target].ip_addr? || options[:target].fqdn?
+  puts opt_parser.help
+  puts "\nReason: #{options[:target]} is not a valid target"
   exit
 end
 
@@ -61,10 +68,10 @@ unless File.exists?(options[:policy])
   exit
 end
 
-policy = SSHScan::Policy.from_file(options[:policy])
+options[:policy_file] = SSHScan::Policy.from_file(options[:policy])
 
 # Perform scan and get results
 scan_engine = SSHScan::ScanEngine.new()
-result = scan_engine.scan(options[:target], options[:port], policy)
+result = scan_engine.scan(options)
 
 puts JSON.pretty_generate(result)

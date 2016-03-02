@@ -4,8 +4,15 @@ require 'ssh_scan/protocol'
 
 module SSHScan
   class Client
-    def initialize(ip, port)
-      @ip = ip
+    def initialize(target, port)
+      @target = target
+
+      if @target.ip_addr?
+        @ip = @target
+      else
+        @ip = @target.resolve_fqdn()
+      end
+
       @port = port
       @client_protocol = SSHScan::Constants::DEFAULT_CLIENT_PROTOCOL
       @server_protocol = nil
@@ -27,11 +34,11 @@ module SSHScan
       kex_exchange_init = SSHScan::KeyExchangeInit.read(resp)
 
       # Assemble and print results
-      result = {
-        :ip => @ip,
-        :port => @port,
-        :server_banner => @server_protocol
-      }
+      result = {}
+      result[:hostname] = @target.fqdn? ? @target : ""
+      result[:ip] = @ip
+      result[:port] = @port
+      result[:server_banner] = @server_protocol
       result.merge!(kex_exchange_init.to_hash)
 
       return result

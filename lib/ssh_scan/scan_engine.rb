@@ -4,9 +4,13 @@ require 'ssh_scan/client'
 module SSHScan
   class ScanEngine
 
-    def scan(ip, port, policy = nil)
+    def scan(opts)
+      target = opts[:target]
+      port = opts[:port]
+      policy = opts[:policy_file]
+
       # Connect and get results
-      client = SSHScan::Client.new(ip, port)
+      client = SSHScan::Client.new(target, port)
       client.connect()
       result = client.get_kex_result()
 
