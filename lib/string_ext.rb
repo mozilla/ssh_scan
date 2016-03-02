@@ -9,7 +9,9 @@ class String
   def ip_addr?
     begin
       IPAddr.new(self)
-    rescue IPAddr::InvalidAddressError
+
+    # Using ArgumentError instead of IPAddr::InvalidAddressError for 1.9.3 backward compatability
+    rescue ArgumentError
       return false
     end
 
