@@ -32,7 +32,7 @@ opt_parser = OptionParser.new do |opts|
   end
 
   opts.on("-v", "--version",
-          "Policy file (Default: Mozilla Modern)") do
+          "Display just version info") do
     puts SSHScan::VERSION
     exit
   end
