@@ -96,7 +96,7 @@ module SSHScan
       missing_policy_encryption.empty? &&
       missing_policy_macs.empty? &&
       missing_policy_kex.empty? &&
-      missing_policy_compression?
+      missing_policy_compression.empty?
     end
 
     def recommendations
