@@ -34,7 +34,7 @@ gem install bindata
 
 Run `ssh_scan -h` to get this
 
-    ssh_scan v0.0.5 (https://github.com/claudijd/ssh_scan)
+    ssh_scan v0.0.6 (https://github.com/claudijd/ssh_scan)
 
     Usage: ssh_scan [options]
         -t, --target [IP/Hostname]       IP/Hostname
