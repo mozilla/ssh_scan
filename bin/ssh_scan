@@ -10,7 +10,8 @@ require 'optparse'
 options = {
   :target => nil,
   :port => 22,
-  :policy => File.expand_path("../../policies/mozilla_modern.yml", __FILE__)
+  :policy => File.expand_path("../../policies/mozilla_modern.yml", __FILE__),
+  :unit_test => false
 }
 opt_parser = OptionParser.new do |opts|
   opts.banner = "ssh_scan v#{SSHScan::VERSION} (https://github.com/claudijd/ssh_scan)\n\n" +
@@ -31,6 +32,11 @@ opt_parser = OptionParser.new do |opts|
     options[:policy] = policy
   end
 
+  opts.on("-u", "--unit-test [FILE]",
+          "Throw appropriate exit codes based on compliance status") do
+    options[:unit_test] = true
+  end
+
   opts.on("-v", "--version",
           "Display just version info") do
     puts SSHScan::VERSION
@@ -44,6 +50,7 @@ opt_parser = OptionParser.new do |opts|
     puts "  ssh_scan -t server.example.com"
     puts "  ssh_scan -t 192.168.1.1 -p 22222"
     puts "  ssh_scan -t 192.168.1.1 -P custom_policy.yml"
+    puts "  ssh_scan -t 192.168.1.1 --unit-test -P custom_policy.yml"
     puts ""
     exit
   end
@@ -82,3 +89,9 @@ scan_engine = SSHScan::ScanEngine.new()
 result = scan_engine.scan(options)
 
 puts JSON.pretty_generate(result)
+
+if result["compliance"] && result["compliance"][:compliant] == false
+  exit 1 #non-zero means a false
+else
+  exit 0 #non-zero means pass
+end
