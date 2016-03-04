@@ -35,20 +35,23 @@ gem install bindata
 
 Run `ssh_scan -h` to get this
 
-    ssh_scan v0.0.6 (https://github.com/claudijd/ssh_scan)
+ssh_scan v0.0.7 (https://github.com/claudijd/ssh_scan)
 
-    Usage: ssh_scan [options]
-        -t, --target [IP/Hostname]       IP/Hostname
-        -p, --port [PORT]                Port (Default: 22)
-        -P, --policy [FILE]              Policy file (Default: Mozilla Modern)
-        -h, --help                       Show this message
+  Usage: ssh_scan [options]
+      -t, --target [IP/Hostname]       IP/Hostname
+      -p, --port [PORT]                Port (Default: 22)
+      -P, --policy [FILE]              Policy file (Default: Mozilla Modern)
+      -u, --unit-test [FILE]           Throw appropriate exit codes based on compliance status
+      -v, --version                    Display just version info
+      -h, --help                       Show this message
 
-    Examples:
+  Examples:
 
-      ssh_scan -t 192.168.1.1
-      ssh_scan -t server.example.com
-      ssh_scan -t server.example.com -p 22222
-      ssh_scan -t server.example.com -P custom_policy.yml
+    ssh_scan -t 192.168.1.1
+    ssh_scan -t server.example.com
+    ssh_scan -t 192.168.1.1 -p 22222
+    ssh_scan -t 192.168.1.1 -P custom_policy.yml
+    ssh_scan -t 192.168.1.1 --unit-test -P custom_policy.yml
 
 See here for [example output](https://github.com/claudijd/ssh_scan/blob/master/examples/192.168.1.1.json)
 
