@@ -38,7 +38,7 @@ Run `ssh_scan -h` to get this
     ssh_scan v0.0.7 (https://github.com/claudijd/ssh_scan)
 
     Usage: ssh_scan [options]
-        -t, --target [IP/Hostname]       IP/Hostname
+        -t, --target [IP/Hostname]       IP/Hostname (IPv4/IPv6/FQDNs)
         -p, --port [PORT]                Port (Default: 22)
         -P, --policy [FILE]              Policy file (Default: Mozilla Modern)
         -u, --unit-test [FILE]           Throw appropriate exit codes based on compliance status
@@ -49,6 +49,7 @@ Run `ssh_scan -h` to get this
 
       ssh_scan -t 192.168.1.1
       ssh_scan -t server.example.com
+      ssh_scan -t ::1
       ssh_scan -t 192.168.1.1 -p 22222
       ssh_scan -t 192.168.1.1 -P custom_policy.yml
       ssh_scan -t 192.168.1.1 --unit-test -P custom_policy.yml
