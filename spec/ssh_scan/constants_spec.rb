@@ -20,13 +20,15 @@ describe SSHScan::Constants do
     expect(SSHScan::Constants::DEFAULT_KEY_INIT_RAW).to eql(default_key_init_raw)
   end
 
-  it "should have the right value for DEFAULT_CLIENT_PROTOCOL" do
-    default_protocol= "SSH-2.0-client"
-    expect(SSHScan::Constants::DEFAULT_CLIENT_PROTOCOL).to eql(default_protocol)
+  it "should have the right value for DEFAULT_CLIENT_BANNER" do
+    default_banner = "SSH-2.0-ssh_scan"
+    expect(SSHScan::Constants::DEFAULT_CLIENT_BANNER).to be_kind_of(SSHScan::Banner)
+    expect(SSHScan::Constants::DEFAULT_CLIENT_BANNER.to_s).to eql(default_banner)
   end
 
-  it "should have the right value for DEFAULT_SERVER_PROTOCOL" do
-    default_protocol= "SSH-2.0-server"
-    expect(SSHScan::Constants::DEFAULT_SERVER_PROTOCOL).to eql(default_protocol)
+  it "should have the right value for DEFAULT_SERVER_BANNER" do
+    default_banner = "SSH-2.0-server"
+    expect(SSHScan::Constants::DEFAULT_SERVER_BANNER).to be_kind_of(SSHScan::Banner)
+    expect(SSHScan::Constants::DEFAULT_SERVER_BANNER.to_s).to eql(default_banner)
   end
 end

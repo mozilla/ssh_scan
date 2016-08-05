@@ -1,6 +1,7 @@
 require 'socket'
 require 'ssh_scan/constants'
 require 'ssh_scan/protocol'
+require 'ssh_scan/banner'
 
 module SSHScan
   class Client
@@ -14,15 +15,16 @@ module SSHScan
       end
 
       @port = port
-      @client_protocol = SSHScan::Constants::DEFAULT_CLIENT_PROTOCOL
-      @server_protocol = nil
+      @client_banner = SSHScan::Constants::DEFAULT_CLIENT_BANNER
+      @server_banner = nil
       @kex_init_raw = SSHScan::Constants::DEFAULT_KEY_INIT_RAW
     end
 
     def connect()
       @sock = TCPSocket.new(@ip, @port)
-      @server_protocol = @sock.gets.chomp
-      @sock.puts(@client_protocol)
+      @raw_server_banner = @sock.gets.chomp
+      @server_banner = SSHScan::Banner.read(@raw_server_banner)
+      @sock.puts(@client_banner.to_s)
     end
 
     def get_kex_result(kex_init_raw = @kex_init_raw)
@@ -39,7 +41,12 @@ module SSHScan
       result[:hostname] = @target.fqdn? ? @target : ""
       result[:ip] = @ip
       result[:port] = @port
-      result[:server_banner] = @server_protocol
+      result[:server_banner] = @server_banner
+      result[:ssh_version] = @server_banner.ssh_version
+      result[:os] = @server_banner.os_guess.common
+      result[:os_cpe] = @server_banner.os_guess.cpe
+      result[:ssh_lib] = @server_banner.ssh_lib_guess.common
+      result[:ssh_lib_cpe] = @server_banner.ssh_lib_guess.cpe
       result.merge!(kex_exchange_init.to_hash)
 
       return result

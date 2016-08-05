@@ -1,0 +1,5 @@
+require 'ssh_scan/os/centos'
+require 'ssh_scan/os/debian'
+require 'ssh_scan/os/freebsd'
+require 'ssh_scan/os/ubuntu'
+require 'ssh_scan/os/unknown'

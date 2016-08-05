@@ -1,9 +1,10 @@
 require 'string_ext'
+require 'ssh_scan/banner'
 
 module SSHScan
   module Constants
-    DEFAULT_CLIENT_PROTOCOL = "SSH-2.0-client"
-    DEFAULT_SERVER_PROTOCOL = "SSH-2.0-server"
+    DEFAULT_CLIENT_BANNER = SSHScan::Banner.new("SSH-2.0-ssh_scan")
+    DEFAULT_SERVER_BANNER = SSHScan::Banner.new("SSH-2.0-server")
     DEFAULT_KEY_INIT_RAW = ("d8eb97b11b6cacbc3285473f08004500019ceccf40004006663fc0a80a7c3ff" +
                             "5db33cdfd0016982e6062988da97e801810154d2b00000101080a03a6399f3d" +
                             "f735d6000001640414e33f813f8cdcc6b00a3d852ec1aea4980000001a64696" +
