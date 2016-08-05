@@ -5,12 +5,12 @@ require 'ssh_scan/constants'
 describe SSHScan::Client do
   context "when connecting as a client" do
     it "should follow a specific sequence on the TCPSocket for connect() operation" do
-      server_protocol = "SSH-2.0-server"
+      server_banner = SSHScan::Banner.read("SSH-2.0-server")
 
       # Override TCPSocket behavior in the name of unit-testing
       io = double("io", puts: nil)
       allow(io).to receive(:puts).and_return(nil)
-      allow(io).to receive(:gets).and_return(server_protocol)
+      allow(io).to receive(:gets).and_return(server_banner.to_s)
       allow(TCPSocket).to receive(:new) { io }
 
       # Do the client connect action
@@ -18,17 +18,17 @@ describe SSHScan::Client do
       client.connect
 
       # Verify the client behaved as expected
-      expect(io).to have_received(:puts).with("SSH-2.0-client")
-      expect(client.instance_variable_get(:@server_protocol)).to eql(server_protocol)
+      expect(io).to have_received(:puts).with("SSH-2.0-ssh_scan")
+      expect(client.instance_variable_get(:@server_banner)).to eq(server_banner)
     end
 
     it "should follow a specific sequence on the TCPSocket for get_kex_result() operation" do
-      server_protocol = "SSH-2.0-server"
+      server_banner = SSHScan::Banner.read("SSH-2.0-server")
 
       # Override TCPSocket behavior in the name of unit-testing
       io = double("io", puts: nil)
       allow(io).to receive(:puts).and_return(nil)
-      allow(io).to receive(:gets).and_return(server_protocol)
+      allow(io).to receive(:gets).and_return(server_banner.to_s)
       allow(TCPSocket).to receive(:new) { io }
 
       # Do the client connect action
@@ -36,8 +36,8 @@ describe SSHScan::Client do
       client.connect
 
       # Verify the client behaved as expected
-      expect(io).to have_received(:puts).with("SSH-2.0-client")
-      expect(client.instance_variable_get(:@server_protocol)).to eql(server_protocol)
+      expect(io).to have_received(:puts).with("SSH-2.0-ssh_scan")
+      expect(client.instance_variable_get(:@server_banner)).to eq(server_banner)
 
       # Override more TCPSocket behavior in the name of unit-testing
       allow(io).to receive(:write).and_return(nil)
