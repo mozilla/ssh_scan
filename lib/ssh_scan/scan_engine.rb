@@ -1,5 +1,6 @@
 require 'socket'
 require 'ssh_scan/client'
+require 'net/ssh'
 
 module SSHScan
   class ScanEngine
@@ -9,10 +10,35 @@ module SSHScan
       port = opts[:port]
       policy = opts[:policy_file]
 
-      # Connect and get results
+      # Connect and get results (native)
       client = SSHScan::Client.new(target, port)
       client.connect()
       result = client.get_kex_result()
+
+      # Connect and get results (Net-SSH)
+      net_ssh_session = Net::SSH::Transport::Session.new(target)
+      host_key = net_ssh_session.host_keys.first
+      net_ssh_session.close
+
+      # only supporting RSA for the moment
+      unless OpenSSL::PKey::RSA
+        raise "Unknown host key type, need to add this host_key type"
+      end
+
+      data_string = OpenSSL::ASN1::Sequence([
+        OpenSSL::ASN1::Integer.new(host_key.public_key.n),
+        OpenSSL::ASN1::Integer.new(host_key.public_key.e)
+      ])
+
+      fingerprint_md5 = OpenSSL::Digest::MD5.hexdigest(data_string.to_der).scan(/../).join(':')
+      fingerprint_sha1 = OpenSSL::Digest::SHA1.hexdigest(data_string.to_der).scan(/../).join(':')
+      fingerprint_sha256 = OpenSSL::Digest::SHA256.hexdigest(data_string.to_der).scan(/../).join(':')
+
+      result['fingerprints'] = {
+        "md5" => fingerprint_md5,
+        "sha1" => fingerprint_sha1,
+        "sha256" => fingerprint_sha256,
+      }
 
       # If policy defined, then add compliance results
       unless policy.nil?
