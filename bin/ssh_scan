@@ -18,7 +18,7 @@ opt_parser = OptionParser.new do |opts|
                 "Usage: ssh_scan [options]"
 
   opts.on("-t", "--target [IP/Hostname]",
-          "IP/Hostname") do |ip|
+          "IP/Hostname (IPv4/IPv6/FQDNs)") do |ip|
     options[:target] = ip
   end
 
@@ -48,6 +48,7 @@ opt_parser = OptionParser.new do |opts|
     puts "\nExamples:"
     puts "\n  ssh_scan -t 192.168.1.1"
     puts "  ssh_scan -t server.example.com"
+    puts "  ssh_scan -t ::1"
     puts "  ssh_scan -t 192.168.1.1 -p 22222"
     puts "  ssh_scan -t 192.168.1.1 -P custom_policy.yml"
     puts "  ssh_scan -t 192.168.1.1 --unit-test -P custom_policy.yml"
