@@ -1,4 +1,5 @@
 require 'string_ext'
+require 'ssh_scan/banner'
 
 module SSHScan
   module Constants
