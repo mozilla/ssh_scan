@@ -11,6 +11,14 @@ module SSHScan
       return SSHScan::Banner.new(string.chomp)
     end
 
+    def ssh_version()
+      if version = @string.match(/SSH-(\d+[\.\d+]+)/)[1]
+        return version.to_f
+      else
+        return "unknown"
+      end
+    end
+
     def ssh_lib_guess()
       case @string
       when /OpenSSH/i

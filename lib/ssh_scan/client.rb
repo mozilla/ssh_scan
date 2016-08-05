@@ -42,6 +42,11 @@ module SSHScan
       result[:ip] = @ip
       result[:port] = @port
       result[:server_banner] = @server_banner
+      result[:ssh_version] = @server_banner.ssh_version
+      result[:os] = @server_banner.os_guess.common
+      result[:os_cpe] = @server_banner.os_guess.cpe
+      result[:ssh_lib] = @server_banner.ssh_lib_guess.common
+      result[:ssh_lib_cpe] = @server_banner.ssh_lib_guess.cpe
       result.merge!(kex_exchange_init.to_hash)
 
       return result
