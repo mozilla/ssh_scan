@@ -5,7 +5,7 @@ module SSHScan
         "unknown"
       end
 
-      def to_s
+      def cpe
         "a:unknown"
       end
     end
