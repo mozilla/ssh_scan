@@ -17,6 +17,9 @@ module SSHScan
 
       # Connect and get results (Net-SSH)
       net_ssh_session = Net::SSH::Transport::Session.new(target)
+      auth_session = Net::SSH::Authentication::Session.new(net_ssh_session, :auth_methods => ["none"])
+      auth_session.authenticate("none", "test", "test")
+      result['auth_methods'] = auth_session.allowed_auth_methods
       host_key = net_ssh_session.host_keys.first
       net_ssh_session.close
 
