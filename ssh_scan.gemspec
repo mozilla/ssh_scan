@@ -27,6 +27,7 @@ Gem::Specification.new do |s|
   s.homepage = 'http://rubygems.org/gems/ssh_scan'
 
   s.add_dependency('bindata', '~> 2.0')
+  s.add_dependency('net-ssh')
   s.add_development_dependency('pry')
   s.add_development_dependency('rspec', '~> 3.0')
   s.add_development_dependency('rspec-its', '~> 1.2')
