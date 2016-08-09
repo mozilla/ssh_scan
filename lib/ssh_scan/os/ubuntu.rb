@@ -6,7 +6,7 @@ module SSHScan
       end
 
       def cpe
-        "o:canonical:freebsd"
+        "o:canonical:ubuntu"
       end
     end
   end
