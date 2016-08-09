@@ -13,7 +13,7 @@ A SSH configuration and policy scanner
 - **Simple** - Just point ssh_scan at an SSH service and get a JSON report of what is supports and it's policy status
 - **Configurable** - Make your own custom policies that fit your unique policy requirements.
 
-[![asciicast](https://asciinema.org/a/7pliiw5zqhj7eqvz7q437u6vx.png)](https://asciinema.org/a/7pliiw5zqhj7eqvz7q437u6vx)
+<a href="https://asciinema.org/a/7pliiw5zqhj7eqvz7q437u6vx" target="_blank"><img src="https://asciinema.org/a/7pliiw5zqhj7eqvz7q437u6vx.png" /></a>
 
 ## Setup
 
