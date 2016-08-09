@@ -14,7 +14,7 @@ options = {
   :unit_test => false
 }
 opt_parser = OptionParser.new do |opts|
-  opts.banner = "ssh_scan v#{SSHScan::VERSION} (https://github.com/claudijd/ssh_scan)\n\n" +
+  opts.banner = "ssh_scan v#{SSHScan::VERSION} (https://github.com/mozilla/ssh_scan)\n\n" +
                 "Usage: ssh_scan [options]"
 
   opts.on("-t", "--target [IP/Hostname]",

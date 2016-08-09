@@ -1,7 +1,7 @@
 # ssh_scan
 
-[![Build Status](https://secure.travis-ci.org/claudijd/ssh_scan.png)](http://travis-ci.org/claudijd/ssh_scan)
-[![Code Climate](https://codeclimate.com/github/claudijd/ssh_scan.png)](https://codeclimate.com/github/claudijd/ssh_scan)
+[![Build Status](https://secure.travis-ci.org/mozilla/ssh_scan.png)](http://travis-ci.org/mozilla/ssh_scan)
+[![Code Climate](https://codeclimate.com/github/mozilla/ssh_scan.png)](https://codeclimate.com/github/mozilla/ssh_scan)
 [![Gem Version](https://badge.fury.io/rb/ssh_scan.svg)](https://badge.fury.io/rb/ssh_scan)
 
 A SSH configuration and policy scanner
@@ -25,7 +25,7 @@ ssh_scan
 To install from source, type
 
 ```bash
-git clone https://github.com/claudijd/ssh_scan.git
+git clone https://github.com/mozilla/ssh_scan.git
 cd ssh_scan
 gem install bindata
 ./bin/ssh_scan
@@ -35,7 +35,7 @@ gem install bindata
 
 Run `ssh_scan -h` to get this
 
-    ssh_scan v0.0.7 (https://github.com/claudijd/ssh_scan)
+    ssh_scan v0.0.7 (https://github.com/mozilla/ssh_scan)
 
     Usage: ssh_scan [options]
         -t, --target [IP/Hostname]       IP/Hostname (IPv4/IPv6/FQDNs)
@@ -54,9 +54,9 @@ Run `ssh_scan -h` to get this
       ssh_scan -t 192.168.1.1 -P custom_policy.yml
       ssh_scan -t 192.168.1.1 --unit-test -P custom_policy.yml
 
-See here for [example output](https://github.com/claudijd/ssh_scan/blob/master/examples/192.168.1.1.json)
+See here for [example output](https://github.com/mozilla/ssh_scan/blob/master/examples/192.168.1.1.json)
 
-See here for [example policies](https://github.com/claudijd/ssh_scan/blob/master/policies)
+See here for [example policies](https://github.com/mozilla/ssh_scan/blob/master/policies)
 
 ## Rubies Supported
 
@@ -70,11 +70,11 @@ This project is integrated with [travis-ci](http://about.travis-ci.org/) and is 
 * [jruby-head](http://jruby.org/)
 * [jruby-19mode](http://jruby.org/)
 
-To checkout the current build status for these rubies, click [here](https://travis-ci.org/#!/claudijd/ssh_scan).
+To checkout the current build status for these rubies, click [here](https://travis-ci.org/#!/mozilla/ssh_scan).
 
 ## Contributing
 
-If you are interested in contributing to this project, please see [CONTRIBUTING.md](https://github.com/claudijd/ssh_scan/blob/master/CONTRIBUTING.md)
+If you are interested in contributing to this project, please see [CONTRIBUTING.md](https://github.com/mozilla/ssh_scan/blob/master/CONTRIBUTING.md)
 
 ## Credits
 
