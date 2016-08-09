@@ -13,8 +13,6 @@ A SSH configuration and policy scanner
 - **Simple** - Just point ssh_scan at an SSH service and get a JSON report of what is supports and it's policy status
 - **Configurable** - Make your own custom policies that fit your unique policy requirements.
 
-<a href="https://asciinema.org/a/7pliiw5zqhj7eqvz7q437u6vx" target="_blank"><img src="https://asciinema.org/a/7pliiw5zqhj7eqvz7q437u6vx.png" /></a>
-
 ## Setup
 
 To install as a gem, type
@@ -55,6 +53,8 @@ Run `ssh_scan -h` to get this
       ssh_scan -t 192.168.1.1 -p 22222
       ssh_scan -t 192.168.1.1 -P custom_policy.yml
       ssh_scan -t 192.168.1.1 --unit-test -P custom_policy.yml
+
+See here for [example video](https://asciinema.org/a/7pliiw5zqhj7eqvz7q437u6vx)
 
 See here for [example output](https://github.com/mozilla/ssh_scan/blob/master/examples/192.168.1.1.json)
 
