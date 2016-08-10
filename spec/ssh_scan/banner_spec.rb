@@ -17,6 +17,9 @@ describe SSHScan::Banner do
       "SSH-2.0-centos" => SSHScan::OS::CentOS,
       "SSH-2.0-debian" => SSHScan::OS::Debian,
       "SSH-2.0-freebsd" => SSHScan::OS::FreeBSD,
+      "SSH-2.0-windows" => SSHScan::OS::Windows,
+      "SSH-2.0-rhel" => SSHScan::OS::RedHat,
+      "SSH-2.0-redhat" => SSHScan::OS::RedHat,
       "SSH-2.0-bananas" => SSHScan::OS::Unknown,
     }
 
@@ -39,6 +42,40 @@ describe SSHScan::Banner do
       it "should detect the right OS for #{banner_string}" do
         banner = SSHScan::Banner.new(banner_string)
         expect(banner.ssh_lib_guess).to be_kind_of(ssh_lib_class)
+      end
+    end
+  end
+
+  context "when OpenSSH versioning" do
+    banner_legend = {
+      "SSH-2.0-OpenSSH_6.9p1 Debian-2" => {
+        "ssh_lib_class" => SSHScan::SSHLib::OpenSSH,
+        "version_class" => SSHScan::SSHLib::OpenSSH::Version,
+        "version_string" => "6.9p1",
+      },
+      "SSH-2.0-OpenSSH_7.3" => {
+        "ssh_lib_class" => SSHScan::SSHLib::OpenSSH,
+        "version_class" => SSHScan::SSHLib::OpenSSH::Version,
+        "version_string" => "7.3",
+      },
+      "SSH-2.0-OpenSSH_6.6.1p1-hpn14v2 FreeBSD-openssh-portable-6.6.p1_2,1" => {
+        "ssh_lib_class" => SSHScan::SSHLib::OpenSSH,
+        "version_class" => SSHScan::SSHLib::OpenSSH::Version,
+        "version_string" => "6.6.1p1",
+      },
+      "SSH-2.0-OpenSSH" => {
+        "ssh_lib_class" => SSHScan::SSHLib::OpenSSH,
+        "version_class" => NilClass,
+        "version_string" => "",
+      }
+    }
+
+    banner_legend.each do |banner_string, elements|
+      it "should detect the right version for #{banner_string}" do
+        banner = SSHScan::Banner.new(banner_string)
+        expect(banner.ssh_lib_guess).to be_kind_of(elements["ssh_lib_class"])
+        expect(banner.ssh_lib_guess.version).to be_kind_of(elements["version_class"])
+        expect(banner.ssh_lib_guess.version.to_s).to eql(elements["version_string"])
       end
     end
   end
