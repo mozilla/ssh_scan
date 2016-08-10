@@ -18,6 +18,8 @@ describe SSHScan::Banner do
       "SSH-2.0-debian" => SSHScan::OS::Debian,
       "SSH-2.0-freebsd" => SSHScan::OS::FreeBSD,
       "SSH-2.0-windows" => SSHScan::OS::Windows,
+      "SSH-2.0-rhel" => SSHScan::OS::RedHat,
+      "SSH-2.0-redhat" => SSHScan::OS::RedHat,
       "SSH-2.0-bananas" => SSHScan::OS::Unknown,
     }
 

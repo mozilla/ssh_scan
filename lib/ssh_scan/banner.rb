@@ -36,6 +36,8 @@ module SSHScan
         return SSHScan::OS::Ubuntu.new
       when /CentOS/i
         return SSHScan::OS::CentOS.new
+      when /RHEL|RedHat/i
+        return SSHScan::OS::RedHat.new
       when /FreeBSD/i
         return SSHScan::OS::FreeBSD.new
       when /Debian/i
