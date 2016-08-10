@@ -22,7 +22,7 @@ module SSHScan
     def ssh_lib_guess()
       case @string
       when /OpenSSH/i
-        return SSHScan::SSHLib::OpenSSH.new()
+        return SSHScan::SSHLib::OpenSSH.new(@string)
       when /LibSSH/i
         return SSHScan::SSHLib::LibSSH.new()
       else
@@ -40,6 +40,8 @@ module SSHScan
         return SSHScan::OS::FreeBSD.new
       when /Debian/i
         return SSHScan::OS::Debian.new
+      when /Windows/i
+        return SSHScan::OS::Windows.new
       else
         return SSHScan::OS::Unknown.new
       end
