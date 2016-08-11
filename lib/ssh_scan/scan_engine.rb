@@ -24,7 +24,7 @@ module SSHScan
       net_ssh_session.close
 
       # only supporting RSA for the moment
-      unless OpenSSL::PKey::RSA
+      unless host_key.is_a?(OpenSSL::PKey::RSA)
         raise "Unknown host key type, need to add this host_key type"
       end
 
