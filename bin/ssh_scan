@@ -8,7 +8,7 @@ require 'optparse'
 
 #Default options
 options = {
-  :target => nil,
+  :targets => [],
   :port => 22,
   :policy => File.expand_path("../../policies/mozilla_modern.yml", __FILE__),
   :unit_test => false
@@ -17,9 +17,9 @@ opt_parser = OptionParser.new do |opts|
   opts.banner = "ssh_scan v#{SSHScan::VERSION} (https://github.com/mozilla/ssh_scan)\n\n" +
                 "Usage: ssh_scan [options]"
 
-  opts.on("-t", "--target [IP/Hostname]",
+  opts.on("-t", "--target [IP/Hostname]", Array,
           "IP/Hostname (IPv4/IPv6/FQDNs)") do |ip|
-    options[:target] = ip
+    options[:targets] = ip
   end
 
   opts.on("-p", "--port [PORT]",
@@ -59,16 +59,18 @@ end
 
 opt_parser.parse!
 
-if options[:target].nil?
+if options[:targets].nil?
   puts opt_parser.help
   puts "\nReason: no target specified"
   exit
 end
 
-unless options[:target].ip_addr? || options[:target].fqdn?
-  puts opt_parser.help
-  puts "\nReason: #{options[:target]} is not a valid target"
-  exit
+options[:targets].each do |target|
+  unless target.ip_addr? || target.fqdn?
+    puts opt_parser.help
+    puts "\nReason: #{options[:targets]} is not a valid target"
+    exit
+  end
 end
 
 unless (0..65535).include?(options[:port])
@@ -87,12 +89,14 @@ options[:policy_file] = SSHScan::Policy.from_file(options[:policy])
 
 # Perform scan and get results
 scan_engine = SSHScan::ScanEngine.new()
-result = scan_engine.scan(options)
+results = scan_engine.scan(options)
 
-puts JSON.pretty_generate(result)
+puts JSON.pretty_generate(results)
 
-if result["compliance"] && result["compliance"][:compliant] == false
-  exit 1 #non-zero means a false
-else
-  exit 0 #non-zero means pass
+results.each do |result|
+  if result["compliance"] && result["compliance"][:compliant] == false
+    exit 1 #non-zero means a false
+  else
+    exit 0 #non-zero means pass
+  end
 end
