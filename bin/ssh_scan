@@ -22,6 +22,12 @@ opt_parser = OptionParser.new do |opts|
     options[:targets] = ip
   end
 
+  opts.on("-f", "--file [FilePath]",
+          "File Path of the file containing IPs") do |file|
+    txt = open(file)
+    options[:targets] = txt.read.chomp.split(',')
+  end
+
   opts.on("-p", "--port [PORT]",
           "Port (Default: 22)") do |port|
     options[:port] = port.to_i
@@ -49,6 +55,7 @@ opt_parser = OptionParser.new do |opts|
     puts "\n  ssh_scan -t 192.168.1.1"
     puts "  ssh_scan -t server.example.com"
     puts "  ssh_scan -t ::1"
+    puts "  ssh_scan -f filePath"
     puts "  ssh_scan -t 192.168.1.1 -p 22222"
     puts "  ssh_scan -t 192.168.1.1 -P custom_policy.yml"
     puts "  ssh_scan -t 192.168.1.1 --unit-test -P custom_policy.yml"
