@@ -5,6 +5,7 @@ $:.unshift File.join(File.dirname(__FILE__), "../lib")
 
 require 'ssh_scan'
 require 'optparse'
+require 'netaddr'
 
 #Default options
 options = {
@@ -18,8 +19,14 @@ opt_parser = OptionParser.new do |opts|
                 "Usage: ssh_scan [options]"
 
   opts.on("-t", "--target [IP/Hostname]", Array,
-          "IP/Hostname (IPv4/IPv6/FQDNs)") do |ip|
-    options[:targets] = ip
+          "IP/Hostname (IPv4/IPv6/FQDNs)") do |ips|
+    ips.each do |ip|
+      if ip.fqdn?
+        options[:targets] += [ip]
+      else
+        options[:targets] += NetAddr::CIDR.create(ip).enumerate
+      end
+    end
   end
 
   opts.on("-f", "--file [FilePath]",
