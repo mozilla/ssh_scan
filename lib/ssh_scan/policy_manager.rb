@@ -103,10 +103,10 @@ module SSHScan
       recommendations = []
 
       # Add these items to be compliant
-      recommendations << "Add these Key Exchange Algos: #{missing_policy_kex.join(", ")}" unless missing_policy_kex.empty?
-      recommendations << "Add these MAC Algos: #{missing_policy_macs.join(", ")}" unless missing_policy_macs.empty?
-      recommendations << "Add these Encryption Ciphers: #{missing_policy_encryption.join(", ")}" unless missing_policy_encryption.empty?
-      recommendations << "Add these Compression Algos: #{missing_policy_compression.join(", ")}" unless missing_policy_compression.empty?
+      recommendations << "Add these Key Exchange Algos: #{missing_policy_kex.join(",")}" unless missing_policy_kex.empty?
+      recommendations << "Add these MAC Algos: #{missing_policy_macs.join(",")}" unless missing_policy_macs.empty?
+      recommendations << "Add these Encryption Ciphers: #{missing_policy_encryption.join(",")}" unless missing_policy_encryption.empty?
+      recommendations << "Add these Compression Algos: #{missing_policy_compression.join(",")}" unless missing_policy_compression.empty?
 
       # Remove these items to be compliant
       recommendations << "Remove these Key Exchange Algos: #{out_of_policy_kex.join(", ")}" unless out_of_policy_kex.empty?
