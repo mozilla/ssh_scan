@@ -28,6 +28,7 @@ To install from source, type:
 git clone https://github.com/mozilla/ssh_scan
 cd ssh_scan
 gem install bindata
+gem install netaddr
 ./bin/ssh_scan
 ```
 
