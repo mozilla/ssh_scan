@@ -62,13 +62,12 @@ Run `ssh_scan -h` to get this
 
 This project is integrated with [travis-ci](http://about.travis-ci.org/) and is regularly tested to work with the following rubies:
 
+* [ruby-head](https://github.com/ruby/ruby)
+* [2.3.0](https://github.com/ruby/ruby/tree/ruby_2_1)
+* [2.2.0](https://github.com/ruby/ruby/tree/ruby_2_1)
 * [2.1.3](https://github.com/ruby/ruby/tree/ruby_2_1)
 * [2.1.0](https://github.com/ruby/ruby/tree/ruby_2_1)
 * [2.0.0](https://github.com/ruby/ruby/tree/ruby_2_0_0)
-* [1.9.3](https://github.com/ruby/ruby/tree/ruby_1_9_3)
-* [ruby-head](https://github.com/ruby/ruby)
-* [jruby-head](http://jruby.org/)
-* [jruby-19mode](http://jruby.org/)
 
 To checkout the current build status for these rubies, click [here](https://travis-ci.org/#!/mozilla/ssh_scan).
 
