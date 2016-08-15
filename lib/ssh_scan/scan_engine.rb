@@ -25,19 +25,23 @@ module SSHScan
         host_key = net_ssh_session.host_keys.first
         net_ssh_session.close
 
+        fingerprint_md5 = nil
+        fingerprint_sha1 = nil
+        fingerprint_sha256 = nil
+
         # only supporting RSA for the moment
-        unless host_key.is_a?(OpenSSL::PKey::RSA)
-          raise "Unknown host key type, need to add this host_key type"
+        if host_key.is_a?(OpenSSL::PKey::RSA)
+          data_string = OpenSSL::ASN1::Sequence([
+            OpenSSL::ASN1::Integer.new(host_key.public_key.n),
+            OpenSSL::ASN1::Integer.new(host_key.public_key.e)
+          ])
+
+          fingerprint_md5 = OpenSSL::Digest::MD5.hexdigest(data_string.to_der).scan(/../).join(':')
+          fingerprint_sha1 = OpenSSL::Digest::SHA1.hexdigest(data_string.to_der).scan(/../).join(':')
+          fingerprint_sha256 = OpenSSL::Digest::SHA256.hexdigest(data_string.to_der).scan(/../).join(':')
+        else
+          warn("Host key support for #{host_key.class} is not provided yet, fingerprints will not be available")
         end
-
-        data_string = OpenSSL::ASN1::Sequence([
-          OpenSSL::ASN1::Integer.new(host_key.public_key.n),
-          OpenSSL::ASN1::Integer.new(host_key.public_key.e)
-        ])
-
-        fingerprint_md5 = OpenSSL::Digest::MD5.hexdigest(data_string.to_der).scan(/../).join(':')
-        fingerprint_sha1 = OpenSSL::Digest::SHA1.hexdigest(data_string.to_der).scan(/../).join(':')
-        fingerprint_sha256 = OpenSSL::Digest::SHA256.hexdigest(data_string.to_der).scan(/../).join(':')
 
         result[index]['fingerprints'] = {
           "md5" => fingerprint_md5,
