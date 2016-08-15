@@ -30,11 +30,6 @@ module SSHScan
           raise "Unknown host key type, need to add this host_key type"
         end
 
-        # only supporting RSA for the moment
-        unless OpenSSL::PKey::RSA
-          raise "Unknown host key type, need to add this host_key type"
-        end
-
         data_string = OpenSSL::ASN1::Sequence([
           OpenSSL::ASN1::Integer.new(host_key.public_key.n),
           OpenSSL::ASN1::Integer.new(host_key.public_key.e)
