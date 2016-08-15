@@ -18,7 +18,7 @@ module SSHScan
         result.push(client.get_kex_result())
 
         # Connect and get results (Net-SSH)
-        net_ssh_session = Net::SSH::Transport::Session.new(target)
+        net_ssh_session = Net::SSH::Transport::Session.new(target, :port => port)
         auth_session = Net::SSH::Authentication::Session.new(net_ssh_session, :auth_methods => ["none"])
         auth_session.authenticate("none", "test", "test")
         result[index]['auth_methods'] = auth_session.allowed_auth_methods
