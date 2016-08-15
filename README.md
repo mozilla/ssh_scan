@@ -25,10 +25,24 @@ ssh_scan
 To install from source, type:
 
 ```bash
-git clone https://github.com/mozilla/ssh_scan
+# clone repo
+git clone https://github.com/mozilla/ssh_scan.git
 cd ssh_scan
-gem install bindata
-gem install netaddr
+
+# install rvm,
+# you might have to provide root to install missing packages
+gpg2 --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+curl -sSL https://get.rvm.io | bash -s stable
+
+# install Ruby 2.1.3 with rvm,
+# again, you might have to install missing devel packages
+rvm install 2.1.3
+rvm use 2.1.3
+
+# resolve dependencies
+gem install bundler
+bundle install
+
 ./bin/ssh_scan
 ```
 
