@@ -34,10 +34,10 @@ cd ssh_scan
 gpg2 --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
 curl -sSL https://get.rvm.io | bash -s stable
 
-# install Ruby 2.1.3 with rvm,
+# install Ruby 2.3.1 with rvm,
 # again, you might have to install missing devel packages
-rvm install 2.1.3
-rvm use 2.1.3
+rvm install 2.3.1
+rvm use 2.3.1
 
 # resolve dependencies
 gem install bundler
