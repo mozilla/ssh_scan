@@ -8,24 +8,24 @@ A SSH configuration and policy scanner
 
 ## Key Benefits
 
-- **Minimal Dependancies** - Uses native Ruby and BinData to do it's work, no heavy dependancies.
+- **Minimal Dependancies** - Uses native Ruby and BinData to do its work, no heavy dependancies.
 - **Not Just a Script** - Implementation is portable for use in another project or for automation of tasks.
-- **Simple** - Just point ssh_scan at an SSH service and get a JSON report of what is supports and it's policy status
+- **Simple** - Just point `ssh_scan` at an SSH service and get a JSON report of what it supports and its policy status.
 - **Configurable** - Make your own custom policies that fit your unique policy requirements.
 
 ## Setup
 
-To install as a gem, type
+To install as a gem, type:
 
 ```bash
 gem install ssh_scan
 ssh_scan
 ```
 
-To install from source, type
+To install from source, type:
 
 ```bash
-git clone https://github.com/mozilla/ssh_scan.git
+git clone https://github.com/mozilla/ssh_scan
 cd ssh_scan
 gem install bindata
 ./bin/ssh_scan
@@ -54,11 +54,9 @@ Run `ssh_scan -h` to get this
       ssh_scan -t 192.168.1.1 -P custom_policy.yml
       ssh_scan -t 192.168.1.1 --unit-test -P custom_policy.yml
 
-See here for [example video](https://asciinema.org/a/7pliiw5zqhj7eqvz7q437u6vx)
-
-See here for [example output](https://github.com/mozilla/ssh_scan/blob/master/examples/192.168.1.1.json)
-
-See here for [example policies](https://github.com/mozilla/ssh_scan/blob/master/policies)
+- See here for [example video](https://asciinema.org/a/7pliiw5zqhj7eqvz7q437u6vx)
+- See here for [example output](https://github.com/mozilla/ssh_scan/blob/master/examples/192.168.1.1.json)
+- See here for [example policies](https://github.com/mozilla/ssh_scan/blob/master/policies)
 
 ## Rubies Supported
 
@@ -76,10 +74,10 @@ To checkout the current build status for these rubies, click [here](https://trav
 
 ## Contributing
 
-If you are interested in contributing to this project, please see [CONTRIBUTING.md](https://github.com/mozilla/ssh_scan/blob/master/CONTRIBUTING.md)
+If you are interested in contributing to this project, please see [CONTRIBUTING.md](https://github.com/mozilla/ssh_scan/blob/master/CONTRIBUTING.md).
 
 ## Credits
 
 **Sources of Inspiration for ssh_scan**
 
-- [**Mozilla OpenSSH Security Guide**](https://wiki.mozilla.org/Security/Guidelines/OpenSSH) - For providing a sane baseline policy recommendation for SSH configuration parameters (eg. Ciphers, Macs, and KexAlgos).
+- [**Mozilla OpenSSH Security Guide**](https://wiki.mozilla.org/Security/Guidelines/OpenSSH) - For providing a sane baseline policy recommendation for SSH configuration parameters (eg. Ciphers, MACs, and KexAlgos).
