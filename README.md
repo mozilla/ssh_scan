@@ -53,9 +53,11 @@ Run `ssh_scan -h` to get this
     ssh_scan v0.0.8 (https://github.com/mozilla/ssh_scan)
 
     Usage: ssh_scan [options]
-        -t, --target [IP/Hostname]       IP/Hostname (IPv4/IPv6/FQDNs)
+        -t, --target [IP/Range/Hostname] IP/Ranges/Hostname to scan
+        -f, --file [FilePath]            File Path of the file containing IP/Range/Hostnames to scan
+        -o, --output [FilePath]          File to write JSON output to
         -p, --port [PORT]                Port (Default: 22)
-        -P, --policy [FILE]              Policy file (Default: Mozilla Modern)
+        -P, --policy [FILE]              Custom policy file (Default: Mozilla Modern)
         -u, --unit-test [FILE]           Throw appropriate exit codes based on compliance status
         -v, --version                    Display just version info
         -h, --help                       Show this message
@@ -65,6 +67,8 @@ Run `ssh_scan -h` to get this
       ssh_scan -t 192.168.1.1
       ssh_scan -t server.example.com
       ssh_scan -t ::1
+      ssh_scan -f hosts.txt
+      ssh_scan -o output.json
       ssh_scan -t 192.168.1.1 -p 22222
       ssh_scan -t 192.168.1.1 -P custom_policy.yml
       ssh_scan -t 192.168.1.1 --unit-test -P custom_policy.yml
