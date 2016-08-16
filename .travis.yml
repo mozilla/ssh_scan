@@ -1,12 +1,13 @@
 language: ruby
-rvm:
-  - 2.3.0
-  - 2.2.0
-  - 2.1.3
-  - 2.1.0
-  - 2.0.0
-  - ruby-head
-services:
-  - docker
-script:
-  - docker build -t mozilla/ssh_scan .
+matrix:
+  include:
+  - rvm: ruby-head
+  - rvm: 2.3.0
+  - rvm: 2.3.0
+    services:
+      - docker
+    script:
+      - docker build -t mozilla/ssh_scan .
+  - rvm: 2.2.0
+  - rvm: 2.1.3
+  - rvm: 2.0.0
