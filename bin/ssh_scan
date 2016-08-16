@@ -18,8 +18,8 @@ opt_parser = OptionParser.new do |opts|
   opts.banner = "ssh_scan v#{SSHScan::VERSION} (https://github.com/mozilla/ssh_scan)\n\n" +
                 "Usage: ssh_scan [options]"
 
-  opts.on("-t", "--target [IP/Hostname]", Array,
-          "IP/Hostname (IPv4/IPv6/FQDNs)") do |ips|
+  opts.on("-t", "--target [IP/Range/Hostname]", Array,
+          "IP/Ranges/Hostname to scan") do |ips|
     ips.each do |ip|
       if ip.fqdn?
         options[:targets] += [ip]
@@ -30,7 +30,7 @@ opt_parser = OptionParser.new do |opts|
   end
 
   opts.on("-f", "--file [FilePath]",
-          "File Path of the file containing IPs") do |file|    
+          "File Path of the file containing IP/Range/Hostnames to scan") do |file|
     unless File.exists?(file)
       puts "\nReason: input file supplied is not a file"
       exit
@@ -40,8 +40,8 @@ opt_parser = OptionParser.new do |opts|
     end
   end
 
-  opts.on("-o", "--outputFile [FilePath]",
-          "Writing JSON documents to disk") do |file|
+  opts.on("-o", "--output [FilePath]",
+          "File to write JSON output to") do |file|
     $stdout.reopen(file, "w")
   end
 
@@ -51,7 +51,7 @@ opt_parser = OptionParser.new do |opts|
   end
 
   opts.on("-P", "--policy [FILE]",
-          "Policy file (Default: Mozilla Modern)") do |policy|
+          "Custom policy file (Default: Mozilla Modern)") do |policy|
     options[:policy] = policy
   end
 
@@ -72,8 +72,8 @@ opt_parser = OptionParser.new do |opts|
     puts "\n  ssh_scan -t 192.168.1.1"
     puts "  ssh_scan -t server.example.com"
     puts "  ssh_scan -t ::1"
-    puts "  ssh_scan -f filePath"
-    puts "  ssh_scan -o filePath"
+    puts "  ssh_scan -f hosts.txt"
+    puts "  ssh_scan -o output.json"
     puts "  ssh_scan -t 192.168.1.1 -p 22222"
     puts "  ssh_scan -t 192.168.1.1 -P custom_policy.yml"
     puts "  ssh_scan -t 192.168.1.1 --unit-test -P custom_policy.yml"
