@@ -1,17 +1,18 @@
 require 'rspec'
+require 'timeout'
 require 'ssh_scan/client'
 require 'ssh_scan/constants'
 
 describe SSHScan::Client do
   context "when connecting as a client" do
-    it "should follow a specific sequence on the TCPSocket for connect() operation" do
+    it "should follow a specific sequence on the Socket for connect() operation" do
       server_banner = SSHScan::Banner.read("SSH-2.0-server")
 
       # Override TCPSocket behavior in the name of unit-testing
       io = double("io", puts: nil)
       allow(io).to receive(:puts).and_return(nil)
       allow(io).to receive(:gets).and_return(server_banner.to_s)
-      allow(TCPSocket).to receive(:new) { io }
+      allow(Socket).to receive(:tcp) { io }
 
       # Do the client connect action
       client = SSHScan::Client.new("192.168.1.1", 22)
@@ -29,7 +30,7 @@ describe SSHScan::Client do
       io = double("io", puts: nil)
       allow(io).to receive(:puts).and_return(nil)
       allow(io).to receive(:gets).and_return(server_banner.to_s)
-      allow(TCPSocket).to receive(:new) { io }
+      allow(Socket).to receive(:tcp) { io }
 
       # Do the client connect action
       client = SSHScan::Client.new("192.168.1.1", 22)
@@ -57,5 +58,21 @@ describe SSHScan::Client do
       expect(result).to be_kind_of(::Hash)
     end
 
+    it "should time out after 3 seconds when connecting to a bad IP" do
+      # Choose a bad IP (say broadcast address for 192.168.0.0/16)
+      bad_ip = "192.168.255.255"
+
+      time_start = Time.now
+      time_passed = 0
+      begin
+        client = SSHScan::Client.new(bad_ip, 22)
+        Timeout.timeout(3) {client.connect}
+      rescue Timeout::Error
+      ensure
+        time_passed = Time.now-time_start
+      end
+
+      expect(time_passed > 3).to eql(true)
+    end
   end
 end
