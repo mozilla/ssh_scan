@@ -30,9 +30,14 @@ opt_parser = OptionParser.new do |opts|
   end
 
   opts.on("-f", "--file [FilePath]",
-          "File Path of the file containing IPs") do |file|
-    txt = open(file)
-    options[:targets] = txt.read.chomp.split(',')
+          "File Path of the file containing IPs") do |file|    
+    unless File.exists?(file)
+      puts "\nReason: input file supplied is not a file"
+      exit
+    end
+    File.open(file).each do |line|
+      options[:targets] += line.chomp.split(',')
+    end
   end
 
   opts.on("-o", "--outputFile [FilePath]",
