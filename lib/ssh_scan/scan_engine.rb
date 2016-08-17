@@ -40,15 +40,18 @@ module SSHScan
             fingerprint_md5 = OpenSSL::Digest::MD5.hexdigest(data_string.to_der).scan(/../).join(':')
             fingerprint_sha1 = OpenSSL::Digest::SHA1.hexdigest(data_string.to_der).scan(/../).join(':')
             fingerprint_sha256 = OpenSSL::Digest::SHA256.hexdigest(data_string.to_der).scan(/../).join(':')
+
+            result[index]['fingerprints'] = {
+             "md5" => fingerprint_md5,
+             "sha1" => fingerprint_sha1,
+             "sha256" => fingerprint_sha256,
+            }
           else
-            warn("WARNING: Host key support for #{host_key.class} is not provided yet, fingerprints will not be available")
+            warn("WARNING: Host key support for #{host_key.class} is not provided yet (fingerprints will not be available)")
+            result[index]['fingerprints'] = {}
           end
 
-          result[index]['fingerprints'] = {
-           "md5" => fingerprint_md5,
-           "sha1" => fingerprint_sha1,
-           "sha256" => fingerprint_sha256,
-          }
+
         rescue Net::SSH::Exception => e
           if e.to_s.match(/could not settle on encryption_client algorithm/)
             warn("WARNING: net-ssh could not find a mutually acceptable encryption algorithm (fingerprints and auth_methods will not be available)")
