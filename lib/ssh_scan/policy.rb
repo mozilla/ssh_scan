@@ -2,7 +2,7 @@ require 'yaml'
 
 module SSHScan
   class Policy
-    attr_reader :name, :kex, :macs, :encryption, :compression
+    attr_reader :name, :kex, :macs, :encryption, :compression, :references
 
     def initialize(opts = {})
       @name = opts['name'] || []
@@ -10,6 +10,7 @@ module SSHScan
       @macs = opts['macs'] || []
       @encryption = opts['encryption'] || []
       @compression = opts['compression'] || []
+      @references = opts['references'] || []
     end
 
     def self.from_file(file)

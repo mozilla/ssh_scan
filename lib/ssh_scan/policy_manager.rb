@@ -120,7 +120,8 @@ module SSHScan
       {
         :policy => @policy.name,
         :compliant => compliant?,
-        :recommendations => recommendations
+        :recommendations => recommendations,
+        :references => @policy.references,
       }
     end
   end
