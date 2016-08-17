@@ -24,7 +24,11 @@ opt_parser = OptionParser.new do |opts|
       if ip.fqdn?
         options[:targets] += [ip]
       else
-        options[:targets] += NetAddr::CIDR.create(ip).enumerate
+        if ip.include? "-"
+          options[:targets] += ip.resolve_ip
+        else
+          options[:targets] += NetAddr::CIDR.create(ip).enumerate
+        end
       end
     end
   end
