@@ -1,3 +1,3 @@
 module SSHScan
-  VERSION = '0.0.10.beta.1'
+  VERSION = '0.0.9'
 end
