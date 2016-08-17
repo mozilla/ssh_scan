@@ -57,6 +57,10 @@ module SSHScan
             warn("WARNING: net-ssh could not find a mutually acceptable encryption algorithm (fingerprints and auth_methods will not be available)")
             result[index]['auth_methods'] = []
             result[index]['fingerprints'] = {}
+          elsif e.to_s.match(/could not settle on host_key algorithm/)
+            warn("WARNING: net-ssh could not find a mutually acceptable host_key algorithm (fingerprints and auth_methods will not be available)")
+            result[index]['auth_methods'] = []
+            result[index]['fingerprints'] = {}
           else
             raise e
           end
