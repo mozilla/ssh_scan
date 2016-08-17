@@ -9,7 +9,8 @@ describe SSHScan::Policy do
                   "encryption:\n- aes256-ctr\n- aes192-ctr\n" +
                   "- aes128-ctr\nmacs:\n- hmac-sha2-512\n" +
                   "- hmac-sha2-256\ncompression:\n- none\n" +
-                  "- zlib@openssh.com"
+                  "- zlib@openssh.com\n" +
+                  "references:\n- https://wiki.mozilla.org/Security/Guidelines/OpenSSH\n"
 
     it "should load all the attributes properly" do
       policy = SSHScan::Policy.from_string(yaml_string)
@@ -19,6 +20,7 @@ describe SSHScan::Policy do
       expect(policy.kex).to eql(["diffie-hellman-group-exchange-sha256"])
       expect(policy.macs).to eql(["hmac-sha2-512", "hmac-sha2-256"])
       expect(policy.compression).to eql(["none", "zlib@openssh.com"])
+      expect(policy.references).to eql(["https://wiki.mozilla.org/Security/Guidelines/OpenSSH"])
     end
   end
 
@@ -28,7 +30,8 @@ describe SSHScan::Policy do
                   "encryption:\n- aes256-ctr\n- aes192-ctr\n" +
                   "- aes128-ctr\nmacs:\n- hmac-sha2-512\n" +
                   "- hmac-sha2-256\ncompression:\n- none\n" +
-                  "- zlib@openssh.com"
+                  "- zlib@openssh.com\n" +
+                  "references:\n- https://wiki.mozilla.org/Security/Guidelines/OpenSSH\n"
 
     it "should load all the attributes properly" do
       file = Tempfile.new('foo')
@@ -44,6 +47,7 @@ describe SSHScan::Policy do
       expect(policy.kex).to eql(["diffie-hellman-group-exchange-sha256"])
       expect(policy.macs).to eql(["hmac-sha2-512", "hmac-sha2-256"])
       expect(policy.compression).to eql(["none", "zlib@openssh.com"])
+      expect(policy.references).to eql(["https://wiki.mozilla.org/Security/Guidelines/OpenSSH"])
     end
   end
 

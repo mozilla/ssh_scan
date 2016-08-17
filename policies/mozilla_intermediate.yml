@@ -12,3 +12,5 @@ macs:
 compression:
 - none
 - zlib@openssh.com
+references:
+- https://wiki.mozilla.org/Security/Guidelines/OpenSSH
