@@ -10,9 +10,6 @@ matrix:
   - rvm: 2.3.0
     env:
       - LABEL=docker_build
-    branches:
-      only:
-      - master
     services:
       - docker
     script:
