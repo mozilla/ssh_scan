@@ -69,11 +69,13 @@ module SSHScan
       targets = opts[:targets]
 
       results = []
+      threads = []
       targets.each_with_index do |target, index|
-        # TODO: Add some threading logic around this...
-        results << scan_target(target, opts)
+        threads << Thread.new do
+          results << scan_target(target, opts)
+        end
       end
-
+      threads.map(&:join)
       return results
     end
   end
