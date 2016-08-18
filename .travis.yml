@@ -8,6 +8,13 @@ matrix:
       - docker
     script:
       - docker build -t mozilla/ssh_scan .
+      - >
+          if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then \
+            docker login -u="$DOCKER_USER" -p="$DOCKER_PASS" ;\
+            docker push mozilla/ssh_scan:latest ;\
+          else \
+            exit 0 ;\
+          fi
   - rvm: 2.3.0
     script:
       - gem install ssh_scan
