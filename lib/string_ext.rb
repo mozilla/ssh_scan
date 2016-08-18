@@ -1,4 +1,5 @@
 require 'ipaddr'
+require 'netaddr'
 
 # Extend string to include some helpful stuff
 class String
@@ -20,6 +21,16 @@ class String
 
   def resolve_fqdn
     @fqdn ||= TCPSocket.gethostbyname(self)[3]
+  end
+
+  def resolve_ip
+    ip_ranges = self.split('-')
+    lower = NetAddr::CIDR.create(ip_ranges[0])
+    temp = ip_ranges[0].split('.')
+    temp[3] = ip_ranges[1]
+    upper = NetAddr::CIDR.create(temp.join("."))
+    ip_ranges = NetAddr.range(lower, upper,:Inclusive => true)
+    return ip_ranges
   end
 
   def fqdn?
