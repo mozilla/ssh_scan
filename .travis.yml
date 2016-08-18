@@ -8,6 +8,11 @@ matrix:
       - docker
     script:
       - docker build -t mozilla/ssh_scan .
+      - >
+          if [ "$TRAVIS_BRANCH" == "master" ]; then
+            docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USER" -p="$DOCKER_PASS"
+            docker push mozilla/ssh_scan:latest
+          fi
   - rvm: 2.3.0
     script:
       - gem install ssh_scan
