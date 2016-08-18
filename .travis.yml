@@ -9,9 +9,11 @@ matrix:
     script:
       - docker build -t mozilla/ssh_scan .
       - >
-          if [ "$TRAVIS_BRANCH" == "master" ]; then
-            docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USER" -p="$DOCKER_PASS"
-            docker push mozilla/ssh_scan:latest
+          if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then \
+            docker login -u="$DOCKER_USER" -p="$DOCKER_PASS" ;\
+            docker push mozilla/ssh_scan:latest ;\
+          else \
+            exit 0 ;\
           fi
   - rvm: 2.3.0
     script:
@@ -23,8 +25,3 @@ matrix:
   - rvm: 2.2.0
   - rvm: 2.1.3
   - rvm: 2.0.0
-env:
-  global:
-  - secure: uIKwWcvBTJc6tw3aa99D65kuHIfyLJpPyB2fTFAvVVO57rKxb/n0i/odi8Uxd+tzwOy+yT33JsG1FFo13BQXe4lz2WUTnYkccA8kThw10eGadcC4+yTE0WKCN3k9pJ9RJeIShbG3BOgbqWohyZ9x5NlOMtM0YPjCtmn+lkf866qf0cFu0aayZNgf1pZ29tk7BAAKQ2HwDnjG3+nIPw2EkSdaDGMQJ6LDkfrQhjLxTZHOAC6Lw903Uzmpp9ya8HM5TW4dsf3Y/CzExYlpys5Q4JxMLys+jsuynn5dguTuuK8mSo2+O8we3mPRUK2luZmZouqXycGZDkK1YcLggd8MC5U2hhUaeA3uEoXemKbOP38KD/rER/F+Tpd0AFcU6Tcq3do8xrgZeK0qkmhCHKQ2EDfyb+WNiTos+zYXmAFz/C6cV4PujGf+wrHaS0Mj46l34kqrGFlPWAZScBNILpFkIIBsofuUJLOTngbAsPhYHNNL+FKqwaCUvm1wzX+hj5U2L14XJkU7sRKixP+hEAyZ05d89G9BxKTLAVfOeLy4/mkKVfTRwrkLhHZdT0nmcC/UT+WMRdh6rZGbldUjB6aAJNyiCinnLq50PiGBB6Di7QgOb5nQbo/ZmYUofxFEcj27U34/A+lpYDTbSzEnAGSyu8eU2cOeXiQvqRRGVAPn8vI=
-  - secure: wUAqxMirm2xCcCIoRClfab9cEIXLyF6QkTzEjBVx1826mSjBDtWY6LMb+fZ8ht++uhD8D9es1hNiomsi4keN7RtqadXvOU/Hdj0qD3l0APqHASV6/AOU8CbA6E8U87CMLebhrYi9h2pQzsQlY8W4UnTWJ8/iYRyBiNb8c6VuOuAS3tWJbPnSxkNDnepGkHhCjO3/ADJrP9ibZTaoETCIL1iRXRvtnyYQi9txSUNLa6oyd1xSVy6Ur4v4a+LE9sRv6fsgEffBc1xzb0JPKG2c0I0G0HLQj23Tj243HlANNoLzD2V4z4nNZ4Rx/cX9djzavP0QfGrBoljeO6sG0lHozoGwMcbVRnglwMV/tG1X++uNa3VLK7eF7V/zaJAwjVOwgzWIyt9r5bnWYN6hwDTIksn3/fVMr2R5AixElAkEBwnBrBIHvXysVZuf7ePIGpSHbIyX+VuGNTKHNIJ1CXv+LrujHga8BQB6HC/ecMVCeHcUTRRcn6cxHUa57Sv2YQwGIHByTUGofrCZxSC6AVdIJUwZGlF1B/tRtmS0A+R0ICj+L1HCU7ox9wc+JdOQheKGnw/ksbGcyJk3Np3MXc9jVfs1zGq2nxMaeJMxt3QmO6tIvcM7r6SMA1F82YOzHb0UUyCof9+krvhNSsILSMEKQ+TneKnIzJwYSkBOlukKiaI=
-  - secure: JgMNt4vySZcviK/9xZAPUDdh3bOMaCNoOvX4XWN+MRbM7Ce9OZORK6TipEXP+YoaT30Rki7FQlke4mbOcB9IMAQf52ArBjjfTGPgDyfXk5S242lgunvlcVWkB0v0/j4ag6OvLbgq25I1JlNtY5HFOq+n8j/KwEtn+SHMShhdGtNO1woDvSkGCYCPLpYhCd3V+On+0EsrEcO5cCRbVvL0t+XfOn8SghHX1eqNfFf5IljJKt7ifR3XSlSj2eJ9rmP2Z1mrJ1UY1jt2L6eNj9XO09CamqOciJRc0vK+5CeACsObLnUoer2UTGgKxYA8ULzQaaeHCrnW0poNSPK6K9ql0QJ+6VaEy9PdafJaysu4vfJfRWRrlCJhQq17HuyJYtGBLIevOpXTJTOCWWEDgCzZ/xx02tVIDamcq+ZkYA0qdy78tKpczwD943Bm3EmUefzVOvoLTSpcilWDT21q7XqMcc4BNO3/v8SAyeojsmoCxldXzj9uL53QvuYLXWJ2JTDgArnmcXOq0LonKs6w3r8cccGAesqtOihVCtPX5Ksy7lyoFbzxE7d8LfA3ONcQVMKt6OdYNh5HTPK3J6DaudTRmcH1KUouXnD4viQUdASPu2NS3xGmaUUw1EAsqNHuAd3wtymdwMQZLb1WimsqDxVK9EkNBOoE+6qhkOvHTFR4MFQ=
