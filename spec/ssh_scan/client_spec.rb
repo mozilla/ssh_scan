@@ -1,6 +1,7 @@
 require 'rspec'
 require 'ssh_scan/client'
 require 'ssh_scan/constants'
+require 'timeout'
 
 describe SSHScan::Client do
   context "when connecting as a client" do
@@ -57,5 +58,21 @@ describe SSHScan::Client do
       expect(result).to be_kind_of(::Hash)
     end
 
+    it "should time out after 3 seconds when connecting to a bad IP" do
+      bad_ip = "192.168.255.255"
+      time_start = Time.now
+      time_passed = 0
+
+      begin
+        client = SSHScan::Client.new(bad_ip, 22)
+        Timeout.timeout(3) {client.connect}
+      rescue Timeout::Error
+      ensure
+        time_passed = Time.now-time_start
+      end
+
+      expect(time_passed > 3).to eql(true)
+    end
+    
   end
 end

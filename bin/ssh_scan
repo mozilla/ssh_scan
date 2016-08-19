@@ -12,7 +12,8 @@ options = {
   :targets => [],
   :port => 22,
   :policy => File.expand_path("../../policies/mozilla_modern.yml", __FILE__),
-  :unit_test => false
+  :unit_test => false,
+  :timeout => 3
 }
 
 target_parser = SSHScan::TargetParser.new()
@@ -56,6 +57,11 @@ opt_parser = OptionParser.new do |opts|
     options[:policy] = policy
   end
 
+  opts.on("-T", "--timeout [seconds]",
+          "Timeout per connect after which ssh_scan gives up on the host") do |timeout|
+    options[:timeout] = timeout.to_i
+  end
+
   opts.on("-u", "--unit-test [FILE]",
           "Throw appropriate exit codes based on compliance status") do
     options[:unit_test] = true
@@ -73,6 +79,7 @@ opt_parser = OptionParser.new do |opts|
     puts "\n  ssh_scan -t 192.168.1.1"
     puts "  ssh_scan -t server.example.com"
     puts "  ssh_scan -t ::1"
+    puts "  ssh_scan -t ::1 -T 5"
     puts "  ssh_scan -f hosts.txt"
     puts "  ssh_scan -o output.json"
     puts "  ssh_scan -t 192.168.1.1 -p 22222"
