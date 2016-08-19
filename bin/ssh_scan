@@ -14,6 +14,9 @@ options = {
   :policy => File.expand_path("../../policies/mozilla_modern.yml", __FILE__),
   :unit_test => false
 }
+
+target_parser = SSHScan::TargetParser.new()
+
 opt_parser = OptionParser.new do |opts|
   opts.banner = "ssh_scan v#{SSHScan::VERSION} (https://github.com/mozilla/ssh_scan)\n\n" +
                 "Usage: ssh_scan [options]"
@@ -21,11 +24,7 @@ opt_parser = OptionParser.new do |opts|
   opts.on("-t", "--target [IP/Range/Hostname]", Array,
           "IP/Ranges/Hostname to scan") do |ips|
     ips.each do |ip|
-      if ip.fqdn?
-        options[:targets] += [ip]
-      else
-        options[:targets] += NetAddr::CIDR.create(ip).enumerate
-      end
+      options[:targets] += target_parser.enumerateIPRange(ip)
     end
   end
 
@@ -36,7 +35,9 @@ opt_parser = OptionParser.new do |opts|
       exit
     end
     File.open(file).each do |line|
-      options[:targets] += line.chomp.split(',')
+      line.chomp.split(',').each do |ip|
+        options[:targets] += target_parser.enumerateIPRange(ip)
+      end
     end
   end
 
