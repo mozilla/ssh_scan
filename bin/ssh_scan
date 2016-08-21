@@ -6,11 +6,13 @@ $:.unshift File.join(File.dirname(__FILE__), "../lib")
 require 'ssh_scan'
 require 'optparse'
 require 'netaddr'
+require 'rubygems'
+require 'json'
 
 #Default options
 options = {
   :targets => [],
-  :port => 22,
+  :ports => [],
   :policy => File.expand_path("../../policies/mozilla_modern.yml", __FILE__),
   :unit_test => false
 }
@@ -35,9 +37,23 @@ opt_parser = OptionParser.new do |opts|
       exit
     end
     File.open(file).each do |line|
-      line.chomp.split(',').each do |ip|
+      line.chomp.split(',').each do |socket|
+        ip, port = socket.chomp.split(':')
+        port = port.nil? ? 22 : port
         options[:targets] += target_parser.enumerateIPRange(ip)
+        options[:ports].push(port.to_i)
       end
+    end
+  end
+
+  opts.on("-O", "--from_json [FilePath]",
+          "File to read JSON output from") do |file|
+    file = open(file)
+    json = file.read
+    parsed_json = JSON.parse(json)
+    parsed_json.each do |host|
+      options[:targets] += target_parser.enumerateIPRange(host['ip'])
+      options[:ports].push(host['port'].to_i)
     end
   end
 
@@ -46,9 +62,9 @@ opt_parser = OptionParser.new do |opts|
     $stdout.reopen(file, "w")
   end
 
-  opts.on("-p", "--port [PORT]",
+  opts.on("-p", "--port [PORT]", Array,
           "Port (Default: 22)") do |port|
-    options[:port] = port.to_i
+    options[:ports].push(port[0].to_i)
   end
 
   opts.on("-P", "--policy [FILE]",
@@ -75,6 +91,7 @@ opt_parser = OptionParser.new do |opts|
     puts "  ssh_scan -t ::1"
     puts "  ssh_scan -f hosts.txt"
     puts "  ssh_scan -o output.json"
+    puts "  ssh_scan -O output.json -o rescan_output.json"
     puts "  ssh_scan -t 192.168.1.1 -p 22222"
     puts "  ssh_scan -t 192.168.1.1 -P custom_policy.yml"
     puts "  ssh_scan -t 192.168.1.1 --unit-test -P custom_policy.yml"
@@ -99,10 +116,18 @@ options[:targets].each do |target|
   end
 end
 
-unless (0..65535).include?(options[:port])
-  puts opt_parser.help
-  puts "\nReason: port supplied is not within acceptable range"
-  exit 1
+if options[:ports].empty?
+  options[:targets].each do
+    options[:ports].push(22)
+  end
+end
+
+options[:ports].each do |port|
+  unless (0..65535).include?(port)
+    puts opt_parser.help
+    puts "\nReason: port supplied is not within acceptable range"
+    exit 1
+  end
 end
 
 unless File.exists?(options[:policy])
