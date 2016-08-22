@@ -26,7 +26,7 @@ describe SSHScan::TargetParser do
   context "IPv4 with subnet mask specified" do
     it "should return an array containing all the IPv4 in that range" do
       target_parser = SSHScan::TargetParser.new()
-      expect(target_parser.enumerateIPRange("192.168.1.0/30")).to eq(["192.168.1.0", "192.168.1.1", "192.168.1.2", "192.168.1.3"])
+      expect(target_parser.enumerateIPRange("192.168.1.0/30")).to eq(["192.168.1.1", "192.168.1.2"])
     end
   end
 end
