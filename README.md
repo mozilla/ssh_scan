@@ -15,14 +15,21 @@ A SSH configuration and policy scanner
 
 ## Setup
 
-To install as a gem, type:
+To install and run as a gem, type:
 
 ```bash
 gem install ssh_scan
 ssh_scan
 ```
 
-To install from source, type:
+To run from a docker container, type:
+
+```bash
+docker pull mozilla/ssh_scan
+docker run -it mozilla/ssh_scan /app/bin/ssh_scan -t github.com
+```
+
+To install and run from source, type:
 
 ```bash
 # clone repo
