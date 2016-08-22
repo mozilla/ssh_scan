@@ -5,8 +5,7 @@ require 'net/ssh'
 module SSHScan
   class ScanEngine
 
-    def scan_target(target, opts)
-      port = opts[:port]
+    def scan_target(target, port, opts)
       policy = opts[:policy_file]
 
       client = SSHScan::Client.new(target, port)
@@ -67,12 +66,13 @@ module SSHScan
 
     def scan(opts)
       targets = opts[:targets]
+      ports = opts[:ports]
 
       results = []
       threads = []
       targets.each_with_index do |target, index|
         threads << Thread.new do
-          results << scan_target(target, opts)
+          results << scan_target(target, ports[index], opts)
         end
       end
       threads.map(&:join)
