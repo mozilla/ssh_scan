@@ -72,15 +72,23 @@ module SSHScan
 
     def scan(opts)
       targets = opts[:targets]
-
+      work_q = Queue.new
       results = []
-      threads = []
-      targets.each_with_index do |target, index|
-        threads << Thread.new do
-          results << scan_target(target, opts)
-        end
+      targets.each do |target|
+        work_q.push target
       end
-      threads.map(&:join)
+      min_worker = [targets.length, 10].min
+      workers = (0...min_worker).map do
+        Thread.new do
+          begin
+            while target = work_q.pop(true)
+              results << scan_target(target, opts)
+            end
+            rescue ThreadError
+          end
+        end
+      end; "ok"
+      workers.map(&:join); "ok"
       return results
     end
   end
