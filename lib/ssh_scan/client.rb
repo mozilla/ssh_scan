@@ -28,6 +28,9 @@ module SSHScan
       rescue Errno::ETIMEDOUT => e
         @error = SSHScan::Error::ConnectTimeout.new(e.message)
         @sock = nil
+      rescue Errno::ECONNREFUSED => e
+        @error = SSHScan::Error::ConnectionRefused.new(e.message)
+        @sock = nil
       else
         @raw_server_banner = @sock.gets.chomp
         @server_banner = SSHScan::Banner.read(@raw_server_banner)
