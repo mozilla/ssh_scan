@@ -13,7 +13,8 @@ options = {
   :port => 22,
   :policy => File.expand_path("../../policies/mozilla_modern.yml", __FILE__),
   :unit_test => false,
-  :timeout => 3
+  :timeout => 2,
+  :threads => 5,
 }
 
 target_parser = SSHScan::TargetParser.new()
@@ -60,6 +61,11 @@ opt_parser = OptionParser.new do |opts|
   opts.on("-P", "--policy [FILE]",
           "Custom policy file (Default: Mozilla Modern)") do |policy|
     options[:policy] = policy
+  end
+
+  opts.on("--threads [NUMBER]",
+          "Number of worker threads (Default: 5)") do |threads|
+    options[:threads] = threads.to_i
   end
 
   opts.on("-u", "--unit-test [FILE]",
