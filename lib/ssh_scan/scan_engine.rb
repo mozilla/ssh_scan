@@ -25,7 +25,17 @@ module SSHScan
         host_key = net_ssh_session.host_keys.first
         net_ssh_session.close
       rescue Net::SSH::ConnectionTimeout => e
-          result[:error] = SSHScan::Error::ConnectTimeout.new(e.message)
+        warn("WARNING: net-ssh timed out attempting to connect to service (fingerprints and auth_methods will not be available)")
+        result['auth_methods'] = []
+        result['fingerprints'] = {}
+        result[:error] = e
+        result[:error] = SSHScan::Error::ConnectTimeout.new(e.message)
+      rescue Net::SSH::Disconnect => e
+        warn("WARNING: net-ssh disconnected unexpectedly (fingerprints and auth_methods will not be available)")
+        result['auth_methods'] = []
+        result['fingerprints'] = {}
+        result[:error] = e
+        result[:error] = SSHScan::Error::Disconnected.new(e.message)
       rescue Net::SSH::Exception => e
         if e.to_s.match(/could not settle on encryption_client algorithm/)
           warn("WARNING: net-ssh could not find a mutually acceptable encryption algorithm (fingerprints and auth_methods will not be available)")
@@ -72,15 +82,25 @@ module SSHScan
 
     def scan(opts)
       targets = opts[:targets]
+      threads = opts[:threads] || 5
 
       results = []
-      threads = []
-      targets.each_with_index do |target, index|
-        threads << Thread.new do
-          results << scan_target(target, opts)
+
+      work_queue = Queue.new
+      targets.each {|x| work_queue.push x }
+      workers = (0...threads).map do |worker_num|
+        Thread.new do
+          begin
+            while target = work_queue.pop(true)
+              results << scan_target(target, opts)
+            end
+          rescue ThreadError => e
+            raise e unless e.to_s.match(/queue empty/)
+          end
         end
       end
-      threads.map(&:join)
+      workers.map(&:join)
+
       return results
     end
   end
