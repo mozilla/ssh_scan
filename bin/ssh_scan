@@ -6,6 +6,7 @@ $:.unshift File.join(File.dirname(__FILE__), "../lib")
 require 'ssh_scan'
 require 'optparse'
 require 'netaddr'
+require 'json'
 
 #Default options
 options = {
@@ -46,6 +47,11 @@ opt_parser = OptionParser.new do |opts|
   opts.on("-T", "--timeout [seconds]",
           "Timeout per connect after which ssh_scan gives up on the host") do |timeout|
     options[:timeout] = timeout.to_i
+  end
+
+  opts.on("--from_json [filename]",
+          "Take input IPs from hosts in given file") do |filename|
+    options[:input_file] = filename
   end
 
   opts.on("-o", "--output [FilePath]",
@@ -91,12 +97,38 @@ opt_parser = OptionParser.new do |opts|
     puts "  ssh_scan -t 192.168.1.1 -p 22222"
     puts "  ssh_scan -t 192.168.1.1 -P custom_policy.yml"
     puts "  ssh_scan -t 192.168.1.1 --unit-test -P custom_policy.yml"
+    puts "  ssh_scan --from_json output.json -o rescan_output.json"
     puts ""
     exit
   end
 end
 
 opt_parser.parse!
+
+if options.include?(:input_file)
+  begin
+    file = File.read(options[:input_file])
+    input_hash = JSON.parse(file)
+  rescue
+    warn("File could not be read: #{options[:input_file]}")
+  else
+    port_in_file = nil
+    input_hash.each do |target_output|
+      if target_output.include?("ip")
+        options[:targets] << target_output["ip"]
+      end
+      if port_in_file.nil? and target_output.include?("port")
+        port_in_file = target_output["port"].to_i
+      elsif target_output.include?("port") and port_in_file != target_output["port"].to_i
+        warn("Multiple ports not yet supported, invalid input file.")
+        exit
+      end
+    end
+    if !port_in_file.nil?
+      options[:port] = port_in_file
+    end
+  end
+end
 
 if options[:targets].nil?
   puts opt_parser.help
