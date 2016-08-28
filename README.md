@@ -64,6 +64,7 @@ Run `ssh_scan -h` to get this
         -f, --file [FilePath]            File Path of the file containing IP/Range/Hostnames to scan
         -T, --timeout [seconds]          Timeout per connect after which ssh_scan gives up on the host
         -o, --output [FilePath]          File to write JSON output to
+        -O, --from_json [FilePath]       File to read JSON output from
         -p, --port [PORT]                Port (Default: 22)
         -P, --policy [FILE]              Custom policy file (Default: Mozilla Modern)
             --threads [NUMBER]           Number of worker threads (Default: 5)
@@ -79,6 +80,7 @@ Run `ssh_scan -h` to get this
       ssh_scan -t ::1 -T 5
       ssh_scan -f hosts.txt
       ssh_scan -o output.json
+      ssh_scan -O output.json -o rescan_output.json
       ssh_scan -t 192.168.1.1 -p 22222
       ssh_scan -t 192.168.1.1 -P custom_policy.yml
       ssh_scan -t 192.168.1.1 --unit-test -P custom_policy.yml

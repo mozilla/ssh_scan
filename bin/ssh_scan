@@ -3,14 +3,14 @@
 # Path setting slight of hand
 $:.unshift File.join(File.dirname(__FILE__), "../lib")
 
-require 'ssh_scan'
-require 'optparse'
+require 'json'
 require 'netaddr'
+require 'optparse'
+require 'ssh_scan'
 
 #Default options
 options = {
-  :targets => [],
-  :port => 22,
+  :sockets => [],
   :policy => File.expand_path("../../policies/mozilla_modern.yml", __FILE__),
   :unit_test => false,
   :timeout => 2,
@@ -26,7 +26,7 @@ opt_parser = OptionParser.new do |opts|
   opts.on("-t", "--target [IP/Range/Hostname]", Array,
           "IP/Ranges/Hostname to scan") do |ips|
     ips.each do |ip|
-      options[:targets] += target_parser.enumerateIPRange(ip)
+      options[:sockets] += target_parser.enumerateIPRange(ip)
     end
   end
 
@@ -37,8 +37,10 @@ opt_parser = OptionParser.new do |opts|
       exit
     end
     File.open(file).each do |line|
-      line.chomp.split(',').each do |ip|
-        options[:targets] += target_parser.enumerateIPRange(ip)
+      line.chomp.split(',').each do |socket|
+        ip, port = socket.chomp.split(':')
+        port = port.nil? ? 22 : port
+        options[:sockets] += target_parser.enumerateIPRange(ip, port)
       end
     end
   end
@@ -48,6 +50,20 @@ opt_parser = OptionParser.new do |opts|
     options[:timeout] = timeout.to_i
   end
 
+  opts.on("-O", "--from_json [FilePath]",
+          "File to read JSON output from") do |file|
+    unless File.exists?(file)
+      puts "\nReason: Invalid file"
+      exit
+    end
+    file = open(file)
+    json = file.read
+    parsed_json = JSON.parse(json)
+    parsed_json.each do |host|
+      options[:sockets] += target_parser.enumerateIPRange(host['ip'], host['port'])
+    end
+  end
+
   opts.on("-o", "--output [FilePath]",
           "File to write JSON output to") do |file|
     $stdout.reopen(file, "w")
@@ -55,7 +71,9 @@ opt_parser = OptionParser.new do |opts|
 
   opts.on("-p", "--port [PORT]",
           "Port (Default: 22)") do |port|
-    options[:port] = port.to_i
+    socket = options[:sockets].shift
+    ip = socket.chomp.split(':').shift
+    options[:sockets] += target_parser.enumerateIPRange(ip, port)
   end
 
   opts.on("-P", "--policy [FILE]",
@@ -88,6 +106,7 @@ opt_parser = OptionParser.new do |opts|
     puts "  ssh_scan -t ::1 -T 5"
     puts "  ssh_scan -f hosts.txt"
     puts "  ssh_scan -o output.json"
+    puts "  ssh_scan -O output.json -o rescan_output.json"
     puts "  ssh_scan -t 192.168.1.1 -p 22222"
     puts "  ssh_scan -t 192.168.1.1 -P custom_policy.yml"
     puts "  ssh_scan -t 192.168.1.1 --unit-test -P custom_policy.yml"
@@ -98,24 +117,28 @@ end
 
 opt_parser.parse!
 
-if options[:targets].nil?
+if options[:sockets].nil?
   puts opt_parser.help
   puts "\nReason: no target specified"
   exit 1
 end
 
-options[:targets].each do |target|
-  unless target.ip_addr? || target.fqdn?
+options[:sockets].each do |socket|
+  ip, port = socket.chomp.split(':')
+  unless ip.ip_addr? || ip.fqdn?
     puts opt_parser.help
-    puts "\nReason: #{options[:targets]} is not a valid target"
+    puts "\nReason: #{socket} is not a valid target"
     exit 1
   end
 end
 
-unless (0..65535).include?(options[:port])
-  puts opt_parser.help
-  puts "\nReason: port supplied is not within acceptable range"
-  exit 1
+options[:sockets].each do |socket|
+  ip, port = socket.chomp.split(':')
+  unless (0..65535).include?(port.to_i)
+    puts opt_parser.help
+    puts "\nReason: port supplied is not within acceptable range"
+    exit 1
+  end
 end
 
 unless File.exists?(options[:policy])

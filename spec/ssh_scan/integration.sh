@@ -44,3 +44,14 @@ else
   echo "Integration Test #4: Fail"
   exit 1
 fi
+
+# Integration Test #5 (File Input + File Output)
+./bin/ssh_scan -t github.com -p 22 -o output.json
+./bin/ssh_scan -O output.json -o rescan_output.json
+if [ $? -eq 0 ]
+then
+  echo "Integration Test #5: Pass"
+else
+  echo "Integration Test #5: Fail"
+  exit 1
+fi
