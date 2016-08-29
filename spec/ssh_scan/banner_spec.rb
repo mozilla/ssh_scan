@@ -23,12 +23,35 @@ describe SSHScan::Banner do
       "SSH-2.0-bananas" => SSHScan::OS::Unknown,
     }
 
+    ubuntu_banner_legend = {
+      "SSH-1.99-OpenSSH_6.6.1p1 Ubuntu-2ubuntu2.7" => "14.04",
+      "SSH-2.0-OpenSSH_6.6.1p1 Ubuntu-2ubuntu2" => "14.04",
+      "SSH-2.0-OpenSSH_7.2p2 Ubuntu-4ubuntu1" => "16.04"
+    }
+
     banner_legend.each do |banner_string, os_class|
       it "should detect the right OS for #{banner_string}" do
         banner = SSHScan::Banner.new(banner_string)
         expect(banner.os_guess).to be_kind_of(os_class)
       end
     end
+
+    dummy_os = SSHScan::OS::Ubuntu.new("") # version = nil
+    dummy_os.fingerprints.each do |ubuntu_version, banners|
+      it "should not see duplicates in scraped fingerprints for Ubuntu #{ubuntu_version}" do
+        expect(banners.uniq).to eql(banners)
+      end
+    end
+
+    ubuntu_banner_legend.each do |banner_string, ubuntu_version|
+      it "should detect correct Ubuntu version for \"#{banner_string}\"" do
+        banner = SSHScan::Banner.new(banner_string)
+        guessed_os = banner.os_guess
+        expect(guessed_os).to be_kind_of(SSHScan::OS::Ubuntu)
+        expect(guessed_os.ubuntu_version.to_s).to eql(ubuntu_version)
+      end
+    end
+
   end
 
   context "when SSH library guessing" do
