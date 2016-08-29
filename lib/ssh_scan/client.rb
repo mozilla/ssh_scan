@@ -19,7 +19,7 @@ module SSHScan
       @port = port
       @client_banner = SSHScan::Constants::DEFAULT_CLIENT_BANNER
       @server_banner = nil
-      @kex_init_raw = SSHScan::Constants::DEFAULT_KEY_INIT_RAW
+      @kex_init_raw = SSHScan::Constants::DEFAULT_KEY_INIT.to_binary_s
     end
 
     def connect()
