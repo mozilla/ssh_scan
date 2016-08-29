@@ -5,8 +5,8 @@ require 'net/ssh'
 module SSHScan
   class ScanEngine
 
-    def scan_target(target, opts)
-      port = opts[:port]
+    def scan_target(socket, opts)
+      target, port = socket.chomp.split(':')
       policy = opts[:policy_file]
       timeout = opts[:timeout]
 
@@ -81,18 +81,18 @@ module SSHScan
     end
 
     def scan(opts)
-      targets = opts[:targets]
+      sockets = opts[:sockets]
       threads = opts[:threads] || 5
 
       results = []
 
       work_queue = Queue.new
-      targets.each {|x| work_queue.push x }
+      sockets.each {|x| work_queue.push x }
       workers = (0...threads).map do |worker_num|
         Thread.new do
           begin
-            while target = work_queue.pop(true)
-              results << scan_target(target, opts)
+            while socket = work_queue.pop(true)
+              results << scan_target(socket, opts)
             end
           rescue ThreadError => e
             raise e unless e.to_s.match(/queue empty/)
