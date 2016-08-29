@@ -9,11 +9,34 @@ module SSHScan
       target, port = socket.chomp.split(':')
       policy = opts[:policy_file]
       timeout = opts[:timeout]
+      result = []
 
-      client = SSHScan::Client.new(target, port, timeout)
-      client.connect()
-      result = client.get_kex_result()
-      return result if result.include?(:error)
+      if target.fqdn?
+        if target.resolve_fqdn_as_ipv6.nil?
+          client = SSHScan::Client.new(target.resolve_fqdn_as_ipv4.to_s, port, timeout)
+          client.connect()
+          result = client.get_kex_result()
+          result[:hostname] = target
+          return result if result.include?(:error)
+        else
+          client = SSHScan::Client.new(target.resolve_fqdn_as_ipv6.to_s, port, timeout)
+          client.connect()
+          result = client.get_kex_result()
+          if result.include?(:error)
+            client = SSHScan::Client.new(target.resolve_fqdn_as_ipv4.to_s, port, timeout)
+            client.connect()
+            result = client.get_kex_result()
+            result[:hostname] = target
+            return result if result.include?(:error)
+          end
+        end
+      else
+        client = SSHScan::Client.new(target, port, timeout)
+        client.connect()
+        result = client.get_kex_result()
+        result[:hostname] = ""
+        return result if result.include?(:error)
+      end
 
       # Connect and get results (Net-SSH)
       begin

@@ -10,12 +10,6 @@ module SSHScan
       @target = target
       @timeout = timeout
 
-      if @target.ip_addr?
-        @ip = @target
-      else
-        @ip = @target.resolve_fqdn()
-      end
-
       @port = port
       @client_banner = SSHScan::Constants::DEFAULT_CLIENT_BANNER
       @server_banner = nil
@@ -24,7 +18,7 @@ module SSHScan
 
     def connect()
       begin
-        @sock = Socket.tcp(@ip, @port, connect_timeout: @timeout)
+        @sock = Socket.tcp(@target, @port, connect_timeout: @timeout)
       rescue Errno::ETIMEDOUT => e
         @error = SSHScan::Error::ConnectTimeout.new(e.message)
         @sock = nil
@@ -42,8 +36,7 @@ module SSHScan
       # Common options for all cases
       result = {}
       result[:ssh_scan_version] = SSHScan::VERSION
-      result[:hostname] = @target.fqdn? ? @target : ""
-      result[:ip] = @ip
+      result[:ip] = @target
       result[:port] = @port
 
       if !@sock
