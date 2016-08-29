@@ -33,6 +33,10 @@ module SSHScan
     uint8 :kex_first_packet_follows
     uint32 :reserved
 
+    def set_default_key_init(string)
+      @string = string
+    end
+
     def key_algorithms
       self.key_algorithms_string.split(",")
     end
