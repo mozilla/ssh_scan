@@ -6,6 +6,10 @@ class String
     [self].pack("H*")
   end
 
+  def hexify
+    self.each_byte.map { |b| b.to_s(16).rjust(2,'0') }.join
+  end
+
   def ip_addr?
     begin
       IPAddr.new(self)
