@@ -33,7 +33,7 @@ module SSHScan
     def os_guess()
       case @string
       when /Ubuntu/i
-        return SSHScan::OS::Ubuntu.new
+        return SSHScan::OS::Ubuntu.new(@string)
       when /CentOS/i
         return SSHScan::OS::CentOS.new
       when /RHEL|RedHat/i
