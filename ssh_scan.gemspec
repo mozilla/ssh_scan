@@ -4,7 +4,7 @@ require 'ssh_scan/version'
 Gem::Specification.new do |s|
   s.name = 'ssh_scan'
   s.version = SSHScan::VERSION
-  s.authors = ["Jonathan Claudius"]
+  s.authors = ["Jonathan Claudius", "Jinank Jain"]
   s.date = Date.today.to_s
   s.email = 'claudijd@yahoo.com'
   s.platform = Gem::Platform::RUBY
