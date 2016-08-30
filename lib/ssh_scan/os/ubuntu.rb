@@ -11,7 +11,7 @@ module SSHScan
       end
 
       # Obtained from scraping ChangeLog on Launchpad
-      @@fingerprints = {
+      FINGERPRINTS = {
        "4.10" => ["3.8.1p1-11ubuntu3.3", "3.8.1p1-11ubuntu3.2", "3.8.1p1-11ubuntu3"],
        "5.04" =>
         ["3.9p1-1ubuntu2.3",
@@ -169,7 +169,7 @@ module SSHScan
       end
 
       def fingerprints
-        @@fingerprints
+        OS::Ubuntu::FINGERPRINTS
       end
 
       def ubuntu_version
@@ -178,8 +178,8 @@ module SSHScan
 
       def ubuntu_version_guess
         possible_versions = []
-        @@fingerprints.keys.each do |ubuntu_version|
-          @@fingerprints[ubuntu_version].uniq.each do |banner|
+        OS::Ubuntu::FINGERPRINTS.keys.each do |ubuntu_version|
+          OS::Ubuntu::FINGERPRINTS[ubuntu_version].uniq.each do |banner|
             openssh_ps, ubuntu_sig = banner.split("-")
             openssh_version = openssh_ps
             # If the version is like 6.6p1, deduce that
