@@ -1,4 +1,5 @@
 require 'ipaddr'
+require 'resolv'
 
 # Extend string to include some helpful stuff
 class String
@@ -20,6 +21,22 @@ class String
     end
 
     return true
+  end
+
+  def resolve_fqdn_as_ipv6
+    Resolv::DNS.open do |dns|
+      ress = dns.getresources self, Resolv::DNS::Resource::IN::AAAA
+      temp = ress.map { |r| r.address  }
+      return temp[0]
+    end
+  end
+
+  def resolve_fqdn_as_ipv4
+    Resolv::DNS.open do |dns|
+      ress = dns.getresources self, Resolv::DNS::Resource::IN::A
+      temp = ress.map { |r| r.address  }
+      return temp[0]
+    end
   end
 
   def resolve_fqdn
