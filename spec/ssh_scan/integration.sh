@@ -10,7 +10,7 @@ then
   SSH_SCAN_BINARY="ssh_scan"
 else
   echo "Running integration tests via ssh_scan source"
-  SSH_SCAN_BINARY="./bin/ssh_scan"
+  SSH_SCAN_BINARY="bin/ssh_scan"
 fi
 
 # Change permissions so the shell script will run
