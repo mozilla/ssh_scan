@@ -1,5 +1,7 @@
 ---
 name: Mozilla Modern
+auth_methods:
+- publickey
 kex:
 - curve25519-sha256@libssh.org
 - ecdh-sha2-nistp521
