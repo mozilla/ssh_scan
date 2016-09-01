@@ -88,6 +88,20 @@ module SSHScan
       return outliers
     end
 
+    def out_of_policy_auth_methods
+      target_auth_methods = @result["auth_methods"]
+      outliers = []
+
+      if not @policy.auth_methods.empty?
+        target_auth_methods.each do |auth_method|
+          if not @policy.auth_methods.include?(auth_method)
+            outliers << auth_method
+          end
+        end
+      end
+      return outliers
+    end
+
     def compliant?
       out_of_policy_encryption.empty? &&
       out_of_policy_macs.empty? &&
@@ -96,7 +110,8 @@ module SSHScan
       missing_policy_encryption.empty? &&
       missing_policy_macs.empty? &&
       missing_policy_kex.empty? &&
-      missing_policy_compression.empty?
+      missing_policy_compression.empty? &&
+      out_of_policy_auth_methods.empty?
     end
 
     def recommendations
@@ -113,6 +128,7 @@ module SSHScan
       recommendations << "Remove these MAC Algos: #{out_of_policy_macs.join(", ")}" unless out_of_policy_macs.empty?
       recommendations << "Remove these Encryption Ciphers: #{out_of_policy_encryption.join(", ")}" unless out_of_policy_encryption.empty?
       recommendations << "Remove these Compression Algos: #{out_of_policy_compression.join(", ")}" unless out_of_policy_compression.empty?
+      recommendations << "Remove these Authentication Methods: #{out_of_policy_auth_methods.join(", ")}" unless out_of_policy_auth_methods.empty?
       return recommendations
     end
 
