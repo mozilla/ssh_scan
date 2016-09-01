@@ -1,5 +1,7 @@
 #External Deps
 require 'bindata'
+require 'timeout'
+require 'resolv'
 
 #Internal Deps
 require 'ssh_scan/version'

@@ -1,5 +1,6 @@
 require 'ipaddr'
 require 'resolv'
+require 'timeout'
 
 # Extend string to include some helpful stuff
 class String
@@ -23,20 +24,33 @@ class String
     return true
   end
 
-  def resolve_fqdn_as_ipv6
-    Resolv::DNS.open do |dns|
-      ress = dns.getresources self, Resolv::DNS::Resource::IN::AAAA
-      temp = ress.map { |r| r.address  }
-      return temp[0]
+  def resolve_fqdn_as_ipv6(timeout = 3)
+    begin
+      Timeout::timeout(timeout) {
+        Resolv::DNS.open do |dns|
+          ress = dns.getresources self, Resolv::DNS::Resource::IN::AAAA
+          temp = ress.map { |r| r.address  }
+          return temp[0]
+        end
+      }
+    rescue Timeout::Error
+      return ""
     end
   end
 
-  def resolve_fqdn_as_ipv4
-    Resolv::DNS.open do |dns|
-      ress = dns.getresources self, Resolv::DNS::Resource::IN::A
-      temp = ress.map { |r| r.address  }
-      return temp[0]
+  def resolve_fqdn_as_ipv4(timeout = 3)
+    begin
+      Timeout::timeout(timeout) {
+        Resolv::DNS.open do |dns|
+          ress = dns.getresources self, Resolv::DNS::Resource::IN::A
+          temp = ress.map { |r| r.address  }
+          return temp[0]
+        end
+      }
+    rescue Timeout::Error
+      return ""
     end
+
   end
 
   def resolve_fqdn
@@ -46,7 +60,7 @@ class String
   def fqdn?
     begin
       resolve_fqdn
-    rescue SocketError
+    rescue SocketError, Timeout::Error
       return false
     end
 
