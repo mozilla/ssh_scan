@@ -7,20 +7,6 @@ matrix:
   - rvm: 2.3.0
     env:
       - LABEL=unit_tests
-  - rvm: 2.3.0
-    env:
-      - LABEL=docker_build_push
-    services:
-      - docker
-    script:
-      - docker build -t mozilla/ssh_scan .
-      - >
-          if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then \
-            docker login -u="$DOCKER_USER" -p="$DOCKER_PASS" ;\
-            docker push mozilla/ssh_scan:latest ;\
-          else \
-            exit 0 ;\
-          fi
   - rvm: 2.2.0
     env:
       - LABEL=unit_tests
@@ -41,5 +27,20 @@ matrix:
     env:
       - LABEL=src_integration_tests
     script:
+      - bundle install
       - chmod 755 ./spec/ssh_scan/integration.sh
       - ./spec/ssh_scan/integration.sh
+  - rvm: 2.3.0
+    env:
+      - LABEL=docker_build_push
+    services:
+      - docker
+    script:
+      - docker build -t mozilla/ssh_scan .
+      - >
+          if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then \
+            docker login -u="$DOCKER_USER" -p="$DOCKER_PASS" ;\
+            docker push mozilla/ssh_scan:latest ;\
+          else \
+            exit 0 ;\
+          fi
