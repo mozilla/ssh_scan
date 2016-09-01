@@ -4,7 +4,7 @@ command_exists () {
     type "$1" &> /dev/null ;
 }
 
-if command_exists ssh_scan
+if gem list | grep 'ssh_scan'
 then
   echo "Running integration tests via ssh_scan RubyGem"
   SSH_SCAN_BINARY="ssh_scan"
