@@ -18,6 +18,8 @@ matrix:
   - rvm: 2.3.0
     script:
       - gem install ssh_scan
+      - chmod 755 ./spec/ssh_scan/integration.sh
+      - ./spec/ssh_scan/integration.sh
   - rvm: 2.3.0
     script:
       - chmod 755 ./spec/ssh_scan/integration.sh
