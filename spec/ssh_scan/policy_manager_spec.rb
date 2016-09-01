@@ -168,4 +168,28 @@ describe SSHScan::PolicyManager do
     end
   end
 
+  context "when checking the allowed auth methods" do
+    yaml_string = "---\nname: Mozilla Intermediate\nkex:\n" +
+                  "- diffie-hellman-group-exchange-sha256\n" +
+                  "encryption:\n- aes256-ctr\n- aes192-ctr\n" +
+                  "- aes128-ctr\nmacs:\n- hmac-sha2-512\n" +
+                  "- hmac-sha2-256\ncompression:\n- none\n" +
+                  "- zlib@openssh.com\n" +
+                  "references:\n- https://wiki.mozilla.org/Security/Guidelines/OpenSSH\n" +
+                  "auth_methods:\n- publickey\n"
+    result = {
+                "auth_methods" => [
+                  "publickey",
+                  "password",
+                ]
+              }
+
+    it "should load all the attributes properly" do
+      policy = SSHScan::Policy.from_string(yaml_string)
+      policy_manager = SSHScan::PolicyManager.new(result, policy)
+      outliers = ["password"]
+      expect(policy_manager.out_of_policy_auth_methods()).to eql(outliers)
+    end
+  end
+
 end
