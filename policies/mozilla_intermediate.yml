@@ -1,5 +1,7 @@
 ---
 name: Mozilla Intermediate
+auth_methods:
+- publickey
 kex:
 - diffie-hellman-group-exchange-sha256
 encryption:
