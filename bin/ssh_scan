@@ -69,11 +69,16 @@ opt_parser = OptionParser.new do |opts|
     $stdout.reopen(file, "w")
   end
 
-  opts.on("-p", "--port [PORT]",
-          "Port (Default: 22)") do |port|
-    socket = options[:sockets].shift
-    ip = socket.chomp.split(':').shift
-    options[:sockets] += target_parser.enumerateIPRange(ip, port)
+  opts.on("-p", "--port [PORT]", Array,
+          "Port (Default: 22)") do |ports|
+    temp = []
+    options[:sockets].each do |socket|
+      ports.each do |port|
+        ip = socket.chomp.split(':').shift
+        temp += target_parser.enumerateIPRange(ip, port)
+      end
+    end
+    options[:sockets] += temp
   end
 
   opts.on("-P", "--policy [FILE]",
