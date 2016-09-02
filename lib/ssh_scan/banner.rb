@@ -25,6 +25,8 @@ module SSHScan
         return SSHScan::SSHLib::OpenSSH.new(@string)
       when /LibSSH/i
         return SSHScan::SSHLib::LibSSH.new()
+      when /Cisco/i
+        return SSHScan::SSHLib::CiscoSSH.new()
       else
         return SSHScan::SSHLib::Unknown.new()
       end
@@ -44,6 +46,8 @@ module SSHScan
         return SSHScan::OS::Debian.new
       when /Windows/i
         return SSHScan::OS::Windows.new
+      when /Cisco/i
+        return SSHScan::OS::Cisco.new
       else
         return SSHScan::OS::Unknown.new
       end
