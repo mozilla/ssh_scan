@@ -76,13 +76,25 @@ module SSHScan
            "sha1" => fingerprint_sha1,
            "sha256" => fingerprint_sha256,
           }
-          # Do this only when no errors were reported
-          unless policy.nil?
-            policy_mgr = SSHScan::PolicyManager.new(result, policy)
-            result['compliance'] = policy_mgr.compliance_results
-          end
         end
       end
+
+      # Do this only when no errors were reported
+      if !policy.nil? &&
+         !result[:key_algorithms].nil? &&
+         !result[:server_host_key_algorithms].nil? &&
+         !result[:encryption_algorithms_client_to_server].nil? &&
+         !result[:encryption_algorithms_server_to_client].nil? &&
+         !result[:mac_algorithms_client_to_server].nil? &&
+         !result[:mac_algorithms_server_to_client].nil? &&
+         !result[:compression_algorithms_client_to_server].nil? &&
+         !result[:compression_algorithms_server_to_client].nil? &&
+         !result[:languages_client_to_server].nil? &&
+         !result[:languages_server_to_client].nil?
+        policy_mgr = SSHScan::PolicyManager.new(result, policy)
+        result['compliance'] = policy_mgr.compliance_results
+      end
+
       return result
     end
 

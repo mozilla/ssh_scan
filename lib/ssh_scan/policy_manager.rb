@@ -89,6 +89,8 @@ module SSHScan
     end
 
     def out_of_policy_auth_methods
+      return [] if @result["auth_methods"].nil?
+
       target_auth_methods = @result["auth_methods"]
       outliers = []
 
