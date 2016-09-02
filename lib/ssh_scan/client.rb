@@ -51,13 +51,6 @@ module SSHScan
         return result
       end
 
-      @sock.write(kex_init_raw)
-      resp = @sock.read(4)
-      resp += @sock.read(resp.unpack("N").first)
-      @sock.close
-
-      kex_exchange_init = SSHScan::KeyExchangeInit.read(resp)
-
       # Assemble and print results
       result[:server_banner] = @server_banner
       result[:ssh_version] = @server_banner.ssh_version
@@ -65,6 +58,20 @@ module SSHScan
       result[:os_cpe] = @server_banner.os_guess.cpe
       result[:ssh_lib] = @server_banner.ssh_lib_guess.common
       result[:ssh_lib_cpe] = @server_banner.ssh_lib_guess.cpe
+
+      @sock.write(kex_init_raw)
+      resp = @sock.read(4)
+
+      if resp.nil?
+        @error = SSHScan::Error::NoKexResponse.new("service did not respond to our kex init request")
+        @sock = nil
+        return result
+      end
+      
+      resp += @sock.read(resp.unpack("N").first)
+      @sock.close
+
+      kex_exchange_init = SSHScan::KeyExchangeInit.read(resp)
       result.merge!(kex_exchange_init.to_hash)
 
       return result
