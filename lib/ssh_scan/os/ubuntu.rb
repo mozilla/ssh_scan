@@ -172,7 +172,7 @@ module SSHScan
         OS::Ubuntu::FINGERPRINTS
       end
 
-      def ubuntu_version
+      def version
         @version
       end
 

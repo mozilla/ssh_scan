@@ -8,6 +8,10 @@ module SSHScan
       def cpe
         "o:unknown"
       end
+
+      def version
+        nil
+      end
     end
   end
 end
