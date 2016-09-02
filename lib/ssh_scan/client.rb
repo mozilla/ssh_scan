@@ -26,9 +26,16 @@ module SSHScan
         @error = SSHScan::Error::ConnectionRefused.new(e.message)
         @sock = nil
       else
-        @raw_server_banner = @sock.gets.chomp
-        @server_banner = SSHScan::Banner.read(@raw_server_banner)
-        @sock.puts(@client_banner.to_s)
+        @raw_server_banner = @sock.gets
+
+        if @raw_server_banner.nil?
+          @error = SSHScan::Error::NoBanner.new("service did not respond with an SSH banner")
+          @sock = nil
+        else
+          @raw_server_banner = @raw_server_banner.chomp
+          @server_banner = SSHScan::Banner.read(@raw_server_banner)
+          @sock.puts(@client_banner.to_s)
+        end
       end
     end
 

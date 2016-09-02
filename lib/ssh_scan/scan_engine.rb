@@ -48,25 +48,21 @@ module SSHScan
         host_key = net_ssh_session.host_keys.first
         net_ssh_session.close
       rescue Net::SSH::ConnectionTimeout => e
-        warn("WARNING: net-ssh timed out attempting to connect to service (fingerprints and auth_methods will not be available)")
         result['auth_methods'] = []
         result['fingerprints'] = {}
         result[:error] = e
         result[:error] = SSHScan::Error::ConnectTimeout.new(e.message)
       rescue Net::SSH::Disconnect => e
-        warn("WARNING: net-ssh disconnected unexpectedly (fingerprints and auth_methods will not be available)")
         result['auth_methods'] = []
         result['fingerprints'] = {}
         result[:error] = e
         result[:error] = SSHScan::Error::Disconnected.new(e.message)
       rescue Net::SSH::Exception => e
         if e.to_s.match(/could not settle on encryption_client algorithm/)
-          warn("WARNING: net-ssh could not find a mutually acceptable encryption algorithm (fingerprints and auth_methods will not be available)")
           result['auth_methods'] = []
           result['fingerprints'] = {}
           result[:error] = e
         elsif e.to_s.match(/could not settle on host_key algorithm/)
-          warn("WARNING: net-ssh could not find a mutually acceptable host_key algorithm (fingerprints and auth_methods will not be available)")
           result['auth_methods'] = []
           result['fingerprints'] = {}
           result[:error] = e

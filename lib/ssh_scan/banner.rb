@@ -8,7 +8,7 @@ module SSHScan
     end
 
     def self.read(string)
-      return SSHScan::Banner.new(string.chomp)
+      return SSHScan::Banner.new(string)
     end
 
     def ssh_version()
