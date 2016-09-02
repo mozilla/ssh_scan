@@ -8,6 +8,10 @@ module SSHScan
       def cpe
         "a:cisco:ciscossh"
       end
+      
+      def version
+        nil
+      end
     end
   end
 end

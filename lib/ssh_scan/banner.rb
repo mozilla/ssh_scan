@@ -36,6 +36,8 @@ module SSHScan
       case @string
       when /Ubuntu/i
         return SSHScan::OS::Ubuntu.new(@string)
+      when /6.6p1-5build1/i # non-standard Ubuntu release
+        return SSHScan::OS::Ubuntu.new(@string)
       when /CentOS/i
         return SSHScan::OS::CentOS.new
       when /RHEL|RedHat/i
