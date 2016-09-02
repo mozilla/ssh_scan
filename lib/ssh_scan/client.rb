@@ -25,6 +25,12 @@ module SSHScan
       rescue Errno::ECONNREFUSED => e
         @error = SSHScan::Error::ConnectionRefused.new(e.message)
         @sock = nil
+      rescue Errno::ENETUNREACH => e
+        @error = SSHScan::Error::ConnectionRefused.new(e.message)
+        @sock = nil
+      rescue Errno::EACCES => e
+        @error = SSHScan::Error::ConnectionRefused.new(e.message)
+        @sock = nil
       else
         @raw_server_banner = @sock.gets
 
