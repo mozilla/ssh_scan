@@ -20,6 +20,7 @@ describe SSHScan::Banner do
       "SSH-2.0-windows" => SSHScan::OS::Windows,
       "SSH-2.0-rhel" => SSHScan::OS::RedHat,
       "SSH-2.0-redhat" => SSHScan::OS::RedHat,
+      "SSH-2.0-cisco" => SSHScan::OS::Cisco,
       "SSH-2.0-bananas" => SSHScan::OS::Unknown,
     }
 
@@ -58,6 +59,7 @@ describe SSHScan::Banner do
     banner_legend = {
       "SSH-2.0-openssh" => SSHScan::SSHLib::OpenSSH,
       "SSH-2.0-libssh" => SSHScan::SSHLib::LibSSH,
+      "SSH-2.0-cisco" => SSHScan::SSHLib::CiscoSSH,
       "SSH-2.0-bananas" => SSHScan::SSHLib::Unknown,
     }
 
