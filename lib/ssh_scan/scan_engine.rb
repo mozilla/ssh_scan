@@ -48,23 +48,15 @@ module SSHScan
         host_key = net_ssh_session.host_keys.first
         net_ssh_session.close
       rescue Net::SSH::ConnectionTimeout => e
-        result['auth_methods'] = []
-        result['fingerprints'] = {}
         result[:error] = e
         result[:error] = SSHScan::Error::ConnectTimeout.new(e.message)
       rescue Net::SSH::Disconnect => e
-        result['auth_methods'] = []
-        result['fingerprints'] = {}
         result[:error] = e
         result[:error] = SSHScan::Error::Disconnected.new(e.message)
       rescue Net::SSH::Exception => e
         if e.to_s.match(/could not settle on encryption_client algorithm/)
-          result['auth_methods'] = []
-          result['fingerprints'] = {}
           result[:error] = e
         elsif e.to_s.match(/could not settle on host_key algorithm/)
-          result['auth_methods'] = []
-          result['fingerprints'] = {}
           result[:error] = e
         else
           raise e
@@ -91,9 +83,6 @@ module SSHScan
             policy_mgr = SSHScan::PolicyManager.new(result, policy)
             result['compliance'] = policy_mgr.compliance_results
           end
-        else
-          warn("WARNING: Host key support for #{host_key.class} is not provided yet (fingerprints will not be available)")
-          result['fingerprints'] = {}
         end
       end
       return result
