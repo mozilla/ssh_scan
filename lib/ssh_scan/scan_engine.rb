@@ -54,9 +54,7 @@ module SSHScan
         result[:error] = e
         result[:error] = SSHScan::Error::Disconnected.new(e.message)
       rescue Net::SSH::Exception => e
-        if e.to_s.match(/could not settle on encryption_client algorithm/)
-          result[:error] = e
-        elsif e.to_s.match(/could not settle on host_key algorithm/)
+        if e.to_s.match(/could not settle on/)
           result[:error] = e
         else
           raise e
