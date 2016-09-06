@@ -43,6 +43,12 @@ describe SSHScan::Banner do
         :ssh_lib_class => SSHScan::SSHLib::CiscoSSH,
         :ssh_lib_version => "",
       },
+      "SSH-2.0-ROSSSH" => {
+        :os_class => SSHScan::OS::ROS,
+        :os_version => "",
+        :ssh_lib_class => SSHScan::SSHLib::ROSSSH,
+        :ssh_lib_version => "",
+      },
 
       # Generic Examples
       "SSH-2.0-OpenSSH" => {
@@ -74,6 +80,9 @@ describe SSHScan::Banner do
       },
       "SSH-2.0-cisco" => {
         :os_class => SSHScan::OS::Cisco,
+      },
+      "SSH-2.0-ros" => {
+        :os_class => SSHScan::OS::ROS,
       },
       "SSH-2.0-bananas" => {
         :os_class => SSHScan::OS::Unknown,
