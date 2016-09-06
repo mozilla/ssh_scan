@@ -7,6 +7,7 @@ require 'json'
 require 'netaddr'
 require 'optparse'
 require 'ssh_scan'
+require 'logger'
 
 #Default options
 options = {
@@ -15,6 +16,8 @@ options = {
   :unit_test => false,
   :timeout => 2,
   :threads => 5,
+  :verbosity => nil,
+  :logger => nil,
 }
 
 target_parser = SSHScan::TargetParser.new()
@@ -48,6 +51,15 @@ opt_parser = OptionParser.new do |opts|
   opts.on("-T", "--timeout [seconds]",
           "Timeout per connect after which ssh_scan gives up on the host") do |timeout|
     options[:timeout] = timeout.to_i
+  end
+
+  opts.on("-L", "--logger [Log File Path]",
+          "Enable logger") do |log_file|
+    if log_file.nil?
+      options[:logger] = Logger.new(STDERR)
+    else
+      options[:logger] = Logger.new $stdout.reopen(log_file, "w")
+    end
   end
 
   opts.on("-O", "--from_json [FilePath]",
@@ -96,6 +108,20 @@ opt_parser = OptionParser.new do |opts|
     options[:unit_test] = true
   end
 
+  opts.on("-V", "--verbosity",
+          "Set the logger level (Accpeted Params: INFO, DEBUG, WARN, ERROR, FATAL)") do |verbosity|
+    options[:logger].level = case options[:verbosity]
+      when "INFO" then Logger::INFO
+      when "DEBUG" then Logger::DEBUG
+      when "WARN" then Logger::WARN
+      when "ERROR" then Logger::ERROR
+      when "FATAL" then Logger::FATAL
+      else 
+        puts "Can't convert #{options[:verbosity]} to any of the Logger level constants"
+        exit
+    end
+  end
+
   opts.on("-v", "--version",
           "Display just version info") do
     puts SSHScan::VERSION
@@ -113,6 +139,7 @@ opt_parser = OptionParser.new do |opts|
     puts "  ssh_scan -o output.json"
     puts "  ssh_scan -O output.json -o rescan_output.json"
     puts "  ssh_scan -t 192.168.1.1 -p 22222"
+    puts "  ssh_scan -t 192.168.1.1 -p 22222 -L output.log -V INFO"
     puts "  ssh_scan -t 192.168.1.1 -P custom_policy.yml"
     puts "  ssh_scan -t 192.168.1.1 --unit-test -P custom_policy.yml"
     puts ""

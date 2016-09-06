@@ -71,6 +71,8 @@ Run `ssh_scan -h` to get this
         -u, --unit-test [FILE]           Throw appropriate exit codes based on compliance status
         -v, --version                    Display just version info
         -h, --help                       Show this message
+        -L, --logger[Log File Path]      Enable logger and set the log file
+        -V, --verbosity                  Set the logger level (Params: INFO, DEBUG, WARN, ERROR, FATAL)
 
     Examples:
 
@@ -82,6 +84,7 @@ Run `ssh_scan -h` to get this
       ssh_scan -o output.json
       ssh_scan -O output.json -o rescan_output.json
       ssh_scan -t 192.168.1.1 -p 22222
+      ssh_scan -t 192.168.1.1 -p 22222 -L output.log -V INFO
       ssh_scan -t 192.168.1.1 -P custom_policy.yml
       ssh_scan -t 192.168.1.1 --unit-test -P custom_policy.yml
 
