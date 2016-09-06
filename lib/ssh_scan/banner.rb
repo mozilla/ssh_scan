@@ -29,6 +29,8 @@ module SSHScan
         return SSHScan::SSHLib::CiscoSSH.new()
       when /ROS/i
         return SSHScan::SSHLib::ROSSSH.new()
+      when /DOPRASSH/i
+        return SSHScan::SSHLib::DOPRASSH.new()
       else
         return SSHScan::SSHLib::Unknown.new()
       end
@@ -54,6 +56,8 @@ module SSHScan
         return SSHScan::OS::Cisco.new
       when /ROS/i
         return SSHScan::OS::ROS.new
+      when /DOPRA/i
+        return SSHScan::OS::DOPRA.new
       else
         return SSHScan::OS::Unknown.new
       end
