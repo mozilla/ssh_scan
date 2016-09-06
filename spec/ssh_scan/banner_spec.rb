@@ -50,6 +50,15 @@ describe SSHScan::Banner do
         :ssh_lib_version => "",
       },
 
+      # DOPRA specific example
+      "SSH-1.99-DOPRA" => {
+        :os_class => SSHScan::OS::DOPRA,
+        :os_version => "",
+        :ssh_lib_class => SSHScan::SSHLib::DOPRASSH,
+        :ssh_lib_version => "",
+      },
+
+
       # Generic Examples
       "SSH-2.0-OpenSSH" => {
         :ssh_lib_class => SSHScan::SSHLib::OpenSSH,
@@ -83,6 +92,9 @@ describe SSHScan::Banner do
       },
       "SSH-2.0-ros" => {
         :os_class => SSHScan::OS::ROS,
+      },
+      "SSH-1.99-DOPRA" => {
+        :os_class => SSHScan::OS::DOPRA,
       },
       "SSH-2.0-bananas" => {
         :os_class => SSHScan::OS::Unknown,
