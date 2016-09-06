@@ -17,7 +17,7 @@ options = {
   :timeout => 2,
   :threads => 5,
   :verbosity => nil,
-  :logger => nil,
+  :logger => Logger.new(STDERR),
 }
 
 target_parser = SSHScan::TargetParser.new()
@@ -116,7 +116,7 @@ opt_parser = OptionParser.new do |opts|
       when "WARN" then Logger::WARN
       when "ERROR" then Logger::ERROR
       when "FATAL" then Logger::FATAL
-      else 
+      else
         puts "Can't convert #{options[:verbosity]} to any of the Logger level constants"
         exit
     end

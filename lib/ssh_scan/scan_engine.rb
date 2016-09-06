@@ -101,6 +101,7 @@ module SSHScan
     def scan(opts)
       sockets = opts[:sockets]
       threads = opts[:threads] || 5
+      logger = opts[:logger]
 
       results = []
 
@@ -110,7 +111,9 @@ module SSHScan
         Thread.new do
           begin
             while socket = work_queue.pop(true)
+              logger.info("Started ssh_scan of #{socket}")
               results << scan_target(socket, opts)
+              logger.info("Completed ssh_scan of #{socket}")
             end
           rescue ThreadError => e
             raise e unless e.to_s.match(/queue empty/)
