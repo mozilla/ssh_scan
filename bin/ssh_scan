@@ -11,7 +11,7 @@ require 'logger'
 
 #Default options
 options = {
-  :sockets => [],
+  :sockets => Set.new,
   :policy => File.expand_path("../../policies/mozilla_modern.yml", __FILE__),
   :unit_test => false,
   :timeout => 2,
@@ -72,7 +72,7 @@ opt_parser = OptionParser.new do |opts|
     json = file.read
     parsed_json = JSON.parse(json)
     parsed_json.each do |host|
-      options[:sockets] += target_parser.enumerateIPRange(host['ip'], host['port'])
+      options[:sockets] += target_parser.enumerateIPRange(host['ip'], host['port'], true)
     end
   end
 
@@ -83,11 +83,11 @@ opt_parser = OptionParser.new do |opts|
 
   opts.on("-p", "--port [PORT]", Array,
           "Port (Default: 22)") do |ports|
-    temp = []
+    temp = Set.new
     options[:sockets].each do |socket|
       ports.each do |port|
         ip = socket.chomp.split(':').shift
-        temp += target_parser.enumerateIPRange(ip, port)
+        temp += target_parser.enumerateIPRange(ip, port, true)
       end
     end
     options[:sockets] += temp
@@ -148,6 +148,7 @@ opt_parser = OptionParser.new do |opts|
 end
 
 opt_parser.parse!
+options[:sockets] = target_parser.sanitizeIPRange(options[:sockets])
 
 if options[:sockets].nil?
   puts opt_parser.help
