@@ -31,6 +31,8 @@ module SSHScan
         return SSHScan::SSHLib::ROSSSH.new()
       when /DOPRASSH/i
         return SSHScan::SSHLib::DOPRASSH.new()
+      when /dropbear/i
+        return SSHScan::SSHLib::Dropbear.new(@string)
       else
         return SSHScan::SSHLib::Unknown.new()
       end
