@@ -7,6 +7,9 @@ module SSHScan
 
     def scan_target(socket, opts)
       target, port = socket.chomp.split(':')
+      if port.nil?
+        port = 22
+      end
       policy = opts[:policy_file]
       timeout = opts[:timeout]
       result = []

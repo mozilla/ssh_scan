@@ -27,9 +27,10 @@ opt_parser = OptionParser.new do |opts|
                 "Usage: ssh_scan [options]"
 
   opts.on("-t", "--target [IP/Range/Hostname]", Array,
-          "IP/Ranges/Hostname to scan") do |ips|
-    ips.each do |ip|
-      options[:sockets] += target_parser.enumerateIPRange(ip)
+          "IP/Ranges/Hostname to scan") do |sockets|
+    sockets.each do |socket|
+      ip, port = socket.chomp.split(':')
+      options[:sockets] += target_parser.enumerateIPRange(ip, port)
     end
   end
 
@@ -42,7 +43,6 @@ opt_parser = OptionParser.new do |opts|
     File.open(file).each do |line|
       line.chomp.split(',').each do |socket|
         ip, port = socket.chomp.split(':')
-        port = port.nil? ? 22 : port
         options[:sockets] += target_parser.enumerateIPRange(ip, port)
       end
     end
@@ -86,11 +86,15 @@ opt_parser = OptionParser.new do |opts|
     temp = []
     options[:sockets].each do |socket|
       ports.each do |port|
-        ip = socket.chomp.split(':').shift
+        ip, old_port = socket.chomp.split(':')
+        if !old_port.nil?
+          puts "Specifying port simultaneously with -t and -p is not allowed. Please fix this and try again"
+          exit 1
+        end
         temp += target_parser.enumerateIPRange(ip, port)
       end
     end
-    options[:sockets] += temp
+    options[:sockets] = temp
   end
 
   opts.on("-P", "--policy [FILE]",
