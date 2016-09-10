@@ -14,6 +14,8 @@ module SSHScan
       timeout = opts[:timeout]
       result = []
 
+      start_time = Time.now
+
       if target.fqdn?
         if target.resolve_fqdn_as_ipv6.nil?
           client = SSHScan::Client.new(target.resolve_fqdn_as_ipv4.to_s, port, timeout)
@@ -97,6 +99,13 @@ module SSHScan
         policy_mgr = SSHScan::PolicyManager.new(result, policy)
         result['compliance'] = policy_mgr.compliance_results
       end
+
+      # Add scan times
+      end_time = Time.now
+
+      result['start_time'] = start_time.to_s
+      result['end_time'] = end_time.to_s
+      result['scan_duration_seconds'] = end_time - start_time
 
       return result
     end
