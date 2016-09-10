@@ -1,5 +1,6 @@
 ---
 name: Mozilla Modern
+ssh_version: 2.0
 auth_methods:
 - publickey
 kex:
@@ -27,4 +28,3 @@ compression:
 - zlib@openssh.com
 references:
 - https://wiki.mozilla.org/Security/Guidelines/OpenSSH
-ssh_version: 2.0
