@@ -144,7 +144,7 @@ module SSHScan
       recommendations << "Remove these Authentication Methods: #{out_of_policy_auth_methods.join(", ")}" unless out_of_policy_auth_methods.empty?
 
       # Update these items to be compliant
-      recommendations << "Update your ssh version to: #{@policy.ssh_version}" unless out_of_policy_ssh_version
+      recommendations << "Update your ssh version to: #{@policy.ssh_version}" if out_of_policy_ssh_version
 
       return recommendations
     end
