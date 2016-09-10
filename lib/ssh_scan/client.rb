@@ -61,7 +61,7 @@ module SSHScan
       end
 
       # Assemble and print results
-      result[:server_banner] = @server_banner
+      result[:server_banner] = @server_banner.to_s
       result[:ssh_version] = @server_banner.ssh_version
       result[:os] = @server_banner.os_guess.common
       result[:os_cpe] = @server_banner.os_guess.cpe
@@ -76,7 +76,7 @@ module SSHScan
         @sock = nil
         return result
       end
-      
+
       resp += @sock.read(resp.unpack("N").first)
       @sock.close
 
