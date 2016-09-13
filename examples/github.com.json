@@ -9,7 +9,7 @@
     "os_cpe": "o:unknown",
     "ssh_lib": "libssh",
     "ssh_lib_cpe": "a:libssh:libssh",
-    "cookie": "f7205449ef9dc6cb757f5d2d47b14fb6",
+    "cookie": "41dab36bef4c686f0cb0d9f71f1d712b",
     "key_algorithms": [
       "curve25519-sha256@libssh.org",
       "ecdh-sha2-nistp256",
@@ -85,15 +85,14 @@
         "Remove these Key Exchange Algos: diffie-hellman-group14-sha1, diffie-hellman-group1-sha1",
         "Remove these MAC Algos: hmac-sha1",
         "Remove these Encryption Ciphers: aes256-cbc, aes192-cbc, aes128-cbc, blowfish-cbc",
-        "Remove these Compression Algos: zlib",
-        "Update your ssh version to: 2.0"
+        "Remove these Compression Algos: zlib"
       ],
       "references": [
         "https://wiki.mozilla.org/Security/Guidelines/OpenSSH"
       ]
     },
-    "start_time": "2016-09-09 23:22:28 -0400",
-    "end_time": "2016-09-09 23:22:28 -0400",
-    "scan_duration_seconds": 0.82107
+    "start_time": "2016-09-13 09:23:00 -0400",
+    "end_time": "2016-09-13 09:23:02 -0400",
+    "scan_duration_seconds": 2.312332
   }
 ]
