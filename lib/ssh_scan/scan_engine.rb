@@ -1,5 +1,6 @@
 require 'socket'
 require 'ssh_scan/client'
+require 'ssh_scan/crypto'
 require 'net/ssh'
 
 module SSHScan
@@ -65,21 +66,12 @@ module SSHScan
           raise e
         end
       else
-        #only supporting RSA for the moment
-        if host_key.is_a?(OpenSSL::PKey::RSA)
-          data_string = OpenSSL::ASN1::Sequence([
-           OpenSSL::ASN1::Integer.new(host_key.public_key.n),
-           OpenSSL::ASN1::Integer.new(host_key.public_key.e)
-          ])
-
-          fingerprint_md5 = OpenSSL::Digest::MD5.hexdigest(data_string.to_der).scan(/../).join(':')
-          fingerprint_sha1 = OpenSSL::Digest::SHA1.hexdigest(data_string.to_der).scan(/../).join(':')
-          fingerprint_sha256 = OpenSSL::Digest::SHA256.hexdigest(data_string.to_der).scan(/../).join(':')
-
+        pkey = SSHScan::Crypto::PublicKey.new(host_key)
+        if pkey.is_supported?
           result['fingerprints'] = {
-           "md5" => fingerprint_md5,
-           "sha1" => fingerprint_sha1,
-           "sha256" => fingerprint_sha256,
+            "md5" => pkey.fingerprint_md5,
+            "sha1" => pkey.fingerprint_sha1,
+            "sha256" => pkey.fingerprint_sha256,
           }
         end
       end
