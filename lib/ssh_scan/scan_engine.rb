@@ -107,7 +107,10 @@ module SSHScan
       threads = opts[:threads] || 5
       logger = opts[:logger]
 
-      results = []
+      #results = []
+
+      mongo_client = Mongo::Client.new('mongodb://127.0.0.1:27017/ssh_scan')
+      collection = mongo_client[:scans]
 
       work_queue = Queue.new
       sockets.each {|x| work_queue.push x }
@@ -116,7 +119,8 @@ module SSHScan
           begin
             while socket = work_queue.pop(true)
               logger.info("Started ssh_scan of #{socket}")
-              results << scan_target(socket, opts)
+              result = scan_target(socket, opts)
+              collection.insert_one(result)
               logger.info("Completed ssh_scan of #{socket}")
             end
           rescue ThreadError => e
@@ -126,7 +130,7 @@ module SSHScan
       end
       workers.map(&:join)
 
-      return results
+      #return results
     end
   end
 end

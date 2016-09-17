@@ -2,6 +2,7 @@
 require 'bindata'
 require 'timeout'
 require 'resolv'
+require 'mongo'
 
 #Internal Deps
 require 'ssh_scan/version'
