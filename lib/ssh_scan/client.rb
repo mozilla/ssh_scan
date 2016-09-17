@@ -28,6 +28,9 @@ module SSHScan
       rescue Errno::ENETUNREACH => e
         @error = SSHScan::Error::ConnectionRefused.new(e.message)
         @sock = nil
+       rescue Errno::ECONNRESET => e
+        @error = SSHScan::Error::ConnectionRefused.new(e.message)
+        @sock = nil
       rescue Errno::EACCES => e
         @error = SSHScan::Error::ConnectionRefused.new(e.message)
         @sock = nil
