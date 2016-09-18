@@ -46,7 +46,12 @@ module SSHScan
 
       # Connect and get results (Net-SSH)
       begin
-        net_ssh_session = Net::SSH::Transport::Session.new(target, :port => port, :timeout => timeout)
+        net_ssh_session = Net::SSH::Transport::Session.new(
+                            target,
+                            :port => port,
+                            :timeout => timeout,
+                            :paranoid => Net::SSH::Verifiers::Null.new
+                          )
         raise SSHScan::Error::ClosedConnection.new if net_ssh_session.closed?
         auth_session = Net::SSH::Authentication::Session.new(net_ssh_session, :auth_methods => ["none"])
         auth_session.authenticate("none", "test", "test")
