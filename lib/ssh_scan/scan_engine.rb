@@ -1,6 +1,7 @@
 require 'socket'
 require 'ssh_scan/client'
 require 'ssh_scan/crypto'
+require 'ssh_scan/fingerprint_database'
 require 'net/ssh'
 
 module SSHScan
@@ -77,6 +78,25 @@ module SSHScan
             "sha1" => pkey.fingerprint_sha1,
             "sha256" => pkey.fingerprint_sha256,
           }
+
+          fingerprint_db = SSHScan::FingerprintDatabase.new("./database/default.db")
+
+          # Need to remove old fingerprints before we add new ones
+          fingerprint_db.clear_fingerprints(result[:ip])
+
+          result['duplicate_fingerprints'] = []
+
+          result['fingerprints'].values.each do |fingerprint|
+            # Add any ips that are reusing these fingerprints
+            fingerprint_db.find_fingerprints(fingerprint).each do |other_ip|
+              result['duplicate_fingerprints'] << other_ip
+            end
+
+            # Add the new fingerprint to the database
+            fingerprint_db.add_fingerprint(fingerprint, result[:ip])
+          end
+
+          result['duplicate_fingerprints'].uniq!
         end
       end
 
