@@ -11,7 +11,6 @@ module SSHScan
       if port.nil?
         port = 22
       end
-      policy = opts[:policy_file]
       timeout = opts[:timeout]
       result = []
 
@@ -81,25 +80,8 @@ module SSHScan
         end
       end
 
-      # Do this only when no errors were reported
-      if !policy.nil? &&
-         !result[:key_algorithms].nil? &&
-         !result[:server_host_key_algorithms].nil? &&
-         !result[:encryption_algorithms_client_to_server].nil? &&
-         !result[:encryption_algorithms_server_to_client].nil? &&
-         !result[:mac_algorithms_client_to_server].nil? &&
-         !result[:mac_algorithms_server_to_client].nil? &&
-         !result[:compression_algorithms_client_to_server].nil? &&
-         !result[:compression_algorithms_server_to_client].nil? &&
-         !result[:languages_client_to_server].nil? &&
-         !result[:languages_server_to_client].nil?
-        policy_mgr = SSHScan::PolicyManager.new(result, policy)
-        result['compliance'] = policy_mgr.compliance_results
-      end
-
       # Add scan times
       end_time = Time.now
-
       result['start_time'] = start_time.to_s
       result['end_time'] = end_time.to_s
       result['scan_duration_seconds'] = end_time - start_time
@@ -130,6 +112,25 @@ module SSHScan
         end
       end
       workers.map(&:join)
+
+      # Decorate all the results with compliance information
+      results.each do |result|
+        # Do this only when we have all the information we need
+        if !opts[:policy_file].nil? &&
+           !result[:key_algorithms].nil? &&
+           !result[:server_host_key_algorithms].nil? &&
+           !result[:encryption_algorithms_client_to_server].nil? &&
+           !result[:encryption_algorithms_server_to_client].nil? &&
+           !result[:mac_algorithms_client_to_server].nil? &&
+           !result[:mac_algorithms_server_to_client].nil? &&
+           !result[:compression_algorithms_client_to_server].nil? &&
+           !result[:compression_algorithms_server_to_client].nil? &&
+           !result[:languages_client_to_server].nil? &&
+           !result[:languages_server_to_client].nil?
+          policy_mgr = SSHScan::PolicyManager.new(result, opts[:policy_file])
+          result['compliance'] = policy_mgr.compliance_results
+        end
+      end
 
       return results
     end
