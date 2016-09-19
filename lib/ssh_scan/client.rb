@@ -71,20 +71,32 @@ module SSHScan
       result[:ssh_lib] = @server_banner.ssh_lib_guess.common
       result[:ssh_lib_cpe] = @server_banner.ssh_lib_guess.cpe
 
-      @sock.write(kex_init_raw)
-      resp = @sock.read(4)
+      begin
+        @sock.write(kex_init_raw)
+        resp = @sock.read(4)
 
-      if resp.nil?
-        @error = SSHScan::Error::NoKexResponse.new("service did not respond to our kex init request")
+        if resp.nil?
+          result[:error] = SSHScan::Error::NoKexResponse.new("service did not respond to our kex init request")
+          @sock = nil
+          return result
+        end
+
+        resp += @sock.read(resp.unpack("N").first)
+        @sock.close
+
+        kex_exchange_init = SSHScan::KeyExchangeInit.read(resp)
+        result.merge!(kex_exchange_init.to_hash)
+      rescue Errno::ETIMEDOUT => e
+        @error = SSHScan::Error::ConnectTimeout.new(e.message)
         @sock = nil
-        return result
+      rescue Errno::ECONNREFUSED,
+             Errno::ENETUNREACH,
+             Errno::ECONNRESET,
+             Errno::EACCES,
+             Errno::EHOSTUNREACH => e
+        result[:error] = SSHScan::Error::NoKexResponse.new("service did not respond to our kex init request")
+        @sock = nil
       end
-
-      resp += @sock.read(resp.unpack("N").first)
-      @sock.close
-
-      kex_exchange_init = SSHScan::KeyExchangeInit.read(resp)
-      result.merge!(kex_exchange_init.to_hash)
 
       return result
     end
