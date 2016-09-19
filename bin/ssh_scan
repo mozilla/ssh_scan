@@ -18,6 +18,7 @@ options = {
   :threads => 5,
   :verbosity => nil,
   :logger => Logger.new(STDERR),
+  :fingerprint_database => "./fingerprints.db"
 }
 
 target_parser = SSHScan::TargetParser.new()
