@@ -138,6 +138,7 @@ module SSHScan
           end
         end
       end
+      result['duplicate_host_key_ips'].uniq! if result['duplicate_host_key_ips']
 
       # Decorate all the results with compliance information
       results.each do |result|
