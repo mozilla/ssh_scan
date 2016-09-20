@@ -189,6 +189,14 @@ unless File.exists?(options[:policy])
   exit 1
 end
 
+# Check to see if we're running the latest released version
+update = SSHScan::Update.new
+if update.newer_gem_available?
+  options[:logger].warn("You're NOT using the latest version of ssh_scan, try 'gem update ssh_scan' to get the latest")
+else
+  options[:logger].info("You're using the latest version of ssh_scan #{SSHScan::VERSION}")
+end
+
 options[:policy_file] = SSHScan::Policy.from_file(options[:policy])
 
 # Perform scan and get results
