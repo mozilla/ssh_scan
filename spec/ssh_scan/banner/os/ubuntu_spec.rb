@@ -142,6 +142,102 @@ describe SSHScan::Banner do
         :ssh_lib_class => SSHScan::SSHLib::OpenSSH,
         :ssh_lib_version => "7.2p2",
       },
+      "SSH-2.0-OpenSSH_6.6.1p1 Ubuntu-2ubuntu2.8" => {
+        :os_class => SSHScan::OS::Ubuntu,
+        :os_version => "14.04",
+        :ssh_lib_class => SSHScan::SSHLib::OpenSSH,
+        :ssh_lib_version => "6.6.1p1",
+      },
+      "SSH-2.0-OpenSSH_7.2p2 Ubuntu-4ubuntu2.1" => {
+        :os_class => SSHScan::OS::Ubuntu,
+        :os_version => "16.04",
+        :ssh_lib_class => SSHScan::SSHLib::OpenSSH,
+        :ssh_lib_version => "7.2p2",
+      },
+      "SSH-2.0-OpenSSH_6.6.1p1 Ubuntu-2ubuntu2.7" => {
+        :os_class => SSHScan::OS::Ubuntu,
+        :os_version => "14.04",
+        :ssh_lib_class => SSHScan::SSHLib::OpenSSH,
+        :ssh_lib_version => "6.6.1p1",
+      },
+      "SSH-2.0-OpenSSH_6.6.1p1 Ubuntu-2ubuntu2.6" => {
+        :os_class => SSHScan::OS::Ubuntu,
+        :os_version => "14.04",
+        :ssh_lib_class => SSHScan::SSHLib::OpenSSH,
+        :ssh_lib_version => "6.6.1p1",
+      },
+      "SSH-2.0-OpenSSH_5.9p1 Debian-5ubuntu1.8" => {
+        :os_class => SSHScan::OS::Ubuntu,
+        :os_version => "12.04",
+        :ssh_lib_class => SSHScan::SSHLib::OpenSSH,
+        :ssh_lib_version => "5.9p1",
+      },
+      "SSH-2.0-OpenSSH_5.9p1 Debian-5ubuntu1.10" => {
+        :os_class => SSHScan::OS::Ubuntu,
+        :os_version => "12.04",
+        :ssh_lib_class => SSHScan::SSHLib::OpenSSH,
+        :ssh_lib_version => "5.9p1",
+      },
+      "SSH-2.0-OpenSSH_5.9p1 Debian-5ubuntu1" => {
+        :os_class => SSHScan::OS::Ubuntu,
+        :os_version => "12.04",
+        :ssh_lib_class => SSHScan::SSHLib::OpenSSH,
+        :ssh_lib_version => "5.9p1",
+      },
+      "SSH-2.0-OpenSSH_6.6.1p1 Ubuntu-2ubuntu2.3" => {
+        :os_class => SSHScan::OS::Ubuntu,
+        :os_version => "14.04",
+        :ssh_lib_class => SSHScan::SSHLib::OpenSSH,
+        :ssh_lib_version => "6.6.1p1",
+      },
+      "SSH-2.0-OpenSSH_6.6.1p1 Ubuntu-2ubuntu2" => {
+        :os_class => SSHScan::OS::Ubuntu,
+        :os_version => "14.04",
+        :ssh_lib_class => SSHScan::SSHLib::OpenSSH,
+        :ssh_lib_version => "6.6.1p1",
+      },
+      "SSH-2.0-OpenSSH_7.2p2 Ubuntu-4ubuntu1" => {
+        :os_class => SSHScan::OS::Ubuntu,
+        :os_version => "16.04",
+        :ssh_lib_class => SSHScan::SSHLib::OpenSSH,
+        :ssh_lib_version => "7.2p2",
+      },
+      "SSH-2.0-OpenSSH_6.6p1 Ubuntu-2ubuntu1" => {
+        :os_class => SSHScan::OS::Ubuntu,
+        :os_version => "14.04",
+        :ssh_lib_class => SSHScan::SSHLib::OpenSSH,
+        :ssh_lib_version => "6.6p1",
+      },
+      "SSH-2.0-OpenSSH_6.6.1p1 Ubuntu-8" => {
+        :os_class => SSHScan::OS::Ubuntu,
+        :os_version => "14.04",
+        :ssh_lib_class => SSHScan::SSHLib::OpenSSH,
+        :ssh_lib_version => "6.6.1p1",
+      },
+      "SSH-2.0-OpenSSH_5.3p1 Debian-3ubuntu7.1" => {
+        :os_class => SSHScan::OS::Ubuntu,
+        :os_version => "10.04",
+        :ssh_lib_class => SSHScan::SSHLib::OpenSSH,
+        :ssh_lib_version => "5.3p1",
+      },
+      "SSH-2.0-OpenSSH_6.9p1 Ubuntu-2ubuntu0.2" => {
+        :os_class => SSHScan::OS::Ubuntu,
+        :os_version => "15.10",
+        :ssh_lib_class => SSHScan::SSHLib::OpenSSH,
+        :ssh_lib_version => "6.9p1",
+      },
+      "SSH-2.0-OpenSSH_6.7p1 Ubuntu-5ubuntu1" => {
+        :os_class => SSHScan::OS::Ubuntu,
+        :os_version => "15.04",
+        :ssh_lib_class => SSHScan::SSHLib::OpenSSH,
+        :ssh_lib_version => "6.7p1",
+      },
+      "SSH-2.0-OpenSSH_5.9p1 Debian-5ubuntu1.9" => {
+        :os_class => SSHScan::OS::Ubuntu,
+        :os_version => "12.04",
+        :ssh_lib_class => SSHScan::SSHLib::OpenSSH,
+        :ssh_lib_version => "5.9p1",
+      },
     }
     checkFingerprints(expectations)
   end
