@@ -18,6 +18,7 @@ options = {
   :threads => 5,
   :verbosity => nil,
   :logger => Logger.new(STDERR),
+  :fingerprint_database => "./fingerprints.db"
 }
 
 target_parser = SSHScan::TargetParser.new()
@@ -107,13 +108,18 @@ opt_parser = OptionParser.new do |opts|
     options[:threads] = threads.to_i
   end
 
+  opts.on("--fingerprint-db [FILE]",
+          "File location of fingerprint database (Default: ./fingerprints.db)") do |fingerprint_db|
+    options[:fingerprint_database] = fingerprint_db
+  end
+
   opts.on("-u", "--unit-test [FILE]",
           "Throw appropriate exit codes based on compliance status") do
     options[:unit_test] = true
   end
 
   opts.on("-V", "--verbosity",
-          "Set the logger level (Accpeted Params: INFO, DEBUG, WARN, ERROR, FATAL)") do |verbosity|
+          "Set the logger level (Accepted Params: INFO, DEBUG, WARN, ERROR, FATAL)") do |verbosity|
     options[:logger].level = case options[:verbosity]
       when "INFO" then Logger::INFO
       when "DEBUG" then Logger::DEBUG
