@@ -238,6 +238,10 @@ describe SSHScan::Banner do
         :ssh_lib_class => SSHScan::SSHLib::OpenSSH,
         :ssh_lib_version => "5.9p1",
       },
+      "SSH-2.0-OpenSSH_6.6.1p1 Ubuntu-9" => {
+        :os_class => SSHScan::OS::Ubuntu,
+        :os_cpe => "o:canonical:ubuntu",
+      }
     }
     checkFingerprints(expectations)
   end
