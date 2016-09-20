@@ -146,7 +146,8 @@ module SSHScan
          "6.6p1-2ubuntu2.2",
          "6.6p1-2ubuntu2",
          "6.6p1-2ubuntu1",
-         "6.2p2-6ubuntu1"],
+         "6.2p2-6ubuntu1",
+         "6.6.1p1 Ubuntu-8"],
        "14.10" => ["6.6p1-5build1"],
        "15.04" =>
         ["6.7p1-5ubuntu1.4",
