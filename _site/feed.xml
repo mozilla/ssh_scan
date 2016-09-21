@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title></title>
+    <description>Website and Blog for mozilla/ssh_scan</description>
+    <link>http://mozilla.github.io/ssh_scan///</link>
+    <atom:link href="http://mozilla.github.io/ssh_scan///feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Wed, 21 Sep 2016 12:58:37 +0200</pubDate>
+    <lastBuildDate>Wed, 21 Sep 2016 12:58:37 +0200</lastBuildDate>
+    <generator>Jekyll v3.2.1</generator>
+    
+  </channel>
+</rss>
