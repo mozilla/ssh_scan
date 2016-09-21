@@ -113,6 +113,10 @@ opt_parser = OptionParser.new do |opts|
     options[:fingerprint_database] = fingerprint_db
   end
 
+  opts.on("--suppress-update-status", "Do not check for updates") do
+    options[:suppress_update_status] = true
+  end
+
   opts.on("-u", "--unit-test [FILE]",
           "Throw appropriate exit codes based on compliance status") do
     options[:unit_test] = true
@@ -190,11 +194,19 @@ unless File.exists?(options[:policy])
 end
 
 # Check to see if we're running the latest released version
-update = SSHScan::Update.new
-if update.newer_gem_available?
-  options[:logger].warn("You're NOT using the latest version of ssh_scan, try 'gem update ssh_scan' to get the latest")
-else
-  options[:logger].info("You're using the latest version of ssh_scan #{SSHScan::VERSION}")
+if !options[:suppress_update_status]
+  update = SSHScan::Update.new
+  if update.newer_gem_available?
+    options[:logger].warn("You're NOT using the latest version of ssh_scan, try 'gem update ssh_scan' to get the latest")
+  else
+    if update.errors.size > 0
+      update.errors.each do |error|
+        options[:logger].error(error)
+      end
+    else
+      options[:logger].info("You're using the latest version of ssh_scan #{SSHScan::VERSION}")
+    end
+  end
 end
 
 options[:policy_file] = SSHScan::Policy.from_file(options[:policy])
