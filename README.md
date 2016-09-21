@@ -59,22 +59,23 @@ bundle install
 
 Run `ssh_scan -h` to get this
 
-    ssh_scan v0.0.10 (https://github.com/mozilla/ssh_scan)
+ssh_scan v0.0.15 (https://github.com/mozilla/ssh_scan)
 
     Usage: ssh_scan [options]
         -t, --target [IP/Range/Hostname] IP/Ranges/Hostname to scan
         -f, --file [FilePath]            File Path of the file containing IP/Range/Hostnames to scan
         -T, --timeout [seconds]          Timeout per connect after which ssh_scan gives up on the host
-        -o, --output [FilePath]          File to write JSON output to
+        -L, --logger [Log File Path]     Enable logger
         -O, --from_json [FilePath]       File to read JSON output from
+        -o, --output [FilePath]          File to write JSON output to
         -p, --port [PORT]                Port (Default: 22)
         -P, --policy [FILE]              Custom policy file (Default: Mozilla Modern)
             --threads [NUMBER]           Number of worker threads (Default: 5)
+            --fingerprint-db [FILE]      File location of fingerprint database (Default: ./fingerprints.db)
         -u, --unit-test [FILE]           Throw appropriate exit codes based on compliance status
+        -V, --verbosity                  Set the logger level (Accepted Params: INFO, DEBUG, WARN, ERROR, FATAL)
         -v, --version                    Display just version info
         -h, --help                       Show this message
-        -L, --logger[Log File Path]      Enable logger and set the log file
-        -V, --verbosity                  Set the logger level (Params: INFO, DEBUG, WARN, ERROR, FATAL)
 
     Examples:
 
