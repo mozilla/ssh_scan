@@ -200,7 +200,7 @@ module SSHScan
       end
 
       def cpe
-        "o:canonical:ubuntu:#{@version}"
+        "o:canonical:ubuntu" + (@version.to_s ? ":#{@version}" : "")
       end
     end
   end
