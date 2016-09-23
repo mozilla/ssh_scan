@@ -5,6 +5,10 @@ require 'net/http'
 
 module SSHScan
   class Update
+    def initialize
+      @errors = []
+    end
+
     def next_patch_version(version = SSHScan::VERSION)
       major, minor, patch = version.split(".")
       patch_num = patch.to_i
@@ -34,7 +38,8 @@ module SSHScan
 
       begin
         res = Net::HTTP.get_response(uri)
-      rescue
+      rescue Exception => e
+        @errors << e.message
         return false
       end
 
@@ -43,6 +48,10 @@ module SSHScan
       else
         return true
       end
+    end
+
+    def errors
+      @errors.uniq
     end
 
     def newer_gem_available?(version = SSHScan::VERSION)
