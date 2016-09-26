@@ -27,7 +27,7 @@ module SSHScan
         return SSHScan::SSHLib::LibSSH.new()
       when /Cisco/i
         return SSHScan::SSHLib::CiscoSSH.new()
-      when /ROS/i
+      when /ROS/
         return SSHScan::SSHLib::ROSSSH.new()
       when /DOPRASSH/i
         return SSHScan::SSHLib::DOPRASSH.new()
@@ -52,10 +52,12 @@ module SSHScan
         return SSHScan::OS::FreeBSD.new
       when /Debian/i
         return SSHScan::OS::Debian.new
-      when /Windows/i
+      when /Windows|Microsoft/i
         return SSHScan::OS::Windows.new
       when /Cisco/i
         return SSHScan::OS::Cisco.new
+      when /Raspbian/i
+        return SSHScan::OS::Raspbian.new()
       when /ROS/i
         return SSHScan::OS::ROS.new
       when /DOPRA/i
