@@ -7,10 +7,10 @@ highlighter: pygments
 logo: false
 paginate: 15
 baseurl: /
-domain_name: 'http://mozilla.github.io/ssh_scan/'
+domain_name: 'https://mozilla.github.io/ssh_scan/'
 google_analytics: 'UA-XXXXXXXX-X'
 gems: [jekyll-paginate]
 
 # Details for the RSS feed generator
-url:            'http://mozilla.github.io/ssh_scan/'
+url:            'https://mozilla.github.io/ssh_scan/'
 author:         'Jinank Jain'
