@@ -40,10 +40,10 @@ cover: false
 
     <article class="post">
         <header class="post-header">
-            <h2 class="post-title"><a href="{{ post.url }}">{{ post.title }}</a></h2>
+            <h2 class="post-title"><a href="{{ site.url }}{{ post.url }}">{{ post.title }}</a></h2>
         </header>
         <section class="post-excerpt">
-            {{ post.excerpt }} <a class="read-more" href="{{ post.url }}">&raquo;</a>
+            {{ post.excerpt }} <a class="read-more" href="{{ site.url }}{{ post.url }}">&raquo;</a>
         </section>
         <footer class="post-meta">
             {% if site.author %}
