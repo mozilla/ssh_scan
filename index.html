@@ -22,7 +22,7 @@ cover: false
                   {% include badges.md %}
                 {% endcapture %}
                 {{ badges-include | markdownify }}
-                {% if site.description %} {{ site.description }} (<a href="{{ site.baseurl }}readme">readme</a>).{% endif %}
+                {% if site.description %} {{ site.description }} (<a href="{{ site.url }}readme">readme</a>).{% endif %}
             </h2>
         </div>
     </div>
