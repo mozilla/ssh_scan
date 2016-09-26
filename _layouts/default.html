@@ -11,10 +11,10 @@
     <meta name="MobileOptimized" content="320" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="stylesheet" type="text/css" href="assets/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="{{ site.url }}assets/css/screen.css" />
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
     <!-- Customisation  -->
-    <link rel="stylesheet" type="text/css" href="assets/css/main.css" />
+    <link rel="stylesheet" type="text/css" href="{{ site.url }}assets/css/main.css" />
 
 </head>
 <body class="{% if page.post_class %}{{page.post_class}}{% else %}home-template{% endif %}">
@@ -23,7 +23,7 @@
     <footer class="site-footer clearfix">
       <section class="copyright">
         <a href="{{ site.baseurl }}">{{ site.name }}</a> &copy; 
-              {{date format="YYYY"}} &bull; All rights reserved.
+              {{ site.time | date:"%Y" }} &bull; All rights reserved.
       </section>
       <section class="poweredby">Made with Jekyll using 
         <a href="http://github.com/rosario/kasper">Kasper theme</a>
