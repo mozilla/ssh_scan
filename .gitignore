@@ -1,0 +1,2 @@
+# Ignore the site generated upon jekyll serve
+_site/*

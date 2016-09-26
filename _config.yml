@@ -1,6 +1,6 @@
 name: mozilla/ssh_scan
-description: Website and Blog for mozilla/ssh_scan
-meta_description: "A SSH configuration and policy scanner"
+description: A SSH configuration and policy scanner
+meta_description: Website and Blog for mozilla/ssh_scan
 
 markdown: kramdown
 highlighter: pygments
