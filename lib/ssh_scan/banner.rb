@@ -25,6 +25,8 @@ module SSHScan
         return SSHScan::SSHLib::OpenSSH.new(@string)
       when /LibSSH/i
         return SSHScan::SSHLib::LibSSH.new()
+      when /ipssh/i
+        return SSHScan::SSHLib::IpSsh.new(@string)
       when /Cisco/i
         return SSHScan::SSHLib::CiscoSSH.new()
       when /ROS/
