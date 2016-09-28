@@ -35,6 +35,8 @@ module SSHScan
         return SSHScan::SSHLib::DOPRASSH.new()
       when /cryptlib/i
         return SSHScan::SSHLib::Cryptlib.new()
+      when /pgp/i
+        return SSHScan::SSHLib::PGP.new()
       when /ServerTech_SSH|Mocana SSH/i
         return SSHScan::SSHLib::SentrySSH.new()
       when /mpssh/i
