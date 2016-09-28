@@ -12,6 +12,7 @@ require 'ssh_scan/protocol'
 require 'ssh_scan/scan_engine'
 require 'ssh_scan/target_parser'
 require 'ssh_scan/update'
+require 'ssh_scan/api'
 
 #Monkey Patches
 require 'string_ext'
