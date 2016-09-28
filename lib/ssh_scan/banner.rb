@@ -33,6 +33,8 @@ module SSHScan
         return SSHScan::SSHLib::DOPRASSH.new()
       when /cryptlib/i
         return SSHScan::SSHLib::Cryptlib.new()
+      when /ServerTech_SSH|Mocana SSH/i
+        return SSHScan::SSHLib::SentrySSH.new()
       when /mpssh/i
         return SSHScan::SSHLib::Mpssh.new(@string)
       when /dropbear/i
