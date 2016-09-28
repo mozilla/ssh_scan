@@ -25,14 +25,30 @@ module SSHScan
         return SSHScan::SSHLib::OpenSSH.new(@string)
       when /LibSSH/i
         return SSHScan::SSHLib::LibSSH.new()
+      when /ipssh/i
+        return SSHScan::SSHLib::IpSsh.new(@string)
       when /Cisco/i
         return SSHScan::SSHLib::CiscoSSH.new()
       when /ROS/
         return SSHScan::SSHLib::ROSSSH.new()
       when /DOPRASSH/i
         return SSHScan::SSHLib::DOPRASSH.new()
+      when /cryptlib/i
+        return SSHScan::SSHLib::Cryptlib.new()
+      when /NOS-SSH/i
+        return SSHScan::SSHLib::NosSSH.new(@string)
+      when /pgp/i
+        return SSHScan::SSHLib::PGP.new()
+      when /ServerTech_SSH|Mocana SSH/i
+        return SSHScan::SSHLib::SentrySSH.new()
+      when /mpssh/i
+        return SSHScan::SSHLib::Mpssh.new(@string)
       when /dropbear/i
         return SSHScan::SSHLib::Dropbear.new(@string)
+      when /RomSShell/i
+        return SSHScan::SSHLib::RomSShell.new(@string)
+      when /Flowssh/i
+        return SSHScan::SSHLib::FlowSsh.new(@string)
       else
         return SSHScan::SSHLib::Unknown.new()
       end
