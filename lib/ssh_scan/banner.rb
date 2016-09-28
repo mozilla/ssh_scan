@@ -35,6 +35,8 @@ module SSHScan
         return SSHScan::SSHLib::Dropbear.new(@string)
       when /RomSShell/i
         return SSHScan::SSHLib::RomSShell.new(@string)
+      when /Flowssh/i
+        return SSHScan::SSHLib::FlowSsh.new(@string)
       else
         return SSHScan::SSHLib::Unknown.new()
       end
