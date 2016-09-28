@@ -31,6 +31,8 @@ module SSHScan
         return SSHScan::SSHLib::ROSSSH.new()
       when /DOPRASSH/i
         return SSHScan::SSHLib::DOPRASSH.new()
+      when /cryptlib/i
+        return SSHScan::SSHLib::Cryptlib.new()
       when /dropbear/i
         return SSHScan::SSHLib::Dropbear.new(@string)
       when /RomSShell/i
