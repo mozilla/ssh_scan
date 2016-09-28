@@ -1,6 +1,6 @@
 module SSHScan
   module SSHLib
-    class OpenSSH
+    class RomSShell
       class Version
         def initialize(version_string)
           @version_string = version_string
@@ -19,15 +19,15 @@ module SSHScan
         return nil if @banner.nil?
         match = @banner.match(/RomSShell_(\d+[\.\d+]+(p)?(\d+)?)/)
         return nil if match.nil?
-        return OpenSSH::Version.new(match[1])
+        return RomSShell::Version.new(match[1])
       end
 
       def common
-        "openssh"
+        "romsshell"
       end
 
       def cpe
-        "a:openssh:openssh" << (":" + version.to_s) unless version.nil?
+        "a:allegrosoft:romsshell"
       end
     end
   end
