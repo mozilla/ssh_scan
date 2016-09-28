@@ -17,7 +17,7 @@ module SSHScan
 
       def version()
         return nil if @banner.nil?
-        match = @banner.match(/RomSShell_(\d+[\.\d+]+(p)?(\d+)?)/)
+        match = @banner.match(/OpenSSH_(\d+[\.\d+]+(p)?(\d+)?)/)
         return nil if match.nil?
         return OpenSSH::Version.new(match[1])
       end
