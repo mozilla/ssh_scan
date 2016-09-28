@@ -142,6 +142,11 @@ opt_parser = OptionParser.new do |opts|
     exit
   end
 
+  opts.on("-l", "--listen", "Listen and serve API requests") do
+    SSHScan::API.run!
+    exit
+  end
+
   opts.on_tail("-h", "--help", "Show this message") do
     puts opts
     puts "\nExamples:"
