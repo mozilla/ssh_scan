@@ -20,6 +20,7 @@ describe SSHScan::Banner do
       expectations["SSH-2.0-dropbear_#{dropbear_version}"] = {
         :ssh_lib_class => SSHScan::SSHLib::Dropbear,
         :ssh_lib_version => dropbear_version,
+        :ssh_lib_cpe => "a:dropbear:dropbear:#{dropbear_version}",
       }
     end
     checkFingerprints(expectations)

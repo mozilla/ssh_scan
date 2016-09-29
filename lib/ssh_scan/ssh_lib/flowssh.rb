@@ -27,7 +27,7 @@ module SSHScan
       end
 
       def cpe
-        "a:bitvise:flowssh"
+        "a:bitvise:flowssh" << (":" + version.to_s) unless version.nil?
       end
     end
   end

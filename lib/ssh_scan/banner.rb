@@ -73,7 +73,7 @@ module SSHScan
       when /Cisco/i
         return SSHScan::OS::Cisco.new
       when /Raspbian/i
-        return SSHScan::OS::Raspbian.new()
+        return SSHScan::OS::Raspbian.new(@string)
       when /ROS/i
         return SSHScan::OS::ROS.new
       when /DOPRA/i

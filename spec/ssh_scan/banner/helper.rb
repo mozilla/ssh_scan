@@ -25,6 +25,10 @@ def checkFingerprints(fingerprint_expectations)
       if expectations[:ssh_lib_version]
         expect(banner.ssh_lib_guess.version.to_s).to eql(expectations[:ssh_lib_version])
       end
+
+      if expectations[:ssh_lib_cpe]
+        expect(banner.ssh_lib_guess.cpe).to eql(expectations[:ssh_lib_cpe])
+      end
     end
   end
 end

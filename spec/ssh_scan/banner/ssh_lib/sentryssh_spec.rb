@@ -7,10 +7,12 @@ describe SSHScan::Banner do
       "SSH-2.0-Mocana SSH" => {
         :ssh_lib_class => SSHScan::SSHLib::SentrySSH,
         :ssh_lib_version => "",
+        :ssh_lib_cpe => "a:servertech:sentryssh",
       },
       "SSH-2.0-ServerTech_SSH" => {
         :ssh_lib_class => SSHScan::SSHLib::SentrySSH,
         :ssh_lib_version => "",
+        :ssh_lib_cpe => "a:servertech:sentryssh",
       },
     }
     checkFingerprints(expectations)

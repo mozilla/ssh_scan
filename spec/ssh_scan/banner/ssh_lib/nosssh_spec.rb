@@ -7,6 +7,7 @@ describe SSHScan::Banner do
       "SSH-2.0-NOS-SSH_2.0" => {
         :ssh_lib_class => SSHScan::SSHLib::NosSSH,
         :ssh_lib_version => "2.0",
+        :ssh_lib_cpe => "a:nosssh:nosssh:2.0",
       },
     }
     checkFingerprints(expectations)
