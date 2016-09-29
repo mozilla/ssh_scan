@@ -27,7 +27,7 @@ module SSHScan
       end
 
       def cpe
-        "a:allegrosoft:romsshell"
+        "a:allegrosoft:romsshell" << (":" + version.to_s) unless version.nil?
       end
     end
   end
