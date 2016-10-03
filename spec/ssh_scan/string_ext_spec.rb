@@ -1,6 +1,7 @@
 require 'rspec'
 require 'pathname'
 require 'string_ext'
+require 'resolv'
 
 describe String do
   context "when unhexing a string" do
@@ -30,19 +31,11 @@ describe String do
 		end
 	end
 
-	context "when resolving a DNS name as IPv6" do
-	testing_dns = "www.google.com"
-		it "should load all the attributes properly" do
-		  test_result = testing_dns.resolve_fqdn_as_ipv6.to_s
-		  expect(test_result).to eql("2607:F8B0:4006:80F::200E")
-		end
-	end
-
 	context "when resolving a DNS name as IPv4" do
-	testing_dns = "www.google.com"
+	testing_dns = "192.168.1.1"
 		it "should load all the attributes properly" do
 		  test_result = testing_dns.resolve_fqdn_as_ipv4.to_s
-		  expect(test_result).to eql("172.217.3.14")
+		  expect(test_result).to eql("192.168.1.1")
 		end
 	end
 
