@@ -31,7 +31,7 @@ describe String do
 	end
 
 	context "when resolving a DNS name as IPv6" do
-	testing_dns = ""
+	testing_dns = "www.google.com"
 		it "should load all the attributes properly" do
 		  test_result = testing_dns.resolve_fqdn_as_ipv6.to_s
 		  expect(test_result).to eql("2607:F8B0:4006:80F::200E")
@@ -41,7 +41,7 @@ describe String do
 	context "when resolving a DNS name as IPv4" do
 	testing_dns = "www.google.com"
 		it "should load all the attributes properly" do
-		  test_result = testing_dns.resolve_fqdn_as_ipv4
+		  test_result = testing_dns.resolve_fqdn_as_ipv4.to_s
 		  expect(test_result).to eql("172.217.3.14")
 		end
 	end
