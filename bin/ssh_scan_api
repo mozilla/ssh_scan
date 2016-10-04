@@ -1,0 +1,36 @@
+#!/usr/bin/env ruby
+
+$:.unshift File.join(File.dirname(__FILE__), "../lib")
+
+require 'optparse'
+require 'ssh_scan'
+
+options = {
+  :port => 8000,
+}
+
+opt_parser = OptionParser.new do |opts|
+  opts.banner = "ssh_scan_api v#{SSHScan::API_VERSION} (https://github.com/mozilla/ssh_scan)\n\n" +
+                "Usage: ssh_scan [options]"
+
+  opts.on("-p", "--port [PORT]", "Listen and serve API requests on this port (Default: 8000)") do |port|
+    options[:port] = port.to_i
+  end
+
+  opts.on("-v", "--version", "Show ssh_scan API version") do
+    puts SSHScan::API_VERSION
+    exit
+  end
+
+  opts.on_tail("-h", "--help", "Show help") do
+    puts opts
+    puts "\nExamples:\n"
+    puts "  ssh_scan_api -p 4567"
+    puts ""
+    exit
+  end
+end
+
+opt_parser.parse!
+
+SSHScan::API.run!(:port => options[:port])
