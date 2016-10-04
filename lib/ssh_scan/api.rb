@@ -46,6 +46,7 @@ module SSHScan
 
     # Custom 404 handling
     not_found do
+      content_type "text/plain"
       'Invalid request, see API documentation here: https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API'
     end
 
