@@ -32,10 +32,10 @@ describe String do
     end
 
     context "when resolving a DNS name as IPv4" do
-    testing_dns = "192.168.1.1"
+    testing_dns = "github.com"
         it "should load all the attributes properly" do
           test_result = testing_dns.resolve_fqdn_as_ipv4.to_s
-          expect(test_result).to eql("192.168.1.1")
+          expect(test_result).to match(Resolv::IPv4::Regex256)
         end
     end
 
