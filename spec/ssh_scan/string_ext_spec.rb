@@ -30,14 +30,6 @@ describe String do
     end
   end
 
-  context "when resolving a DNS name as IPv6" do
-  testing_dns = "github.com"
-    it "should load all the attributes properly" do
-      test_result = testing_dns.resolve_fqdn_as_ipv4.to_s
-      expect(test_result).to match()
-    end
-  end
-
   context "when resolving a DNS name as IPv4" do
   testing_dns = "github.com"
     it "should load all the attributes properly" do
