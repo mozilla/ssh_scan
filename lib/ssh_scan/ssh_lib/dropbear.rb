@@ -31,7 +31,7 @@ module SSHScan
       end
 
       def cpe
-        "o:dropbear:dropbear:#{@version.to_s}"
+        "a:dropbear:dropbear" << (":" + version.to_s) unless version.nil?
       end
 
       def version
@@ -40,4 +40,3 @@ module SSHScan
     end
   end
 end
-

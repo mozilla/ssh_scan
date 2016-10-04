@@ -27,7 +27,7 @@ module SSHScan
       end
 
       def cpe
-        "a:mpssh:mpssh"
+        "a:mpssh:mpssh" << (":" + version.to_s) unless version.nil?
       end
     end
   end

@@ -7,6 +7,7 @@ describe SSHScan::Banner do
       "SSH-2.0-cryptlib" => {
         :ssh_lib_class => SSHScan::SSHLib::Cryptlib,
         :ssh_lib_version => "",
+        :ssh_lib_cpe => "a:cryptlib:cryptlib",
       },
     }
     checkFingerprints(expectations)
