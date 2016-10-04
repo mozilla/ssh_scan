@@ -24,22 +24,9 @@ module SSHScan
       config.x_permitted_cross_domain_policies = "none"
       config.referrer_policy = "origin-when-cross-origin"
       config.csp = {
-        default_src: %w(https: 'self'),
-        base_uri: %w('self'),
-        block_all_mixed_content: true, # see http://www.w3.org/TR/mixed-content/
-        child_src: %w('none'), # if child-src isn't supported, the value for frame-src will be set.
-        connect_src: %w('none'),
-        font_src: %w('none'),
-        form_action: %w('none'),
+        default_src: %w('none'),
         frame_ancestors: %w('none'),
-        img_src: %w('none'),
-        media_src: %w('none'),
-        object_src: %w('none'),
-        plugin_types: %w('none'),
-        script_src: %w('none'),
-        style_src: %w('none'),
         upgrade_insecure_requests: true, # see https://www.w3.org/TR/upgrade-insecure-requests/
-        #report_uri: %w(https://report-uri.io/example-csp)
       }
     end
 
@@ -60,6 +47,11 @@ module SSHScan
     # Custom 404 handling
     not_found do
       'Invalid request, see API documentation here: https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API'
+    end
+
+    get '/robots.txt' do
+      content_type "text/plain"
+      "User-agent: *\nDisallow: /\n"
     end
 
     namespace "/api/v#{SSHScan::API_VERSION}" do
