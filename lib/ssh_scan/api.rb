@@ -54,6 +54,42 @@ module SSHScan
       "User-agent: *\nDisallow: /\n"
     end
 
+    get '/contribute.json' do
+      content_type :json
+      {
+        :name => "ssh_scan api",
+        :description => "An api for performing ssh compliance and policy scanning",
+        :repository => {
+          :url => "https://github.com/mozilla/ssh_scan",
+          :tests => "https://travis-ci.org/mozilla/ssh_scan",
+        },
+        :participate => {
+          :home => "https://github.com/mozilla/ssh_scan",
+          :docs => "https://github.com/mozilla/ssh_scan",
+          :irc => "irc://irc.mozilla.org/#infosec",
+          :irc_contacts => [
+            "claudijd",
+            "pwnbus",
+            "kang",
+          ],
+          :glitter => "https://gitter.im/mozilla-ssh_scan/Lobby",
+          :glitter_contacts => [
+            "claudijd",
+            "pwnbus",
+            "kang",
+          ],
+        },
+        :bugs => {
+          :list => "https://github.com/mozilla/ssh_scan/issues",
+        },
+        :keywords => [
+          "ruby",
+          "sinatra",
+        ],
+      }.to_json
+    end
+
+
     namespace "/api/v#{SSHScan::API_VERSION}" do
       before do
         content_type :json
