@@ -77,6 +77,8 @@ module SSHScan
             "claudijd",
             "pwnbus",
             "kang",
+            "jinankjain",
+            "agaurav77"
           ],
         },
         :bugs => {
