@@ -18,6 +18,15 @@ describe SSHScan::API do
     }.to_json)
   end
 
+  it "should send a positive response on GET heartbeat if the API is reachable" do
+    get "/api/v#{SSHScan::API_VERSION}/heartbeat"
+    expect(last_response.status).to eql(200)
+    expect(last_response.body).to eql({
+      :status => "OK",
+      :message => "Keep sending resquests. I am still alive."
+    }.to_json)
+  end
+
   it "should say ConnectTimeout for bad IP, and return valid JSON" do
     bad_ip = "192.168.255.255"
     port = "999"
