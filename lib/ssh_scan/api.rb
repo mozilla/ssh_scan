@@ -119,6 +119,13 @@ module SSHScan
           :api_version => SSHScan::API_VERSION,
         }.to_json
       end
+
+      get '/__lbheartbeat__' do
+        {
+          :status => "OK",
+          :message => "Keep sending requests. I am still alive."
+        }.to_json
+      end
     end
   end
 end
