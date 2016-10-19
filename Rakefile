@@ -5,6 +5,7 @@ require 'rspec'
 require 'rspec/core'
 require 'rspec/core/rake_task'
 require 'bundler/setup'
+require 'ssh_scan/version'
 
 $:.unshift File.join(File.dirname(__FILE__), "lib")
 
@@ -16,7 +17,7 @@ desc "Run all specs in spec directory"
 RSpec::Core::RakeTask.new(:spec)
 
 PACKAGE_NAME = "ssh_scan"
-VERSION = "0.0.15"
+VERSION = SSHScan::VERSION
 TRAVELING_RUBY_VERSION = "20150210-2.1.5"
 SQLITE3_VERSION = "1.3.9"  # Must match Gemfile
 
