@@ -119,6 +119,13 @@ module SSHScan
           :api_version => SSHScan::API_VERSION,
         }.to_json
       end
+
+      get '/heartbeat' do
+        {
+          :status=> "OK",
+          :message => "Keep sending resquests. I am still alive."
+        }.to_json
+      end      
     end
   end
 end
