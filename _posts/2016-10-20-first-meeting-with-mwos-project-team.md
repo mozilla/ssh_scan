@@ -2,9 +2,7 @@
 layout: post
 title:  "First Meeting with MWoS Project Team"
 date:   2016-10-20 12:00:00
-categories: Introduction
 author: claudijd
-author_short_bio: test test
 ---
 
 Today we conducted our first weekly meeting with the Mozilla Winter of Security (MWoS) project team focused on improving the feature set and scalability of [ssh_scan](https://github.com/mozilla/ssh_scan).  If you're not familiar with MWoS, it's a play on Google's Summer of Code program and you can find more details about it [here](https://wiki.mozilla.org/Security/Automation/Winter_Of_Security_2016).
