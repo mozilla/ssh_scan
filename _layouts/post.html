@@ -52,11 +52,9 @@ post_class: post-template
                 </figure>
                 <section class="author">
                     <!-- Author Name -->
-                    <h4> {{ site.author }} </h4>
+                    <h4> {{ post.author }} </h4>
                     <!-- Author Bio -->
-                    <p>
-                        An open community of developers working on ssh_scan
-                    </p>
+                    <p> {{ post.author_short_bio }} </p>
                 </section>
             {% endif %}
 
