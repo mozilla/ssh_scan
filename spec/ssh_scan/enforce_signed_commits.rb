@@ -30,7 +30,7 @@ if parts[1] == 'gpg'
       exit 0
     end
   end
-  if keyid.nil?
-    raise "Latest commit #{sha} is not signed!\nCommits must be gpg signed: `git commit -S[<keyid>]`"
-  end
+end
+if keyid.nil?
+  raise "Latest commit #{sha} is not signed!\nCommits must be gpg signed: `git commit -S[<keyid>]`"
 end
