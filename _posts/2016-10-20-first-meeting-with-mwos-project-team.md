@@ -1,13 +1,13 @@
 ---
 layout: post
 title:  "First Meeting with MWoS Project Team"
-date:   2016-09-21 12:57:00
+date:   2016-10-20 12:00:00
 categories: Introduction
 ---
 
 Today we conducted our first weekly meeting with the Mozilla Winter of Security (MWoS) project team focused on improving the feature set and scalability of [ssh_scan](https://github.com/mozilla/ssh_scan).  If you're not familiar with MWoS, it's a play on Google's Summer of Code program and you can find more details about it [here](https://wiki.mozilla.org/Security/Automation/Winter_Of_Security_2016).
 
-During the call, we met each other face to face for the first time so can develop a cadence for weekly touching base on the things we want to get done in the next 4 months (the duration of the project).  During the call, I had to express how odd it was that today was just the first official project meeting, but over the past couple months contributors (including members of the MWoS team) have already made some huge leaps and bounds with the project, which is currently still in prototype status.  It's been an amazing effort so far, I'm excited for else we have in store now that we're meeting regularly.
+During the call, we met each other face to face for the first time so can develop a cadence for meeting face to face on the things we want to get done in the next 4 months (the duration of the project).  During the call, I had to express how odd it was that today was just the first official project meeting, but over the past couple months contributors (including members of the MWoS team) have already made some huge leaps and bounds with the project, which is currently still in prototype status.  It's been an amazing effort so far, I'm excited for else we have in store now that we're meeting regularly.
 
 What's been accomplished so far?
 
@@ -35,3 +35,5 @@ Also, here's a photo of our team meeting up on Google Hangout today, we hope to 
 ![alt text](https://github.com/mozilla/ssh_scan/raw/gh-pages/_images/mwos_first_meeting.png "First team meeting")
 
 If you have questions or have used ssh_scan and would like to guest blog here about ssh_scan, please let us know via a [GitHub issue](https://github.com/mozilla/ssh_scan/issues/new).
+
+-claudijd

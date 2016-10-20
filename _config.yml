@@ -13,4 +13,4 @@ gems: [jekyll-paginate]
 
 # Details for the RSS feed generator
 url:            'https://mozilla.github.io/ssh_scan/'
-author:         'Jinank Jain'
+author:         'ssh_scan'
