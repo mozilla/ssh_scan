@@ -12,12 +12,15 @@ REGEX = / using [A-Z]+ key( ID)? (0x)?(?<keyid>[A-F0-9]*)/
 
 stdin, stdout, stderr, wait_thr = Open3.popen3("git log --no-merges --format='%H:%GG' master")
 first_line = stdout.gets.strip
+puts first_line.inspect
 first_line.gsub! "'", ""
 parts = first_line.split(":")
 keyid = nil
 sha = parts[0]
 if parts[1] == 'gpg'
   next_line = stdout.gets.strip
+  puts next_line.inspect
+  puts stdout.gets.strip
   next_line.gsub! "'", ""
   m = REGEX.match(next_line)
   if m
