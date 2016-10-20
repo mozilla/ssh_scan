@@ -5,7 +5,7 @@ date:   2016-10-20 12:00:00
 author: claudijd
 ---
 
-Today we conducted our first weekly meeting with the Mozilla Winter of Security (MWoS) project team focused on improving the feature set and scalability of [ssh_scan](https://github.com/mozilla/ssh_scan).  If you're not familiar with MWoS, it's a play on Google's Summer of Code program and you can find more details about it [here](https://wiki.mozilla.org/Security/Automation/Winter_Of_Security_2016).
+Today we conducted our first weekly meeting with the Mozilla Winter of Security (MWoS) project team focused on improving the feature set and scalability of [ssh_scan](https://github.com/mozilla/ssh_scan).  If you're not familiar with MWoS, it's a play on [Google's Summer of Code (GSoC)](https://developers.google.com/open-source/gsoc/) program and you can find more details about MWoS [here](https://wiki.mozilla.org/Security/Automation/Winter_Of_Security_2016).
 
 During the call, we met each other face to face for the first time so can develop a cadence for meeting face to face on the things we want to get done in the next 4 months (the duration of the project).  During the call, I had to express how odd it was that today was just the first official project meeting, but over the past couple months contributors (including members of the MWoS team) have already made some huge leaps and bounds with the project, which is currently still in prototype status.  It's been an amazing effort so far, I'm excited for else we have in store now that we're meeting regularly.
 
