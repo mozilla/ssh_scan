@@ -118,4 +118,4 @@ If you are interested in contributing to this project, please see [CONTRIBUTING.
 
 - [**Mozilla OpenSSH Security Guide**](https://wiki.mozilla.org/Security/Guidelines/OpenSSH) - For providing a sane baseline policy recommendation for SSH configuration parameters (eg. Ciphers, MACs, and KexAlgos).
 
-Test(unsigned)
+Test(signed)
