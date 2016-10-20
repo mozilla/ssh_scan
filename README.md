@@ -117,5 +117,3 @@ If you are interested in contributing to this project, please see [CONTRIBUTING.
 **Sources of Inspiration for ssh_scan**
 
 - [**Mozilla OpenSSH Security Guide**](https://wiki.mozilla.org/Security/Guidelines/OpenSSH) - For providing a sane baseline policy recommendation for SSH configuration parameters (eg. Ciphers, MACs, and KexAlgos).
-
-Test(signed)
