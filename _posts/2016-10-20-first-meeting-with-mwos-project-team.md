@@ -13,7 +13,7 @@ What's been accomplished so far?
 
 - We've released [9 versions](https://github.com/mozilla/ssh_scan/releases) of ssh_scan (0.0.8 - 0.0.15)
 - We've created a blog and as of today are now blogging on it.
-- We've produced a stable ssh_scan binary that allows you to scan ssh services for compliance
+- We've produced a stable [ssh_scan](https://github.com/mozilla/ssh_scan) binary that allows you to scan ssh services for compliance
 - We've built an early prototype of [ssh_scan_api](https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API), which we hope to iterate more on in the coming months
 - We've added dozens of OS and SSH Library fingerprints
 - We've added auth_method detection, so you can tell whether an endpoint supports publickey auth, password auth, etc.
@@ -26,12 +26,12 @@ What's been accomplished so far?
 - We have begun some [architecture discussions](https://github.com/mozilla/ssh_scan/issues/228) around whether ssh_scan could developed into a service and be plugged into the [Mozilla Observatory](https://observatory.mozilla.org/)
 - Fixed dozens of bugs and corner cases as well as many other things
 
-What's next for ssh_scan? Well, it's not entirely clear yet, but we have some homework to do for next week to start developing an open road map on our GitHub wiki that we can clearly and openly share with everyone.  We of course plan to iterate on it, but this will be the preliminary map we will be using to help drive the focus of the MWoS project team as well as other contributions that we'll seek to knock out in the coming months.
+What's next for [ssh_scan](https://github.com/mozilla/ssh_scan)? Well, it's not entirely clear yet, but we have some homework to do for next week to start developing an open road map on our GitHub wiki that we can clearly and openly share with everyone.  We of course plan to iterate on it, but this will be the preliminary map we will be using to help drive the focus of the MWoS project team as well as other contributions that we'll seek to knock out in the coming months.
 
 Lastly, and we've heard this a lot, when will we be releasing 0.1.0?  I can tell you that for some time this has been a little unclear and this is something that the MWoS project team is interested in moving across the finish line, but we'll have some more clarity in the coming weeks.  If I had to put a ballpark figure on it, you can probably expect something before the end of Q1 2017.
 
-Also, here's a photo of our team meeting up on Google Hangout today, we hope to share more about the experiences of the MWoS team soon (likely from their own words) as well as any other interesting ssh_scan developments we have in the works here on the blog.
+Also, here's a photo of our team meeting up on Google Hangout today, we hope to share more about the experiences of the MWoS team soon (likely from their own words) as well as any other interesting [ssh_scan](https://github.com/mozilla/ssh_scan) developments we have in the works here on the blog.
 
 ![alt text](https://github.com/mozilla/ssh_scan/raw/gh-pages/_images/mwos_first_meeting.png "First team meeting")
 
-If you have questions or have used ssh_scan and would like to guest blog here about ssh_scan, please let us know via a [GitHub issue](https://github.com/mozilla/ssh_scan/issues/new).
+If you have questions or have used ssh_scan and would like to guest blog here about [ssh_scan](https://github.com/mozilla/ssh_scan), please let us know via a [GitHub issue](https://github.com/mozilla/ssh_scan/issues/new).
