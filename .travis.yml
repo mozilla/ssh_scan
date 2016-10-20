@@ -3,6 +3,12 @@ matrix:
   include:
   - rvm: ruby-head
     env:
+      - LABEL=enforce_signed_commits
+    script:
+      - chmod 755 ./spec/ssh_scan/enforce_signed_commits.rb
+      - ./spec/ssh_scan/enforce_signed_commits.rb
+  - rvm: ruby-head
+    env:
       - LABEL=unit_tests
   - rvm: 2.3.0
     env:
