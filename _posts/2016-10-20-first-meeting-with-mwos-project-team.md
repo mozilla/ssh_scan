@@ -30,7 +30,7 @@ What's next for ssh_scan? Well, it's not entirely clear yet, but we have some ho
 
 Lastly, and we've heard this a lot, when will we be releasing 0.1.0?  I can tell you that for some time this has been a little unclear and this is something that the MWoS project team is interested in moving across the finish line, but we'll have some more clarity in the coming weeks.  If I had to put a ballpark figure on it, you can probably expect something before the end of Q1 2017.
 
-Also, here's a photo of our team meeting up on Google Hangout today, we hope to share more about the experiences of the MWoS team soon (likely from their own works) as well as any other interesting ssh_scan developments we have in the works here on the blog.
+Also, here's a photo of our team meeting up on Google Hangout today, we hope to share more about the experiences of the MWoS team soon (likely from their own words) as well as any other interesting ssh_scan developments we have in the works here on the blog.
 
 ![alt text](https://github.com/mozilla/ssh_scan/raw/gh-pages/_images/mwos_first_meeting.png "First team meeting")
 
