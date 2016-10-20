@@ -3,7 +3,7 @@ description: A SSH configuration and policy scanner
 meta_description: Website and Blog for mozilla/ssh_scan
 
 markdown: kramdown
-highlighter: pygments
+highlighter: rouge
 logo: false
 paginate: 15
 baseurl: /
