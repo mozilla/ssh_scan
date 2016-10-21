@@ -10,12 +10,7 @@ VALID_KEY_IDS = {
 
 REGEX = / using [A-Z]+ key( ID)? (0x)?(?<keyid>[A-F0-9]*)/
 
-stdin, stdout, stderr, wait_thr = Open3.popen3("git rev-parse --abbrev-ref HEAD")
-if stdout.gets.strip != "master"
-  puts "Not on master, skipping."
-  exit 0
-end
-stdin, stdout, stderr, wait_thr = Open3.popen3("git log --no-merges --format='%H:%GG'")
+stdin, stdout, stderr, wait_thr = Open3.popen3("git log --no-merges --format='%H:%GG' master")
 first_line = stdout.gets.strip
 first_line.gsub! "'", ""
 parts = first_line.split(":")
@@ -35,7 +30,7 @@ if parts[1] == 'gpg'
       exit 0
     end
   end
-  if keyid.nil?
-    raise "Latest commit #{sha} is not signed!\nCommits must be gpg signed: `git commit -S[<keyid>]`"
-  end
+end
+if keyid.nil?
+  raise "Latest commit #{sha} is not signed!\nCommits must be gpg signed: `git commit -S[<keyid>]`"
 end
