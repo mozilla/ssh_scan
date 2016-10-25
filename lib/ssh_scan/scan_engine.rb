@@ -56,7 +56,6 @@ module SSHScan
         auth_session = Net::SSH::Authentication::Session.new(net_ssh_session, :auth_methods => ["none"])
         auth_session.authenticate("none", "test", "test")
         result['auth_methods'] = auth_session.allowed_auth_methods
-        host_key = net_ssh_session.host_keys.first
         net_ssh_session.close
       rescue Net::SSH::ConnectionTimeout => e
         result[:error] = e
@@ -71,13 +70,32 @@ module SSHScan
           raise e
         end
       else
-        pkey = SSHScan::Crypto::PublicKey.new(host_key)
-        if pkey.is_supported?
-          result['fingerprints'] = {
-            "md5" => pkey.fingerprint_md5,
-            "sha1" => pkey.fingerprint_sha1,
-            "sha256" => pkey.fingerprint_sha256,
-          }
+        result['fingerprints'] = {}
+        host_keys = `ssh-keyscan -t rsa,dsa #{target} 2>/dev/null`.split
+        host_keys_len = host_keys.length - 1
+
+        for i in 0..host_keys_len
+          if host_keys[i].eql? "ssh-dss"
+            pkey = SSHScan::Crypto::PublicKey.new(host_keys[i + 1])
+            result['fingerprints'].merge!({
+              "dsa" => {
+                "md5" => pkey.fingerprint_md5,
+                "sha1" => pkey.fingerprint_sha1,
+                "sha256" => pkey.fingerprint_sha256,
+              }
+            })
+          end
+
+          if host_keys[i].eql? "ssh-rsa"
+            pkey = SSHScan::Crypto::PublicKey.new(host_keys[i + 1])
+            result['fingerprints'].merge!({
+              "rsa" => {
+                "md5" => pkey.fingerprint_md5,
+                "sha1" => pkey.fingerprint_sha1,
+                "sha256" => pkey.fingerprint_sha256,
+              }
+            })
+          end
         end
       end
 
@@ -119,8 +137,10 @@ module SSHScan
       results.each do |result|
         fingerprint_db.clear_fingerprints(result[:ip])
         if result['fingerprints']
-          result['fingerprints'].values.each do |fingerprint|
-            fingerprint_db.add_fingerprint(fingerprint, result[:ip])
+          result['fingerprints'].values.each do |host_key_algo|
+            host_key_algo.values.each do |fingerprint|
+              fingerprint_db.add_fingerprint(fingerprint, result[:ip])
+            end
           end
         end
       end
@@ -130,10 +150,12 @@ module SSHScan
         if result['fingerprints']
           ip = result[:ip]
           result['duplicate_host_key_ips'] = []
-          result['fingerprints'].values.each do |fingerprint|
-            fingerprint_db.find_fingerprints(fingerprint).each do |other_ip|
-              next if ip == other_ip
-              result['duplicate_host_key_ips'] << other_ip
+          result['fingerprints'].values.each do |host_key_algo|
+            host_key_algo.values.each do |fingerprint|
+              fingerprint_db.find_fingerprints(fingerprint).each do |other_ip|
+                next if ip == other_ip
+                result['duplicate_host_key_ips'] << other_ip
+              end
             end
           end
           result['duplicate_host_key_ips'].uniq!        
