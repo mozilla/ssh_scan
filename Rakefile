@@ -127,8 +127,12 @@ def create_package(target, os_type = :unix)
   sh "cp Gemfile Gemfile.lock #{PACKAGE_NAME}.gemspec #{package_dir}/lib/vendor/"
   sh "mkdir #{package_dir}/lib/vendor/.bundle"
   sh "cp packaging/bundler-config #{package_dir}/lib/vendor/.bundle/config"
-  sh "tar -xzf packaging/traveling-ruby-#{TRAVELING_RUBY_VERSION}-#{target}-sqlite3-#{SQLITE3_VERSION}.tar.gz " +
-    "-C #{package_dir}/lib/vendor/ruby"
+  if os_type == :unix
+    sh "tar -xzf packaging/traveling-ruby-#{TRAVELING_RUBY_VERSION}-#{target}-sqlite3-#{SQLITE3_VERSION}.tar.gz " +
+      "-C #{package_dir}/lib/vendor/ruby"
+  else
+    sh "tar -xzf packaging/traveling-ruby-#{TRAVELING_RUBY_VERSION}-#{target}.tar.gz " + "-C #{package_dir}/lib/vendor/ruby"
+  end
   if !ENV['DIR_ONLY']
     if os_type == :unix
       sh "tar -czf #{package_dir}.tar.gz #{package_dir}"
