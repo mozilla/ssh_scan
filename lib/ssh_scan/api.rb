@@ -110,7 +110,9 @@ module SSHScan
         options[:sockets] << "#{params[:target]}:#{params[:port] ? params[:port] : "22"}"
         options[:policy_file] = SSHScan::Policy.from_file(options[:policy])
         scan_engine = SSHScan::ScanEngine.new()
-        scan_engine.scan(options).to_json
+        results = scan_engine.scan_target(options[:sockets].first, options)
+        scan_engine.post_scan(results, options)
+        results = [results].to_json
       end
 
       get '/__version__' do
