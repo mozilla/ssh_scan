@@ -22,6 +22,18 @@ opt_parser = OptionParser.new do |opts|
     exit
   end
 
+  opts.on("--https", "Use HTTPS") do
+    options[:https] = true
+  end
+
+  opts.on("--https-key KEY", "Specify the path to your KEY file for your server") do |key|
+    options[:key] = File.realpath(key)
+  end
+
+  opts.on("--https-crt CRT", "Specify the path to your CRT file for your server") do |crt|
+    options[:crt] = File.realpath(crt)
+  end
+
   opts.on_tail("-h", "--help", "Show help") do
     puts opts
     puts "\nExamples:\n"
@@ -33,4 +45,8 @@ end
 
 opt_parser.parse!
 
-SSHScan::API.run!(:port => options[:port])
+if options[:https]
+  SSHScan::API.run!(:port => options[:port], :key => options[:key], :crt => options[:crt])
+else
+  SSHScan::API.run!(:port => options[:port])
+end

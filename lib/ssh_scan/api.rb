@@ -6,9 +6,16 @@ require 'ssh_scan/scan_engine'
 require 'json'
 require 'haml'
 require 'secure_headers'
+require 'thin'
 
 module SSHScan
   class API < Sinatra::Base
+
+    configure do
+      set :bind, '0.0.0.0'
+      set :server, "thin"
+    end
+
     use SecureHeaders::Middleware
 
     SecureHeaders::Configuration.default do |config|
@@ -122,10 +129,31 @@ module SSHScan
 
       get '/__lbheartbeat__' do
         {
-          :status => "OK",
+          :status  => "OK",
+          :ssl     =>  request.secure?,
           :message => "Keep sending requests. I am still alive."
         }.to_json
       end
     end
+
+    # override the run! method to enable https mode with options{} passed
+    def self.run!(options = {}, &block)
+      set options
+      if options[:crt] and options[:key]
+        # Use HTTPS
+        super do |server|
+          server.ssl = true
+          server.ssl_options = {
+            :cert_chain_file  => options[:crt],
+            :private_key_file => options[:key],
+            :verify_peer      => false
+          }
+        end
+      else
+        # Use HTTP
+        super(options, &block)
+      end
+    end
+
   end
 end
