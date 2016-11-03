@@ -1,6 +1,11 @@
 language: ruby
 matrix:
   include:
+  - rvm: 2.3.1
+    env:
+      - LABEL=rubocop_style_check
+    script:
+      - 'bundle exec rubocop -dDc .rubocop.yml'
   - rvm: ruby-head
     env:
       - LABEL=enforce_signed_commits
