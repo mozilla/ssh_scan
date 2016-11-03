@@ -2,10 +2,15 @@ require 'socket'
 require 'ssh_scan/client'
 require 'ssh_scan/crypto'
 require 'ssh_scan/fingerprint_database'
+require 'ssh_scan/worker'
 require 'net/ssh'
 
 module SSHScan
   class ScanEngine
+
+    def initialize
+      @flag = false
+    end
 
     def scan_target(socket, opts)
       target, port = socket.chomp.split(':')
@@ -104,34 +109,40 @@ module SSHScan
       result['start_time'] = start_time.to_s
       result['end_time'] = end_time.to_s
       result['scan_duration_seconds'] = end_time - start_time
-
       return result
     end
 
     def scan(opts)
+
+      results = []
+
       sockets = opts[:sockets]
       threads = opts[:threads] || 5
       logger = opts[:logger]
 
-      results = []
+      workers = SSHScan::ThreadPool.new(threads)
 
-      work_queue = Queue.new
-      sockets.each {|x| work_queue.push x }
-      workers = (0...threads).map do |worker_num|
-        Thread.new do
-          begin
-            while socket = work_queue.pop(true)
-              logger.info("Started ssh_scan of #{socket}")
-              results << scan_target(socket, opts)
-              logger.info("Completed ssh_scan of #{socket}")
-            end
-          rescue ThreadError => e
-            raise e unless e.to_s.match(/queue empty/)
+      sockets.each do |socket|
+        workers.schedule do
+          logger.info("Started ssh_scan of #{socket}")
+          results << scan_target(socket, opts)
+          logger.info("Completed ssh_scan of #{socket}")
+          post_scan(results, opts)
+          if results.length == sockets.length && @flag == false
+            @flag = true
+            puts JSON.pretty_generate(results)
           end
         end
       end
-      workers.map(&:join)
 
+      at_exit { workers.shutdown }
+
+    end
+
+    def post_scan(results, opts)
+      if !results.kind_of?(Array)
+        results = [results]
+      end
       # Add all the fingerprints to our peristent FingerprintDatabase
       fingerprint_db = SSHScan::FingerprintDatabase.new(opts[:fingerprint_database])
       results.each do |result|
@@ -181,7 +192,6 @@ module SSHScan
         end
       end
 
-      return results
     end
   end
 end
