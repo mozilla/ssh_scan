@@ -130,7 +130,6 @@ module SSHScan
       get '/__lbheartbeat__' do
         {
           :status  => "OK",
-          :ssl     =>  request.secure?,
           :message => "Keep sending requests. I am still alive."
         }.to_json
       end
@@ -139,19 +138,13 @@ module SSHScan
     # override the run! method to enable https mode with options{} passed
     def self.run!(options = {}, &block)
       set options
-      if options[:crt] and options[:key]
-        # Use HTTPS
-        super do |server|
-          server.ssl = true
-          server.ssl_options = {
-            :cert_chain_file  => options[:crt],
-            :private_key_file => options[:key],
-            :verify_peer      => false
-          }
-        end
-      else
-        # Use HTTP
-        super(options, &block)
+
+      super do |server|
+        server.ssl = true
+        ssl_opts = {:verify_peer => false}
+        ssl_opts[:cert_chain_file] = options[:crt] if options[:crt]
+        ssl_opts[:private_key_file] = options[:key] if options[:key]
+        server.ssl_options = ssl_opts
       end
     end
 

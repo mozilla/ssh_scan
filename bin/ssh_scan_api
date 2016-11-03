@@ -22,10 +22,6 @@ opt_parser = OptionParser.new do |opts|
     exit
   end
 
-  opts.on("--https", "Use HTTPS") do
-    options[:https] = true
-  end
-
   opts.on("--https-key KEY", "Specify the path to your KEY file for your server") do |key|
     options[:key] = File.realpath(key)
   end

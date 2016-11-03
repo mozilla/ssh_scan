@@ -23,7 +23,6 @@ describe SSHScan::API do
     expect(last_response.status).to eql(200)
     expect(last_response.body).to eql({
       :status => "OK",
-      :ssl => false,
       :message => "Keep sending requests. I am still alive."
     }.to_json)
   end
@@ -33,13 +32,15 @@ describe SSHScan::API do
     port = "999"
     post "/api/v#{SSHScan::API_VERSION}/scan", {:target => bad_ip, :port => port}
     expect(last_response.status).to eql(200)
-    expect(last_response.body).to eql([
-    {
-      :ssh_scan_version => SSHScan::VERSION,
-      :ip => bad_ip,
-      :port => port,
-      :error => "ConnectTimeout: Connection timed out - user specified timeout",
-      :hostname => ""
-    }].to_json)
+    expect(last_response.body).to be_kind_of(::String)
+
+    parsed_response_body = JSON.parse(last_response.body)
+
+    expect(parsed_response_body).to be_kind_of(::Array)
+    expect(parsed_response_body.first["ssh_scan_version"]).to eql(SSHScan::VERSION)
+    expect(parsed_response_body.first["ip"]).to eql(bad_ip)
+    expect(parsed_response_body.first["port"]).to eql(port)
+    expect(parsed_response_body.first["error"]).to match(/ConnectTimeout: (Connection|Operation) timed out - user specified timeout/)
+    expect(parsed_response_body.first["hostname"]).to eql("")
   end
 end
