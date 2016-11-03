@@ -43,6 +43,16 @@ Lint/HandleExceptions:
   Exclude:
     - 'spec/ssh_scan/client_spec.rb'
 
+# Offense count: 6
+Lint/InheritException:
+  Exclude:
+    - 'lib/ssh_scan/error/connect_timeout.rb'
+
+# Offense count: 2
+Lint/PercentStringArray:
+  Exclude:
+    - 'lib/ssh_scan/api.rb'
+
 # Offense count: 1
 Lint/RescueException:
   Exclude:
@@ -74,6 +84,10 @@ Lint/UselessAssignment:
 # Offense count: 13
 Metrics/AbcSize:
   Max: 85
+
+# Offense count: 4
+Metrics/BlockLength:
+  Max: 125
 
 # Offense count: 1
 Metrics/BlockNesting:
@@ -394,6 +408,25 @@ Style/MethodCallParentheses:
 # SupportedStyles: snake_case, camelCase
 Style/MethodName:
   Enabled: false
+
+# Offense count: 3
+# Cop supports --auto-correct.
+Style/MultilineArrayBraceLayout:
+  Exclude:
+    - 'Rakefile'
+    - 'spec/ssh_scan/api_spec.rb'
+
+# Offense count: 1
+# Cop supports --auto-correct.
+Style/MultilineHashBraceLayout:
+  Exclude:
+    - 'spec/ssh_scan/protocol_spec.rb'
+
+# Offense count: 1
+# Cop supports --auto-correct.
+Style/MultilineMethodCallBraceLayout:
+  Exclude:
+    - 'spec/ssh_scan/client_spec.rb'
 
 # Offense count: 12
 # Cop supports --auto-correct.
