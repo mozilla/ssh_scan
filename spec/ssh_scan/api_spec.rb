@@ -23,6 +23,7 @@ describe SSHScan::API do
     expect(last_response.status).to eql(200)
     expect(last_response.body).to eql({
       :status => "OK",
+      :ssl => false,
       :message => "Keep sending requests. I am still alive."
     }.to_json)
   end
