@@ -47,6 +47,11 @@ Lint/HandleExceptions:
 Lint/InheritException:
   Exclude:
     - 'lib/ssh_scan/error/connect_timeout.rb'
+    - 'lib/ssh_scan/error/closed_connection.rb'
+    - 'lib/ssh_scan/error/connection_refused.rb'
+    - 'lib/ssh_scan/error/disconnected.rb'
+    - 'lib/ssh_scan/error/no_banner.rb'
+    - 'lib/ssh_scan/error/no_kex_response.rb'
 
 # Offense count: 2
 Lint/PercentStringArray:
