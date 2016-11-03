@@ -1,6 +1,9 @@
 *.gem
 *.rbc
 *.db
+*.key
+*.crt
+*.cert
 /.config
 /coverage/
 /InstalledFiles
