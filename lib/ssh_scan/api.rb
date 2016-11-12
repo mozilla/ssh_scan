@@ -2,11 +2,14 @@ require 'sinatra/base'
 require 'sinatra/namespace'
 require 'ssh_scan/version'
 require 'ssh_scan/policy'
-require 'ssh_scan/scan_engine'
+require 'ssh_scan/job_queue'
+require 'ssh_scan/worker'
 require 'json'
 require 'haml'
 require 'secure_headers'
 require 'thin'
+require 'securerandom'
+require 'net/http'
 
 module SSHScan
   class API < Sinatra::Base
@@ -14,10 +17,12 @@ module SSHScan
     configure do
       set :bind, '0.0.0.0'
       set :server, "thin"
+      set :logger, Logger.new(STDOUT)
+      set :job_queue, JobQueue.new()
     end
 
+    # Configure all the secure headers we want to use
     use SecureHeaders::Middleware
-
     SecureHeaders::Configuration.default do |config|
       config.cookies = {
         secure: true, # mark all cookies as "Secure"
@@ -37,13 +42,43 @@ module SSHScan
       }
     end
 
-    class NullLogger < Logger
-      def initialize(*args)
-      end
+    results = []
 
-      def add(*args, &block)
-      end
-    end
+    ##### START - JobQueue MONITORING SHIM #####
+    @monitoring_thread = Thread.new do
+                          loop do
+                            sleep 2
+                            logger.warn("JobQueue Size: #{settings.job_queue.size.to_s}")
+                          end
+                        end
+    ##### END - QUEUE SHIM ####
+
+    ##### START - WORKER SHIM (Remove me later) #####
+    # TODO: DONE: have more than one worker, probably multiple threads here to emulate a worker pool
+    # TODO: DONE: actually do the work rather than emulating the producer/consumer relationship
+    # TODO: DONE: have a dedicated Worker class that is dumb and just does work (aka: a scan)
+    # TODO: eventually, expose an API endpoint to allow workers to consume work and post results back to the api (this will eventually require some sort of authentication of the worker, probably auth tokens)
+
+    threads = 5
+    @worker_threads = (0...threads).map do |thread_num|
+                        Thread.new do
+                          Thread.current[:id] = thread_num
+                          begin
+                            loop do
+                              sleep 5
+                              logger.warn("Thread #{thread_num} worker Polls for Job")
+                              job = settings.job_queue.next
+                              if job.nil?
+                                logger.warn("No Jobs available")
+                              else
+                                logger.warn("Thread #{thread_num} worker Takes Job: #{job[:sockets]}")
+                                results << Worker.process_job(job)
+                              end
+                            end
+                          end
+                        end
+
+    ##### END - WORKER SHIM ####
 
     register Sinatra::Namespace
 
@@ -99,13 +134,13 @@ module SSHScan
       }.to_json
     end
 
-
     namespace "/api/v#{SSHScan::API_VERSION}" do
       before do
         content_type :json
       end
 
       post '/scan' do
+        # TODO: there needs to be some sort of ID tracking here so the user can come back later and retrieve the results of their scan
         options = {
           :sockets => [],
           :policy => File.expand_path("../../../policies/mozilla_modern.yml", __FILE__),
@@ -116,8 +151,28 @@ module SSHScan
         }
         options[:sockets] << "#{params[:target]}:#{params[:port] ? params[:port] : "22"}"
         options[:policy_file] = SSHScan::Policy.from_file(options[:policy])
-        scan_engine = SSHScan::ScanEngine.new()
-        scan_engine.scan(options).to_json
+        options[:uuid] = SecureRandom.uuid
+        settings.job_queue.add(options)
+        # socket = "#{params[:target]}:#{params[:port] ? params[:port] : "22"}"
+        # socket[:uuid] = SecureRandom.uuid
+        # settings.job_queue.add(socket)
+        uri = URI('http://localhost:8000/results')
+        options = { uuid: socket[:uuid] }
+        Net::HTTP.get_response(uri, options)
+      end
+
+      get '/results' do
+        loop do
+          sleep 1
+          logger.warn("Scanning results for uuid: #{params[:uuid]}")
+          scan_result = results.detect { |result| result[:uuid] == params[:uuid] }
+          if job.nil?
+            logger.warn("Scan not yet completed.")
+          else
+            logger.warn("Scan completed")
+            return scan_result
+          end
+        end
       end
 
       get '/__version__' do
@@ -135,7 +190,6 @@ module SSHScan
       end
     end
 
-    # override the run! method to enable https mode with options{} passed
     def self.run!(options = {}, &block)
       set options
 
