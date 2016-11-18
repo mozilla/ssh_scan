@@ -1,6 +1,6 @@
 module SSHScan
   class JobQueue
-    def initialize()
+    def initialize
       @queue = Queue.new
     end
 
@@ -11,8 +11,8 @@ module SSHScan
     end
 
     # @return [String] a socket we want to scan (Example: "192.168.1.1:22")
-    def next()
-      return nil if @queue.size == 0
+    def next
+      return nil if @queue.empty?
       @queue.pop
     end
 

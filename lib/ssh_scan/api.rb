@@ -13,7 +13,6 @@ require 'net/http'
 
 module SSHScan
   class API < Sinatra::Base
-
     configure do
       set :bind, '0.0.0.0'
       set :server, "thin"
@@ -46,11 +45,11 @@ module SSHScan
 
     ##### START - JobQueue MONITORING SHIM #####
     @monitoring_thread = Thread.new do
-                          loop do
-                            sleep 2
-                            logger.warn("JobQueue Size: #{settings.job_queue.size.to_s}")
-                          end
-                        end
+      loop do
+        sleep 2
+        logger.warn("JobQueue Size: #{settings.job_queue.size}")
+      end
+    end
     ##### END - QUEUE SHIM ####
 
     ##### START - WORKER SHIM (Remove me later) #####
@@ -61,22 +60,23 @@ module SSHScan
 
     threads = 5
     @worker_threads = (0...threads).map do |thread_num|
-                        Thread.new do
-                          Thread.current[:id] = thread_num
-                          begin
-                            loop do
-                              sleep 5
-                              logger.warn("Thread #{thread_num} worker Polls for Job")
-                              job = settings.job_queue.next
-                              if job.nil?
-                                logger.warn("No Jobs available")
-                              else
-                                logger.warn("Thread #{thread_num} worker Takes Job: #{job[:sockets]}")
-                                results << Worker.process_job(job)
-                              end
-                            end
-                          end
-                        end
+      Thread.new do
+        Thread.current[:id] = thread_num
+        begin
+          loop do
+            sleep 5
+            logger.warn("Thread #{thread_num} worker Polls for Job")
+            job = settings.job_queue.next
+            if job.nil?
+              logger.warn("No Jobs available")
+            else
+              logger.warn("Thread #{thread_num} worker Takes Job: #{job[:sockets]}")
+              results << Worker.process_job(job)
+            end
+          end
+        end
+      end
+    end
 
     ##### END - WORKER SHIM ####
 
@@ -156,23 +156,23 @@ module SSHScan
         # socket = "#{params[:target]}:#{params[:port] ? params[:port] : "22"}"
         # socket[:uuid] = SecureRandom.uuid
         # settings.job_queue.add(socket)
-        uri = URI('http://localhost:8000/results')
-        options = { uuid: socket[:uuid] }
-        Net::HTTP.get_response(uri, options)
+        {
+          uuid: options[:uuid]
+        }.to_json
       end
 
-      get '/results' do
-        loop do
-          sleep 1
-          logger.warn("Scanning results for uuid: #{params[:uuid]}")
-          scan_result = results.detect { |result| result[:uuid] == params[:uuid] }
-          if job.nil?
-            logger.warn("Scan not yet completed.")
-          else
-            logger.warn("Scan completed")
-            return scan_result
-          end
+      get '/scan/results' do
+        logger.warn("Scanning results for uuid: #{params[:uuid]}")
+        scan_result = results.detect { |result| result[:uuid] == params[:uuid] }
+        if job.nil?
+          logger.warn("Scan for uuid: #{params[:uuid]} not yet completed.")
+          scan_result[:completed] = false
+        else
+          logger.warn("Scan result for uuid: #{params[:uuid]} found.")
+          results.delete_if { |result| result[:uuid] == params[:uuid] }
+          scan_result[:completed] = true
         end
+        scan_result
       end
 
       get '/__version__' do
@@ -201,6 +201,5 @@ module SSHScan
         server.ssl_options = ssl_opts
       end
     end
-
   end
 end
