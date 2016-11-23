@@ -3,6 +3,7 @@ require 'ssh_scan/client'
 require 'ssh_scan/crypto'
 require 'ssh_scan/fingerprint_database'
 require 'net/ssh'
+require 'logger'
 
 module SSHScan
   class ScanEngine
@@ -112,6 +113,8 @@ module SSHScan
       sockets = opts[:sockets]
       threads = opts[:threads] || 5
       logger = opts[:logger]
+
+      logger.warn("ScanEngine polls for #{opts}")
 
       results = []
 
