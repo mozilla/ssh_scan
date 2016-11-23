@@ -9,7 +9,6 @@ require 'haml'
 require 'secure_headers'
 require 'thin'
 require 'securerandom'
-require 'net/http'
 
 module SSHScan
   class API < Sinatra::Base
@@ -70,8 +69,10 @@ module SSHScan
             if job.nil?
               logger.warn("No Jobs available")
             else
-              logger.warn("Thread #{thread_num} worker Takes Job: #{job[:sockets]}")
-              results << Worker.process_job(job)
+              logger.warn("Thread #{thread_num} worker Takes Job: #{job[:uuid]}")
+              result = Worker.process_job(job)
+              puts result.inspect
+              results << result
             end
           end
         end
@@ -146,7 +147,6 @@ module SSHScan
           :policy => File.expand_path("../../../policies/mozilla_modern.yml", __FILE__),
           :timeout => 2,
           :verbosity => nil,
-          :logger => NullLogger.new,
           :fingerprint_database => "fingerprints.db",
         }
         options[:sockets] << "#{params[:target]}:#{params[:port] ? params[:port] : "22"}"
@@ -163,16 +163,16 @@ module SSHScan
 
       get '/scan/results' do
         logger.warn("Scanning results for uuid: #{params[:uuid]}")
-        scan_result = results.detect { |result| result[:uuid] == params[:uuid] }
-        if job.nil?
+        scan_result = results.select { |result| result[:uuid] == params[:uuid] }
+        if scan_result.empty?
           logger.warn("Scan for uuid: #{params[:uuid]} not yet completed.")
-          scan_result[:completed] = false
+          scan_result =  { completed: false }.to_json
         else
           logger.warn("Scan result for uuid: #{params[:uuid]} found.")
-          results.delete_if { |result| result[:uuid] == params[:uuid] }
+          # results.delete_if { |result| result[:uuid] == params[:uuid] }
           scan_result[:completed] = true
         end
-        scan_result
+        puts results.inspect
       end
 
       get '/__version__' do
