@@ -114,8 +114,6 @@ module SSHScan
       threads = opts["threads"] || 5
       logger = opts["logger"] || Logger.new(STDOUT)
 
-      logger.warn("ScanEngine polls for #{opts}")
-
       results = []
 
       work_queue = Queue.new
