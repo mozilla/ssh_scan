@@ -41,48 +41,6 @@ module SSHScan
       }
     end
 
-    #results = []
-
-    ##### START - JobQueue MONITORING SHIM #####
-    # @monitoring_thread = Thread.new do
-    #   loop do
-    #     sleep 2
-    #     logger.warn("JobQueue Size: #{settings.job_queue.size}")
-    #   end
-    # end
-    ##### END - QUEUE SHIM ####
-
-    ##### START - WORKER SHIM (Remove me later) #####
-    # # TODO: DONE: have more than one worker, probably multiple threads here to emulate a worker pool
-    # # TODO: DONE: actually do the work rather than emulating the producer/consumer relationship
-    # # TODO: DONE: have a dedicated Worker class that is dumb and just does work (aka: a scan)
-    # # TODO: eventually, expose an API endpoint to allow workers to consume work and post results back to the api (this will eventually require some sort of authentication of the worker, probably auth tokens)
-    #
-    # threads = 5
-    # @worker_threads = (0...threads).map do |thread_num|
-    #   Thread.new do
-    #     Thread.current[:id] = thread_num
-    #     begin
-    #       loop do
-    #         sleep 5
-    #         #logger.warn("Thread #{thread_num} worker Polls for Job")
-    #         job = settings.job_queue.next
-    #         if job.nil?
-    #           logger.warn("No Jobs available")
-    #         else
-    #           logger.warn("Thread #{thread_num} worker Takes Job: #{job[:uuid]}")
-    #           result = Worker.process_job(job)
-    #           logger.warn("Thread #{thread_num} completes Job: #{job[:uuid]}")
-    #           puts result.inspect
-    #           settings.results[job[:uuid]] == result
-    #         end
-    #       end
-    #     end
-    #   end
-    # end
-
-    ##### END - WORKER SHIM ####
-
     register Sinatra::Namespace
 
     before do
@@ -162,6 +120,7 @@ module SSHScan
         }.to_json
       end
 
+      # TODO: get the data store before this is re-enabled
       # get '/scan/results' do
       #   # if settings.results[params[:uuid]]
       #   #   require 'pry'
