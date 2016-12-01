@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+$:.unshift File.join(File.dirname(__FILE__), "../lib")
+
+require 'ssh_scan'
+
+# An example of a dummy worker process performing scans
+logger = Logger.new(STDOUT)
+
+loop do
+  sleep 0.5
+  worker = SSHScan::Worker.new({:server => "192.168.10.37", :port => 8000})
+  response = worker.get_work
+  if response["work"]
+    job = response["work"]
+    results = worker.perform_work(job)
+    worker.post_results(results, job)
+  else
+    next
+  end
+end
