@@ -4,6 +4,7 @@ $:.unshift File.join(File.dirname(__FILE__), "../lib")
 
 require 'optparse'
 require 'ssh_scan'
+require 'ssh_scan/api'
 
 options = {
   :port => 8000,

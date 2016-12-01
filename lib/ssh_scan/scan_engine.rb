@@ -3,6 +3,7 @@ require 'ssh_scan/client'
 require 'ssh_scan/crypto'
 require 'ssh_scan/fingerprint_database'
 require 'net/ssh'
+require 'logger'
 
 module SSHScan
   class ScanEngine
@@ -12,7 +13,7 @@ module SSHScan
       if port.nil?
         port = 22
       end
-      timeout = opts[:timeout]
+      timeout = opts["timeout"]
       result = []
 
       start_time = Time.now
@@ -109,13 +110,14 @@ module SSHScan
     end
 
     def scan(opts)
-      sockets = opts[:sockets]
-      threads = opts[:threads] || 5
-      logger = opts[:logger]
+      sockets = opts["sockets"]
+      threads = opts["threads"] || 5
+      logger = opts["logger"] || Logger.new(STDOUT)
 
       results = []
 
       work_queue = Queue.new
+
       sockets.each {|x| work_queue.push x }
       workers = (0...threads).map do |worker_num|
         Thread.new do
@@ -133,34 +135,34 @@ module SSHScan
       workers.map(&:join)
 
       # Add all the fingerprints to our peristent FingerprintDatabase
-      fingerprint_db = SSHScan::FingerprintDatabase.new(opts[:fingerprint_database])
-      results.each do |result|
-        fingerprint_db.clear_fingerprints(result[:ip])
-        if result['fingerprints']
-          result['fingerprints'].values.each do |host_key_algo|
-            host_key_algo.values.each do |fingerprint|
-              fingerprint_db.add_fingerprint(fingerprint, result[:ip])
-            end
-          end
-        end
-      end
+      # fingerprint_db = SSHScan::FingerprintDatabase.new(opts[:fingerprint_database])
+      # results.each do |result|
+      #   fingerprint_db.clear_fingerprints(result[:ip])
+      #   if result['fingerprints']
+      #     result['fingerprints'].values.each do |host_key_algo|
+      #       host_key_algo.values.each do |fingerprint|
+      #         fingerprint_db.add_fingerprint(fingerprint, result[:ip])
+      #       end
+      #     end
+      #   end
+      # end
 
       # Decorate all the results with duplicate keys
-      results.each do |result|
-        if result['fingerprints']
-          ip = result[:ip]
-          result['duplicate_host_key_ips'] = []
-          result['fingerprints'].values.each do |host_key_algo|
-            host_key_algo.values.each do |fingerprint|
-              fingerprint_db.find_fingerprints(fingerprint).each do |other_ip|
-                next if ip == other_ip
-                result['duplicate_host_key_ips'] << other_ip
-              end
-            end
-          end
-          result['duplicate_host_key_ips'].uniq!        
-        end
-      end
+      # results.each do |result|
+      #   if result['fingerprints']
+      #     ip = result[:ip]
+      #     result['duplicate_host_key_ips'] = []
+      #     result['fingerprints'].values.each do |host_key_algo|
+      #       host_key_algo.values.each do |fingerprint|
+      #         fingerprint_db.find_fingerprints(fingerprint).each do |other_ip|
+      #           next if ip == other_ip
+      #           result['duplicate_host_key_ips'] << other_ip
+      #         end
+      #       end
+      #     end
+      #     result['duplicate_host_key_ips'].uniq!
+      #   end
+      # end
 
       # Decorate all the results with compliance information
       results.each do |result|

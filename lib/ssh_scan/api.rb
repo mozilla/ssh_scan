@@ -2,22 +2,26 @@ require 'sinatra/base'
 require 'sinatra/namespace'
 require 'ssh_scan/version'
 require 'ssh_scan/policy'
-require 'ssh_scan/scan_engine'
+require 'ssh_scan/job_queue'
+require 'ssh_scan/worker'
 require 'json'
 require 'haml'
 require 'secure_headers'
 require 'thin'
+require 'securerandom'
 
 module SSHScan
   class API < Sinatra::Base
-
     configure do
       set :bind, '0.0.0.0'
       set :server, "thin"
+      set :logger, Logger.new(STDOUT)
+      set :job_queue, JobQueue.new()
+      set :results, {}
     end
 
+    # Configure all the secure headers we want to use
     use SecureHeaders::Middleware
-
     SecureHeaders::Configuration.default do |config|
       config.cookies = {
         secure: true, # mark all cookies as "Secure"
@@ -35,14 +39,6 @@ module SSHScan
         frame_ancestors: %w('none'),
         upgrade_insecure_requests: true, # see https://www.w3.org/TR/upgrade-insecure-requests/
       }
-    end
-
-    class NullLogger < Logger
-      def initialize(*args)
-      end
-
-      def add(*args, &block)
-      end
     end
 
     register Sinatra::Namespace
@@ -99,7 +95,6 @@ module SSHScan
       }.to_json
     end
 
-
     namespace "/api/v#{SSHScan::API_VERSION}" do
       before do
         content_type :json
@@ -111,13 +106,46 @@ module SSHScan
           :policy => File.expand_path("../../../policies/mozilla_modern.yml", __FILE__),
           :timeout => 2,
           :verbosity => nil,
-          :logger => NullLogger.new,
           :fingerprint_database => "fingerprints.db",
         }
         options[:sockets] << "#{params[:target]}:#{params[:port] ? params[:port] : "22"}"
         options[:policy_file] = SSHScan::Policy.from_file(options[:policy])
-        scan_engine = SSHScan::ScanEngine.new()
-        scan_engine.scan(options).to_json
+        options[:uuid] = SecureRandom.uuid
+        settings.job_queue.add(options)
+        {
+          uuid: options[:uuid]
+        }.to_json
+      end
+
+      get '/scan/results' do
+        #TODO: get a given scan result, by UUID and return it as JSON
+        '{"I am not finished yet"}'
+      end
+
+      get '/work' do
+        worker_id = params[:worker_id]
+        logger.warn("Worker #{worker_id} polls for Job")
+        job = settings.job_queue.next
+        if job.nil?
+          logger.warn("Worker #{worker_id} didn't get any work")
+          {"work" => false}.to_json
+        else
+          logger.warn("Worker #{worker_id} got job #{job[:uuid]}")
+          {"work" => job}.to_json
+        end
+      end
+
+      post '/work/results/:worker_id/:uuid' do
+        worker_id = params['worker_id']
+        uuid = params['uuid']
+
+        if worker_id.empty? or uuid.empty?
+          return {"accepted" => "false"}.to_json
+        end
+
+        # TODO: add work results to datastore, whatever that ends up being
+
+        return {"accepted" => "true"}.to_json
       end
 
       get '/__version__' do
@@ -135,7 +163,6 @@ module SSHScan
       end
     end
 
-    # override the run! method to enable https mode with options{} passed
     def self.run!(options = {}, &block)
       set options
 
@@ -147,6 +174,5 @@ module SSHScan
         server.ssl_options = ssl_opts
       end
     end
-
   end
 end
