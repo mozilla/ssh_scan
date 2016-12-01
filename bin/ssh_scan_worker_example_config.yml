@@ -1,2 +1,5 @@
+# The location of the API server
 server: 127.0.0.1
+
+# The port of the API server
 port: 8000

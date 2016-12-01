@@ -1,0 +1,10 @@
+# The interface you would like the API to bind to, by default is assumes 127.0.0.1
+# Uncomment the below line if you want to intentionally host the service on all interfaces
+#bind: 0.0.0.0
+
+# The TCP port that the service should use
+port: 8000
+
+# The locations for they key and crt files for legit SSL/TLS configuration
+#key: the_file_path_to_the_key
+#crt: the_file_path_to_the_crt

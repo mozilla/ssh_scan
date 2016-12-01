@@ -12,14 +12,6 @@ require 'securerandom'
 
 module SSHScan
   class API < Sinatra::Base
-    configure do
-      set :bind, '0.0.0.0'
-      set :server, "thin"
-      set :logger, Logger.new(STDOUT)
-      set :job_queue, JobQueue.new()
-      set :results, {}
-    end
-
     # Configure all the secure headers we want to use
     use SecureHeaders::Middleware
     SecureHeaders::Configuration.default do |config|
@@ -165,6 +157,14 @@ module SSHScan
 
     def self.run!(options = {}, &block)
       set options
+
+      configure do
+        set :bind, options["bind"] || '127.0.0.1'
+        set :server, "thin"
+        set :logger, Logger.new(STDOUT)
+        set :job_queue, JobQueue.new()
+        set :results, {}
+      end
 
       super do |server|
         server.ssl = true

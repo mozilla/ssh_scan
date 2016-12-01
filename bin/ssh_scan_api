@@ -2,48 +2,10 @@
 
 $:.unshift File.join(File.dirname(__FILE__), "../lib")
 
-require 'optparse'
 require 'ssh_scan'
-require 'ssh_scan/api'
 
-options = {
-  :port => 8000,
-}
+# Get the api config from command-line or via an example location
+config_file = ARGV[0] || File.join(File.dirname(__FILE__), "ssh_scan_api_example_config.yml")
+opts = YAML.load_file(config_file)
 
-opt_parser = OptionParser.new do |opts|
-  opts.banner = "ssh_scan_api v#{SSHScan::API_VERSION} (https://github.com/mozilla/ssh_scan)\n\n" +
-                "Usage: ssh_scan [options]"
-
-  opts.on("-p", "--port [PORT]", "Listen and serve API requests on this port (Default: 8000)") do |port|
-    options[:port] = port.to_i
-  end
-
-  opts.on("-v", "--version", "Show ssh_scan API version") do
-    puts SSHScan::API_VERSION
-    exit
-  end
-
-  opts.on("--https-key KEY", "Specify the path to your KEY file for your server") do |key|
-    options[:key] = File.realpath(key)
-  end
-
-  opts.on("--https-crt CRT", "Specify the path to your CRT file for your server") do |crt|
-    options[:crt] = File.realpath(crt)
-  end
-
-  opts.on_tail("-h", "--help", "Show help") do
-    puts opts
-    puts "\nExamples:\n"
-    puts "  ssh_scan_api -p 4567"
-    puts ""
-    exit
-  end
-end
-
-opt_parser.parse!
-
-if options[:https]
-  SSHScan::API.run!(:port => options[:port], :key => options[:key], :crt => options[:crt])
-else
-  SSHScan::API.run!(:port => options[:port])
-end
+SSHScan::API.run!(opts)
