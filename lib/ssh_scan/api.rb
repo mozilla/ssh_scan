@@ -112,35 +112,15 @@ module SSHScan
         options[:policy_file] = SSHScan::Policy.from_file(options[:policy])
         options[:uuid] = SecureRandom.uuid
         settings.job_queue.add(options)
-        # socket = "#{params[:target]}:#{params[:port] ? params[:port] : "22"}"
-        # socket[:uuid] = SecureRandom.uuid
-        # settings.job_queue.add(socket)
         {
           uuid: options[:uuid]
         }.to_json
       end
 
-      # TODO: get the data store before this is re-enabled
-      # get '/scan/results' do
-      #   # if settings.results[params[:uuid]]
-      #   #   require 'pry'
-      #   #   binding.pry
-      #   # else
-      #   #   puts "unrecognized uuid"
-      #   # end
-      #
-      #   # logger.warn("Scanning results for uuid: #{params[:uuid]}")
-      #   # scan_result = results.select { |result| result[:uuid] == params[:uuid] }
-      #   # if scan_result.empty?
-      #   #   logger.warn("Scan for uuid: #{params[:uuid]} not yet completed.")
-      #   #   scan_result =  { completed: false }.to_json
-      #   # else
-      #   #   logger.warn("Scan result for uuid: #{params[:uuid]} found.")
-      #   #   # results.delete_if { |result| result[:uuid] == params[:uuid] }
-      #   #   scan_result[:completed] = true
-      #   # end
-      #   # puts results.inspect
-      # end
+      get '/scan/results' do
+        #TODO: get a given scan result, by UUID and return it as JSON
+        '{"I am not finished yet"}'
+      end
 
       get '/work' do
         worker_id = params[:worker_id]

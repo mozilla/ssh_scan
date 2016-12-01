@@ -13,7 +13,7 @@ module SSHScan
       if port.nil?
         port = 22
       end
-      timeout = opts[:timeout]
+      timeout = opts["timeout"]
       result = []
 
       start_time = Time.now
