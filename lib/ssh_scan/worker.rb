@@ -13,6 +13,11 @@ module SSHScan
       @verify_ssl = false
     end
 
+    def self.from_config_file(file_string)
+      opts = YAML.load_file(file_string)
+      self.new(opts)
+    end
+
     def run!
       loop do
         begin

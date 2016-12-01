@@ -3,10 +3,8 @@ $:.unshift File.join(File.dirname(__FILE__), "../lib")
 
 require 'ssh_scan'
 
-opts = {
-  "server" => "192.168.10.37",
-  "port" => 8000
-}
+# Get the worker config from command-line or via an example location
+config_file = ARGV[0] || File.join(File.dirname(__FILE__), "ssh_scan_worker_example_config.yml")
 
-worker = SSHScan::Worker.new({:server => "192.168.10.37", :port => 8000})
+worker = SSHScan::Worker.from_config_file(config_file)
 worker.run!
