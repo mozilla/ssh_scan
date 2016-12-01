@@ -9,6 +9,7 @@ require 'haml'
 require 'secure_headers'
 require 'thin'
 require 'securerandom'
+require 'ssh_scan/authenticator'
 
 module SSHScan
   class API < Sinatra::Base
@@ -90,6 +91,12 @@ module SSHScan
     namespace "/api/v#{SSHScan::API_VERSION}" do
       before do
         content_type :json
+        if settings.authentication == true
+          token = request.env['HTTP_SSH_SCAN_AUTH_TOKEN']
+          unless token && settings.authenticator.valid_token?(token)
+            halt '{"error" : "authentication failure"}'
+          end
+        end
       end
 
       post '/scan' do
@@ -164,6 +171,8 @@ module SSHScan
         set :logger, Logger.new(STDOUT)
         set :job_queue, JobQueue.new()
         set :results, {}
+        set :authentication, options["authentication"]
+        set :authenticator, SSHScan::Authenticator.from_config_file(options["config_file"])
       end
 
       super do |server|
