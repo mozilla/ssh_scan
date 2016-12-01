@@ -45,7 +45,7 @@ module SSHScan
         attr_accessor :ssl_options
       end
 
-      uri = URI("https://#{@server}:#{@port}/api/v0.0.1/work?worker_id=#{@worker_id}")
+      uri = URI("https://#{@server}:#{@port}/api/v#{SSHScan::API_VERSION}/work?worker_id=#{@worker_id}")
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE # unless @verify_ssl == true
@@ -70,7 +70,7 @@ module SSHScan
     end
 
     def post_results(results, job)
-      uri = URI("https://#{@server}:#{@port}/api/v0.0.1/work/results/#{@worker_id}/#{job["uuid"]}")
+      uri = URI("https://#{@server}:#{@port}/api/v#{SSHScan::API_VERSION}/work/results/#{@worker_id}/#{job["uuid"]}")
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE # unless @verify_ssl == true
