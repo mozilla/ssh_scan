@@ -13,6 +13,25 @@ module SSHScan
       @verify_ssl = false
     end
 
+    def run!
+      loop do
+        begin
+          response = get_work
+          if response["work"]
+            job = response["work"]
+            results = perform_work(job)
+            post_results(results, job)
+          else
+            sleep 0.5
+            next
+          end
+        rescue Errno::ECONNREFUSED
+          @logger.error("Cannot reach API endpoint, waiting 5 seconds")
+          sleep 5
+        end
+      end
+    end
+
     def get_work
       (Net::HTTP::SSL_IVNAMES << :@ssl_options).uniq!
       (Net::HTTP::SSL_ATTRIBUTES << :options).uniq!
@@ -33,7 +52,6 @@ module SSHScan
     end
 
     def perform_work(job)
-
       @logger.info("Worker #{@worker_id} started job")
       scan_engine = SSHScan::ScanEngine.new()
       options = {
