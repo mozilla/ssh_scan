@@ -24,8 +24,9 @@ options = {
 target_parser = SSHScan::TargetParser.new()
 
 opt_parser = OptionParser.new do |opts|
-  opts.banner = "ssh_scan v#{SSHScan::VERSION} (https://github.com/mozilla/ssh_scan)\n\n" +
-                "Usage: ssh_scan [options]"
+  opts.banner =
+    "ssh_scan v#{SSHScan::VERSION} (https://github.com/mozilla/ssh_scan)\n\n\
+Usage: ssh_scan [options]"
 
   opts.on("-t", "--target [IP/Range/Hostname]", Array,
           "IP/Ranges/Hostname to scan") do |sockets|
@@ -36,8 +37,9 @@ opt_parser = OptionParser.new do |opts|
   end
 
   opts.on("-f", "--file [FilePath]",
-          "File Path of the file containing IP/Range/Hostnames to scan") do |file|
-    unless File.exists?(file)
+          "File Path of the file containing IP/Range/Hostnames to \
+scan") do |file|
+    unless File.exist?(file)
       puts "\nReason: input file supplied is not a file"
       exit
     end
@@ -50,7 +52,8 @@ opt_parser = OptionParser.new do |opts|
   end
 
   opts.on("-T", "--timeout [seconds]",
-          "Timeout per connect after which ssh_scan gives up on the host") do |timeout|
+          "Timeout per connect after which ssh_scan gives up on the\
+ host") do |timeout|
     options["timeout"] = timeout.to_i
   end
 
@@ -65,7 +68,7 @@ opt_parser = OptionParser.new do |opts|
 
   opts.on("-O", "--from_json [FilePath]",
           "File to read JSON output from") do |file|
-    unless File.exists?(file)
+    unless File.exist?(file)
       puts "\nReason: Invalid file"
       exit
     end
@@ -73,7 +76,10 @@ opt_parser = OptionParser.new do |opts|
     json = file.read
     parsed_json = JSON.parse(json)
     parsed_json.each do |host|
-      options["sockets"] += target_parser.enumerateIPRange(host['ip'], host['port'])
+      options["sockets"] += target_parser.enumerateIPRange(
+        host['ip'],
+        host['port']
+      )
     end
   end
 
@@ -89,7 +95,8 @@ opt_parser = OptionParser.new do |opts|
       ports.each do |port|
         ip, old_port = socket.chomp.split(':')
         if !old_port.nil?
-          puts "Specifying port simultaneously with -t and -p is not allowed. Please fix this and try again"
+          puts "Specifying port simultaneously with -t and -p is not\
+ allowed. Please fix this and try again"
           exit 1
         end
         temp += target_parser.enumerateIPRange(ip, port)
@@ -109,7 +116,8 @@ opt_parser = OptionParser.new do |opts|
   end
 
   opts.on("--fingerprint-db [FILE]",
-          "File location of fingerprint database (Default: ./fingerprints.db)") do |fingerprint_db|
+          "File location of fingerprint database (Default: \
+./fingerprints.db)") do |fingerprint_db|
     options["fingerprint_database"] = fingerprint_db
   end
 
@@ -123,15 +131,17 @@ opt_parser = OptionParser.new do |opts|
   end
 
   opts.on("-V", "--verbosity",
-          "Set the logger level (Accepted Params: INFO, DEBUG, WARN, ERROR, FATAL)") do |verbosity|
-    options["logger"].level = case options["verbosity"]
+          "Set the logger level (Accepted Params: INFO, DEBUG, WARN, \
+ERROR, FATAL)") do |verbosity|
+    options["logger"].level = case verbosity
       when "INFO" then Logger::INFO
       when "DEBUG" then Logger::DEBUG
       when "WARN" then Logger::WARN
       when "ERROR" then Logger::ERROR
       when "FATAL" then Logger::FATAL
       else
-        puts "Can't convert #{options["verbosity"]} to any of the Logger level constants"
+        puts "Can't convert #{options["verbosity"]} to any of the Logger \
+level constants"
         exit
     end
   end
@@ -175,7 +185,7 @@ if options["sockets"].nil?
 end
 
 options["sockets"].each do |socket|
-  ip, port = socket.chomp.split(':')
+  ip = socket.chomp.split(':')[0]
   unless ip.ip_addr? || ip.fqdn?
     puts opt_parser.help
     puts "\nReason: #{socket} is not a valid target"
@@ -184,7 +194,7 @@ options["sockets"].each do |socket|
 end
 
 options["sockets"].each do |socket|
-  ip, port = socket.chomp.split(':')
+  port = socket.chomp.split(':')[1]
   unless (0..65535).include?(port.to_i)
     puts opt_parser.help
     puts "\nReason: port supplied is not within acceptable range"
@@ -192,7 +202,7 @@ options["sockets"].each do |socket|
   end
 end
 
-unless File.exists?(options["policy"])
+unless File.exist?(options["policy"])
   puts opt_parser.help
   puts "\nReason: policy file supplied is not a file"
   exit 1
@@ -202,14 +212,19 @@ end
 if !options["suppress_update_status"]
   update = SSHScan::Update.new
   if update.newer_gem_available?
-    options["logger"].warn("You're NOT using the latest version of ssh_scan, try 'gem update ssh_scan' to get the latest")
+    options["logger"].warn(
+      "You're NOT using the latest version of ssh_scan, try 'gem update \
+ssh_scan' to get the latest"
+    )
   else
-    if update.errors.size > 0
+    if update.errors.any?
       update.errors.each do |error|
         options["logger"].error(error)
       end
     else
-      options["logger"].info("You're using the latest version of ssh_scan #{SSHScan::VERSION}")
+      options["logger"].info(
+        "You're using the latest version of ssh_scan #{SSHScan::VERSION}"
+      )
     end
   end
 end

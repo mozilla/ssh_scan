@@ -41,7 +41,9 @@ module SSHScan
         @raw_server_banner = @sock.gets
 
         if @raw_server_banner.nil?
-          @error = SSHScan::Error::NoBanner.new("service did not respond with an SSH banner")
+          @error = SSHScan::Error::NoBanner.new(
+            "service did not respond with an SSH banner"
+          )
           @sock = nil
         else
           @raw_server_banner = @raw_server_banner.chomp
@@ -76,7 +78,9 @@ module SSHScan
         resp = @sock.read(4)
 
         if resp.nil?
-          result[:error] = SSHScan::Error::NoKexResponse.new("service did not respond to our kex init request")
+          result[:error] = SSHScan::Error::NoKexResponse.new(
+            "service did not respond to our kex init request"
+          )
           @sock = nil
           return result
         end
@@ -93,8 +97,10 @@ module SSHScan
              Errno::ENETUNREACH,
              Errno::ECONNRESET,
              Errno::EACCES,
-             Errno::EHOSTUNREACH => e
-        result[:error] = SSHScan::Error::NoKexResponse.new("service did not respond to our kex init request")
+             Errno::EHOSTUNREACH
+        result[:error] = SSHScan::Error::NoKexResponse.new(
+          "service did not respond to our kex init request"
+        )
         @sock = nil
       end
 

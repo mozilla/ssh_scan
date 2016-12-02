@@ -11,28 +11,50 @@ module SSHScan
     uint8 :message_code, :initial_value => 20
     string :cookie_string, :length => 16
     uint32 :kex_algorithms_length
-    string :key_algorithms_string, :length => lambda { self.kex_algorithms_length }
+    string :key_algorithms_string, :length => lambda {
+      self.kex_algorithms_length
+    }
     uint32 :server_host_key_algorithms_length
-    string :server_host_key_algorithms_string, :length => lambda { self.server_host_key_algorithms_length }
+    string :server_host_key_algorithms_string, :length => lambda {
+      self.server_host_key_algorithms_length
+    }
     uint32 :encryption_algorithms_client_to_server_length
-    string :encryption_algorithms_client_to_server_string, :length => lambda { self.encryption_algorithms_client_to_server_length }
+    string :encryption_algorithms_client_to_server_string, :length => lambda {
+      self.encryption_algorithms_client_to_server_length
+    }
     uint32 :encryption_algorithms_server_to_client_length
-    string :encryption_algorithms_server_to_client_string, :length => lambda { self.encryption_algorithms_server_to_client_length }
+    string :encryption_algorithms_server_to_client_string, :length => lambda {
+      self.encryption_algorithms_server_to_client_length
+    }
     uint32 :mac_algorithms_client_to_server_length
-    string :mac_algorithms_client_to_server_string, :length => lambda { self.mac_algorithms_client_to_server_length }
+    string :mac_algorithms_client_to_server_string, :length => lambda {
+      self.mac_algorithms_client_to_server_length
+    }
     uint32 :mac_algorithms_server_to_client_length
-    string :mac_algorithms_server_to_client_string, :length => lambda { self.mac_algorithms_server_to_client_length }
+    string :mac_algorithms_server_to_client_string, :length => lambda {
+      self.mac_algorithms_server_to_client_length
+    }
     uint32 :compression_algorithms_client_to_server_length
-    string :compression_algorithms_client_to_server_string, :length => lambda { self.compression_algorithms_client_to_server_length }
+    string :compression_algorithms_client_to_server_string, :length => lambda {
+      self.compression_algorithms_client_to_server_length
+    }
     uint32 :compression_algorithms_server_to_client_length
-    string :compression_algorithms_server_to_client_string, :length => lambda { self.compression_algorithms_server_to_client_length }
+    string :compression_algorithms_server_to_client_string, :length => lambda {
+      self.compression_algorithms_server_to_client_length
+    }
     uint32 :languages_client_to_server_length
-    string :languages_client_to_server_string, :length => lambda { self.languages_client_to_server_length }
+    string :languages_client_to_server_string, :length => lambda {
+      self.languages_client_to_server_length
+    }
     uint32 :languages_server_to_client_length
-    string :languages_server_to_client_string, :length => lambda { self.languages_server_to_client_length }
+    string :languages_server_to_client_string, :length => lambda {
+      self.languages_server_to_client_length
+    }
     uint8 :kex_first_packet_follows
     uint32 :reserved
-    string :padding_string, :read_length => lambda { self.padding_length }
+    string :padding_string, :read_length => lambda {
+      self.padding_length
+    }
 
     def cookie
       self.cookie_string
@@ -183,12 +205,16 @@ module SSHScan
         :cookie => self.cookie.hexify,
         :key_algorithms => key_algorithms,
         :server_host_key_algorithms => server_host_key_algorithms,
-        :encryption_algorithms_client_to_server => encryption_algorithms_client_to_server,
-        :encryption_algorithms_server_to_client => encryption_algorithms_server_to_client,
+        :encryption_algorithms_client_to_server =>
+          encryption_algorithms_client_to_server,
+        :encryption_algorithms_server_to_client =>
+          encryption_algorithms_server_to_client,
         :mac_algorithms_client_to_server => mac_algorithms_client_to_server,
         :mac_algorithms_server_to_client => mac_algorithms_server_to_client,
-        :compression_algorithms_client_to_server => compression_algorithms_client_to_server,
-        :compression_algorithms_server_to_client => compression_algorithms_server_to_client,
+        :compression_algorithms_client_to_server =>
+          compression_algorithms_client_to_server,
+        :compression_algorithms_server_to_client =>
+          compression_algorithms_server_to_client,
         :languages_client_to_server => languages_client_to_server,
         :languages_server_to_client => languages_server_to_client,
       }
@@ -200,12 +226,18 @@ module SSHScan
       kex_init.padding = opts[:padding]
       kex_init.key_algorithms = opts[:key_algorithms]
       kex_init.server_host_key_algorithms = opts[:server_host_key_algorithms]
-      kex_init.encryption_algorithms_client_to_server = opts[:encryption_algorithms_client_to_server]
-      kex_init.encryption_algorithms_server_to_client = opts[:encryption_algorithms_server_to_client]
-      kex_init.mac_algorithms_client_to_server = opts[:mac_algorithms_client_to_server]
-      kex_init.mac_algorithms_server_to_client = opts[:mac_algorithms_server_to_client]
-      kex_init.compression_algorithms_client_to_server = opts[:compression_algorithms_client_to_server]
-      kex_init.compression_algorithms_server_to_client = opts[:compression_algorithms_server_to_client]
+      kex_init.encryption_algorithms_client_to_server =
+        opts[:encryption_algorithms_client_to_server]
+      kex_init.encryption_algorithms_server_to_client =
+        opts[:encryption_algorithms_server_to_client]
+      kex_init.mac_algorithms_client_to_server =
+        opts[:mac_algorithms_client_to_server]
+      kex_init.mac_algorithms_server_to_client =
+        opts[:mac_algorithms_server_to_client]
+      kex_init.compression_algorithms_client_to_server =
+        opts[:compression_algorithms_client_to_server]
+      kex_init.compression_algorithms_server_to_client =
+        opts[:compression_algorithms_server_to_client]
       kex_init.languages_client_to_server = opts[:languages_client_to_server]
       kex_init.languages_server_to_client = opts[:languages_server_to_client]
       return kex_init

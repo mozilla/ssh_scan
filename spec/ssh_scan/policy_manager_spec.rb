@@ -4,13 +4,14 @@ require 'ssh_scan/policy'
 
 describe SSHScan::PolicyManager do
   context "when checking out of policy encryption" do
-    yaml_string = "---\nname: Mozilla Intermediate\nkex:\n" +
-                  "- diffie-hellman-group-exchange-sha256\n" +
-                  "encryption:\n- aes256-ctr\n- aes192-ctr\n" +
-                  "- aes128-ctr\nmacs:\n- hmac-sha2-512\n" +
-                  "- hmac-sha2-256\ncompression:\n- none\n" +
-                  "- zlib@openssh.com\n" +
-                  "references:\n- https://wiki.mozilla.org/Security/Guidelines/OpenSSH\n"
+    yaml_string =
+      "---\nname: Mozilla Intermediate\nkex:\n" +
+      "- diffie-hellman-group-exchange-sha256\n" +
+      "encryption:\n- aes256-ctr\n- aes192-ctr\n" +
+      "- aes128-ctr\nmacs:\n- hmac-sha2-512\n" +
+      "- hmac-sha2-256\ncompression:\n- none\n" +
+      "- zlib@openssh.com\n" +
+      "references:\n- https://wiki.mozilla.org/Security/Guidelines/OpenSSH\n"
     result =  {
                 :encryption_algorithms_client_to_server => [
                   "chacha20-poly1305@openssh.com",
@@ -41,13 +42,14 @@ describe SSHScan::PolicyManager do
   end
 
   context "when checking the missing policy encryption" do
-    yaml_string = "---\nname: Mozilla Intermediate\nkex:\n" +
-                  "- diffie-hellman-group-exchange-sha256\n" +
-                  "encryption:\n- aes256-ctr\n- aes192-ctr\n" +
-                  "- aes128-ctr\nmacs:\n- hmac-sha2-512\n" +
-                  "- hmac-sha2-256\ncompression:\n- none\n" +
-                  "- zlib@openssh.com\n" +
-                  "references:\n- https://wiki.mozilla.org/Security/Guidelines/OpenSSH\n"
+    yaml_string =
+      "---\nname: Mozilla Intermediate\nkex:\n" +
+      "- diffie-hellman-group-exchange-sha256\n" +
+      "encryption:\n- aes256-ctr\n- aes192-ctr\n" +
+      "- aes128-ctr\nmacs:\n- hmac-sha2-512\n" +
+      "- hmac-sha2-256\ncompression:\n- none\n" +
+      "- zlib@openssh.com\n" +
+      "references:\n- https://wiki.mozilla.org/Security/Guidelines/OpenSSH\n"
     result = {
                 :encryption_algorithms_client_to_server => [
                   "chacha20-poly1305@openssh.com",
@@ -76,13 +78,14 @@ describe SSHScan::PolicyManager do
   end
 
   context "when checking out of policy mac" do
-    yaml_string = "---\nname: Mozilla Intermediate\nkex:\n" +
-                  "- diffie-hellman-group-exchange-sha256\n" +
-                  "encryption:\n- aes256-ctr\n- aes192-ctr\n" +
-                  "- aes128-ctr\nmacs:\n- hmac-sha2-512\n" +
-                  "- hmac-sha2-256\ncompression:\n- none\n" +
-                  "- zlib@openssh.com\n" +
-                  "references:\n- https://wiki.mozilla.org/Security/Guidelines/OpenSSH\n"
+    yaml_string =
+      "---\nname: Mozilla Intermediate\nkex:\n" +
+      "- diffie-hellman-group-exchange-sha256\n" +
+      "encryption:\n- aes256-ctr\n- aes192-ctr\n" +
+      "- aes128-ctr\nmacs:\n- hmac-sha2-512\n" +
+      "- hmac-sha2-256\ncompression:\n- none\n" +
+      "- zlib@openssh.com\n" +
+      "references:\n- https://wiki.mozilla.org/Security/Guidelines/OpenSSH\n"
     result =  {
                 :mac_algorithms_client_to_server => [
                   "umac-64-etm@openssh.com",
@@ -126,13 +129,14 @@ describe SSHScan::PolicyManager do
   end
 
   context "when checking the missing policy mac" do
-    yaml_string = "---\nname: Mozilla Intermediate\nkex:\n" +
-                  "- diffie-hellman-group-exchange-sha256\n" +
-                  "encryption:\n- aes256-ctr\n- aes192-ctr\n" +
-                  "- aes128-ctr\nmacs:\n- hmac-sha2-512\n" +
-                  "- hmac-sha2-256\ncompression:\n- none\n" +
-                  "- zlib@openssh.com\n" +
-                  "references:\n- https://wiki.mozilla.org/Security/Guidelines/OpenSSH\n"
+    yaml_string =
+      "---\nname: Mozilla Intermediate\nkex:\n" +
+      "- diffie-hellman-group-exchange-sha256\n" +
+      "encryption:\n- aes256-ctr\n- aes192-ctr\n" +
+      "- aes128-ctr\nmacs:\n- hmac-sha2-512\n" +
+      "- hmac-sha2-256\ncompression:\n- none\n" +
+      "- zlib@openssh.com\n" +
+      "references:\n- https://wiki.mozilla.org/Security/Guidelines/OpenSSH\n"
     result = {
                 :mac_algorithms_client_to_server => [
                   "umac-64-etm@openssh.com",
@@ -169,14 +173,15 @@ describe SSHScan::PolicyManager do
   end
 
   context "when checking the allowed auth methods" do
-    yaml_string = "---\nname: Mozilla Intermediate\nkex:\n" +
-                  "- diffie-hellman-group-exchange-sha256\n" +
-                  "encryption:\n- aes256-ctr\n- aes192-ctr\n" +
-                  "- aes128-ctr\nmacs:\n- hmac-sha2-512\n" +
-                  "- hmac-sha2-256\ncompression:\n- none\n" +
-                  "- zlib@openssh.com\n" +
-                  "references:\n- https://wiki.mozilla.org/Security/Guidelines/OpenSSH\n" +
-                  "auth_methods:\n- publickey\n"
+    yaml_string =
+      "---\nname: Mozilla Intermediate\nkex:\n" +
+      "- diffie-hellman-group-exchange-sha256\n" +
+      "encryption:\n- aes256-ctr\n- aes192-ctr\n" +
+      "- aes128-ctr\nmacs:\n- hmac-sha2-512\n" +
+      "- hmac-sha2-256\ncompression:\n- none\n" +
+      "- zlib@openssh.com\n" +
+      "references:\n- https://wiki.mozilla.org/Security/Guidelines/OpenSSH\n" +
+      "auth_methods:\n- publickey\n"
     result = {
                 "auth_methods" => [
                   "publickey",
@@ -193,15 +198,16 @@ describe SSHScan::PolicyManager do
   end
 
   context "when checking the minimum ssh_version" do
-    yaml_string = "---\nname: Mozilla Intermediate\nkex:\n" +
-                  "- diffie-hellman-group-exchange-sha256\n" +
-                  "encryption:\n- aes256-ctr\n- aes192-ctr\n" +
-                  "- aes128-ctr\nmacs:\n- hmac-sha2-512\n" +
-                  "- hmac-sha2-256\ncompression:\n- none\n" +
-                  "- zlib@openssh.com\n" +
-                  "references:\n- https://wiki.mozilla.org/Security/Guidelines/OpenSSH\n" +
-                  "auth_methods:\n- publickey\n" +
-                  "ssh_version: 2.0\n"
+    yaml_string =
+      "---\nname: Mozilla Intermediate\nkex:\n" +
+      "- diffie-hellman-group-exchange-sha256\n" +
+      "encryption:\n- aes256-ctr\n- aes192-ctr\n" +
+      "- aes128-ctr\nmacs:\n- hmac-sha2-512\n" +
+      "- hmac-sha2-256\ncompression:\n- none\n" +
+      "- zlib@openssh.com\n" +
+      "references:\n- https://wiki.mozilla.org/Security/Guidelines/OpenSSH\n" +
+      "auth_methods:\n- publickey\n" +
+      "ssh_version: 2.0\n"
     result = {
                 :ssh_version => 1.9
              }

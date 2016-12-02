@@ -5,8 +5,10 @@ require 'net/http'
 
 urls = [
   "https://launchpad.net/ubuntu/+source/openssh/+changelog",
-  "https://launchpad.net/ubuntu/+source/openssh/+changelog?batch=75&memo=75&start=75",
-  "https://launchpad.net/ubuntu/+source/openssh/+changelog?batch=75&memo=150&start=150"
+  "https://launchpad.net/ubuntu/+source/openssh/+changelog\
+?batch=75&memo=75&start=75",
+  "https://launchpad.net/ubuntu/+source/openssh/+changelog\
+?batch=75&memo=150&start=150"
 ]
 
 lines = []
@@ -49,11 +51,11 @@ end
 
 lines.each do |line|
   next if !line.include?("openssh (")
-  fingerprint = line.strip.scan /\(([^\)]+)\)/
+  fingerprint = line.strip.scan(/\(([^\)]+)\)/)
   versions.keys.each do |key|
     matches = 0
     if line.include?(codenames[key])
-      fingerprint.each do |val| 
+      fingerprint.each do |val|
         versions[key] << val.first.split(":")[1..-1].join(":")
       end
       matches += 1

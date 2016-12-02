@@ -19,7 +19,7 @@ module SSHScan
           upper = NetAddr::CIDR.create(octets.join('.') + "." + range[1])
           ip_array = NetAddr.range(lower, upper,:Inclusive => true)
           if !port.nil?
-            ip_array.map! { |ip| ip.concat(":").concat(port.to_s) }
+            ip_array.map! { |i| i.concat(":").concat(port.to_s) }
           end
           return ip_array
         elsif ip.include? "/"
@@ -28,7 +28,7 @@ module SSHScan
           ip_array.delete(cidr.network)
           ip_array.delete(cidr.last)
           if !port.nil?
-            ip_array.map! { |ip| ip.concat(":").concat(port.to_s) }
+            ip_array.map! { |i| i.concat(":").concat(port.to_s) }
           end
           return ip_array
         else

@@ -11,7 +11,9 @@ def checkFingerprints(fingerprint_expectations)
       end
 
       if expectations[:os_version]
-        expect(banner.os_guess.version.to_s).to eql(expectations[:os_version])
+        expect(banner.os_guess.version.to_s).to eql(
+          expectations[:os_version]
+        )
       end
 
       if expectations[:os_cpe]
@@ -19,11 +21,15 @@ def checkFingerprints(fingerprint_expectations)
       end
 
       if expectations[:ssh_lib_class]
-        expect(banner.ssh_lib_guess).to be_kind_of(expectations[:ssh_lib_class])
+        expect(banner.ssh_lib_guess).to be_kind_of(
+          expectations[:ssh_lib_class]
+        )
       end
 
       if expectations[:ssh_lib_version]
-        expect(banner.ssh_lib_guess.version.to_s).to eql(expectations[:ssh_lib_version])
+        expect(banner.ssh_lib_guess.version.to_s).to eql(
+          expectations[:ssh_lib_version]
+        )
       end
 
       if expectations[:ssh_lib_cpe]

@@ -1,6 +1,6 @@
 module SSHScan
   module Error
-    class ConnectTimeout < Exception
+    class ConnectTimeout < RuntimeError
       def initialize(message)
         @message = message
       end

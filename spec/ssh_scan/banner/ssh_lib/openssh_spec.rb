@@ -24,11 +24,6 @@ describe SSHScan::Banner do
         :ssh_lib_version => "6.2",
         :ssh_lib_cpe => "a:openssh:openssh:6.2",
       },
-      "SSH-2.0-OpenSSH_6.2 FIPS" => {
-        :ssh_lib_class => SSHScan::SSHLib::OpenSSH,
-        :ssh_lib_version => "6.2",
-        :ssh_lib_cpe => "a:openssh:openssh:6.2",
-      },
       "SSH-2.0-OpenSSH_12.1" => {
         :ssh_lib_class => SSHScan::SSHLib::OpenSSH,
         :ssh_lib_version => "12.1",

@@ -18,7 +18,7 @@ module SSHScan
     end
 
     def next_minor_version(version = SSHScan::VERSION)
-      major, minor, patch = version.split(".")
+      major, minor = version.split(".")[0, 2]
       minor_num = minor.to_i
       minor_num += 1
 
@@ -26,7 +26,7 @@ module SSHScan
     end
 
     def next_major_version(version = SSHScan::VERSION)
-      major, minor, patch = version.split(".")
+      major = version.split(".")[0]
       major_num = major.to_i
       major_num += 1
 
@@ -38,7 +38,7 @@ module SSHScan
 
       begin
         res = Net::HTTP.get_response(uri)
-      rescue Exception => e
+      rescue SocketError => e
         @errors << e.message
         return false
       end

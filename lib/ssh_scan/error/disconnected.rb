@@ -1,6 +1,6 @@
 module SSHScan
   module Error
-    class Disconnected < Exception
+    class Disconnected < RuntimeError
       def initialize(message)
         @message = message
       end

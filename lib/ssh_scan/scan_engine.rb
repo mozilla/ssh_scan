@@ -20,17 +20,23 @@ module SSHScan
 
       if target.fqdn?
         if target.resolve_fqdn_as_ipv6.nil?
-          client = SSHScan::Client.new(target.resolve_fqdn_as_ipv4.to_s, port, timeout)
+          client = SSHScan::Client.new(
+            target.resolve_fqdn_as_ipv4.to_s, port, timeout
+          )
           client.connect()
           result = client.get_kex_result()
           result[:hostname] = target
           return result if result.include?(:error)
         else
-          client = SSHScan::Client.new(target.resolve_fqdn_as_ipv6.to_s, port, timeout)
+          client = SSHScan::Client.new(
+            target.resolve_fqdn_as_ipv6.to_s, port, timeout
+          )
           client.connect()
           result = client.get_kex_result()
           if result.include?(:error)
-            client = SSHScan::Client.new(target.resolve_fqdn_as_ipv4.to_s, port, timeout)
+            client = SSHScan::Client.new(
+              target.resolve_fqdn_as_ipv4.to_s, port, timeout
+            )
             client.connect()
             result = client.get_kex_result()
             result[:hostname] = target
@@ -54,7 +60,9 @@ module SSHScan
                             :paranoid => Net::SSH::Verifiers::Null.new
                           )
         raise SSHScan::Error::ClosedConnection.new if net_ssh_session.closed?
-        auth_session = Net::SSH::Authentication::Session.new(net_ssh_session, :auth_methods => ["none"])
+        auth_session = Net::SSH::Authentication::Session.new(
+          net_ssh_session, :auth_methods => ["none"]
+        )
         auth_session.authenticate("none", "test", "test")
         result['auth_methods'] = auth_session.allowed_auth_methods
         net_ssh_session.close
@@ -119,7 +127,7 @@ module SSHScan
       work_queue = Queue.new
 
       sockets.each {|x| work_queue.push x }
-      workers = (0...threads).map do |worker_num|
+      workers = (0...threads).map do
         Thread.new do
           begin
             while socket = work_queue.pop(true)
@@ -135,7 +143,9 @@ module SSHScan
       workers.map(&:join)
 
       # Add all the fingerprints to our peristent FingerprintDatabase
-      # fingerprint_db = SSHScan::FingerprintDatabase.new(opts[:fingerprint_database])
+      # fingerprint_db = SSHScan::FingerprintDatabase.new(
+      #   opts[:fingerprint_database]
+      # )
       # results.each do |result|
       #   fingerprint_db.clear_fingerprints(result[:ip])
       #   if result['fingerprints']

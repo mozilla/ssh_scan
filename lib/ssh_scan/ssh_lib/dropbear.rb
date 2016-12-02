@@ -1,6 +1,8 @@
 module SSHScan
   module SSHLib
     class Dropbear
+      attr_reader :version
+
       class Version
         def initialize(version_string)
           if version_string == nil
@@ -32,10 +34,6 @@ module SSHScan
 
       def cpe
         "a:dropbear:dropbear" << (":" + version.to_s) unless version.nil?
-      end
-
-      def version
-        @version
       end
     end
   end
