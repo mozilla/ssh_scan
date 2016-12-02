@@ -22,14 +22,11 @@ describe SSHScan::VERSION do
   end
 
   it "SSHScan::API_VERSION should have 3 levels" do
-    expect(SSHScan::API_VERSION.split('.').size).to eql(3)
+    expect(SSHScan::API_VERSION.split('.').size).to eql(1)
   end
 
   it "SSHScan::API_VERSION should have a number between 1-20 for each octet" do
-    SSHScan::API_VERSION.split('.').each do |octet|
-      expect(octet.to_i).to be >= 0
-      expect(octet.to_i).to be <= 20
-    end
+    expect(SSHScan::API_VERSION).to eql("1")
   end
 
 end

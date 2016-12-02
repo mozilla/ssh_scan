@@ -8,3 +8,22 @@ port: 8000
 # The locations for they key and crt files for legit SSL/TLS configuration
 #key: the_file_path_to_the_key
 #crt: the_file_path_to_the_crt
+
+# API Tokens (a crude mechanism for adding auth to your API)
+#authentication: true
+authentication: false
+
+
+# If authentication is to true, the authentication tokens you generate below
+# will be required to access certain API functions.
+#
+# Generate a new token using Ruby's Secure random uuid
+# $ ruby -r securerandom -e 'puts SecureRandom.uuid'
+#
+# users:
+#   - username    : starlord
+#     token       : INSERT_STARLORD_TOKEN
+#   - username    : groot
+#     token       : INSERT_GROOT_TOKEN
+#   - username    : gamora
+#     token       : INSERT_GAMORA_TOKEN

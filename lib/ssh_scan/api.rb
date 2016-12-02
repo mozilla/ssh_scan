@@ -9,6 +9,7 @@ require 'haml'
 require 'secure_headers'
 require 'thin'
 require 'securerandom'
+require 'ssh_scan/authenticator'
 
 module SSHScan
   class API < Sinatra::Base
@@ -52,44 +53,18 @@ module SSHScan
 
     get '/contribute.json' do
       content_type :json
-      {
-        :name => "ssh_scan api",
-        :description => "An api for performing ssh compliance and policy scanning",
-        :repository => {
-          :url => "https://github.com/mozilla/ssh_scan",
-          :tests => "https://travis-ci.org/mozilla/ssh_scan",
-        },
-        :participate => {
-          :home => "https://github.com/mozilla/ssh_scan",
-          :docs => "https://github.com/mozilla/ssh_scan",
-          :irc => "irc://irc.mozilla.org/#infosec",
-          :irc_contacts => [
-            "claudijd",
-            "pwnbus",
-            "kang",
-          ],
-          :glitter => "https://gitter.im/mozilla-ssh_scan/Lobby",
-          :glitter_contacts => [
-            "claudijd",
-            "pwnbus",
-            "kang",
-            "jinankjain",
-            "agaurav77"
-          ],
-        },
-        :bugs => {
-          :list => "https://github.com/mozilla/ssh_scan/issues",
-        },
-        :keywords => [
-          "ruby",
-          "sinatra",
-        ],
-      }.to_json
+      SSHScan::Constants::CONTRIBUTE_JSON.to_json
     end
 
     namespace "/api/v#{SSHScan::API_VERSION}" do
       before do
         content_type :json
+        if settings.authentication == true
+          token = request.env['HTTP_SSH_SCAN_AUTH_TOKEN']
+          unless token && settings.authenticator.valid_token?(token)
+            halt '{"error" : "authentication failure"}'
+          end
+        end
       end
 
       post '/scan' do
@@ -164,6 +139,8 @@ module SSHScan
         set :logger, Logger.new(STDOUT)
         set :job_queue, JobQueue.new()
         set :results, {}
+        set :authentication, options["authentication"]
+        set :authenticator, SSHScan::Authenticator.from_config_file(options["config_file"])
       end
 
       super do |server|
