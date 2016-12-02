@@ -1,6 +1,6 @@
 module SSHScan
   module Error
-    class NoBanner < Exception
+    class NoBanner < RuntimeError
       def initialize(message)
         @message = message
       end

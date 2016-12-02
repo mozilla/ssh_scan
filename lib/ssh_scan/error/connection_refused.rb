@@ -1,6 +1,6 @@
 module SSHScan
   module Error
-    class ConnectionRefused < Exception
+    class ConnectionRefused < RuntimeError
       def initialize(message)
         @message = message
       end

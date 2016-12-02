@@ -3,7 +3,7 @@ require 'sqlite3'
 module SSHScan
   class FingerprintDatabase
     def initialize(database_name)
-      if File.exists?(database_name)
+      if File.exist?(database_name)
         @db = ::SQLite3::Database.open(database_name)
       else
         @db = ::SQLite3::Database.new(database_name)
@@ -30,7 +30,10 @@ module SSHScan
 
     def find_fingerprints(fingerprint)
       ips = []
-      @db.execute( "select * from fingerprints where fingerprint like ( ? )", [fingerprint] ) do |row|
+      @db.execute(
+        "select * from fingerprints where fingerprint like ( ? )",
+        [fingerprint]
+      ) do |row|
         ips << row[1]
       end
       return ips

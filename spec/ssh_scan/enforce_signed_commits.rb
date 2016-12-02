@@ -10,7 +10,9 @@ VALID_KEY_IDS = {
 
 REGEX = / using [A-Z]+ key( ID)? (0x)?(?<keyid>[A-F0-9]*)/
 
-stdin, stdout, stderr, wait_thr = Open3.popen3("git log --no-merges --format='%H:%GG' master")
+stdin, stdout, stderr, wait_thr = Open3.popen3(
+  "git log --no-merges --format='%H:%GG' master"
+)
 first_line = stdout.gets.strip
 first_line.gsub! "'", ""
 parts = first_line.split(":")
@@ -32,5 +34,6 @@ if parts[1] == 'gpg'
   end
 end
 if keyid.nil?
-  raise "Latest commit #{sha} is not signed!\nCommits must be gpg signed: `git commit -S[<keyid>]`"
+  raise "Latest commit #{sha} is not signed!\nCommits must be gpg \
+signed: `git commit -S[<keyid>]`"
 end

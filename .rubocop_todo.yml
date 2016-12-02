@@ -6,30 +6,12 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 1
-Lint/AmbiguousRegexpLiteral:
-  Exclude:
-    - 'scripts/Ubuntu.rb'
-
 # Offense count: 2
 # Configuration parameters: AllowSafeAssignment.
 Lint/AssignmentInCondition:
   Exclude:
     - 'lib/ssh_scan/banner.rb'
     - 'lib/ssh_scan/scan_engine.rb'
-
-# Offense count: 6
-# Cop supports --auto-correct.
-Lint/DeprecatedClassMethods:
-  Exclude:
-    - 'bin/ssh_scan'
-    - 'lib/ssh_scan/fingerprint_database.rb'
-    - 'spec/ssh_scan/fingerprint_database_spec.rb'
-
-# Offense count: 1
-Lint/DuplicatedKey:
-  Exclude:
-    - 'spec/ssh_scan/banner/ssh_lib/openssh_spec.rb'
 
 # Offense count: 1
 # Cop supports --auto-correct.
@@ -38,52 +20,10 @@ Lint/DuplicatedKey:
 Lint/EndAlignment:
   Enabled: false
 
-# Offense count: 1
-Lint/HandleExceptions:
-  Exclude:
-    - 'spec/ssh_scan/client_spec.rb'
-
-# Offense count: 6
-Lint/InheritException:
-  Exclude:
-    - 'lib/ssh_scan/error/connect_timeout.rb'
-    - 'lib/ssh_scan/error/closed_connection.rb'
-    - 'lib/ssh_scan/error/connection_refused.rb'
-    - 'lib/ssh_scan/error/disconnected.rb'
-    - 'lib/ssh_scan/error/no_banner.rb'
-    - 'lib/ssh_scan/error/no_kex_response.rb'
-
-# Offense count: 2
-Lint/PercentStringArray:
-  Exclude:
-    - 'lib/ssh_scan/api.rb'
-
-# Offense count: 1
-Lint/RescueException:
-  Exclude:
-    - 'lib/ssh_scan/update.rb'
-
-# Offense count: 2
-Lint/ShadowingOuterLocalVariable:
-  Exclude:
-    - 'lib/ssh_scan/target_parser.rb'
-
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: IgnoreEmptyBlocks.
-Lint/UnusedBlockArgument:
-  Exclude:
-    - 'bin/ssh_scan'
-    - 'lib/ssh_scan/scan_engine.rb'
-
 # Offense count: 14
 Lint/UselessAssignment:
   Exclude:
-    - 'bin/ssh_scan'
-    - 'lib/ssh_scan/client.rb'
-    - 'lib/ssh_scan/update.rb'
     - 'scripts/Ubuntu.rb'
-    - 'spec/ssh_scan/client_spec.rb'
     - 'spec/ssh_scan/enforce_signed_commits.rb'
 
 # Offense count: 13
@@ -93,15 +33,26 @@ Metrics/AbcSize:
 # Offense count: 4
 Metrics/BlockLength:
   Max: 125
+  Exclude:
+    - 'ssh_scan.gemspec'
+    - 'bin/ssh_scan'
+    - 'lib/ssh_scan/api.rb'
+    - 'spec/**/*'
 
 # Offense count: 1
 Metrics/BlockNesting:
-  Max: 4
+  Exclude:
+    - 'lib/ssh_scan/scan_engine.rb'
 
 # Offense count: 4
 # Configuration parameters: CountComments.
 Metrics/ClassLength:
   Max: 185
+  Exclude:
+    - 'lib/ssh_scan/os/ubuntu.rb'
+    - 'lib/ssh_scan/policy_manager.rb'
+    - 'lib/ssh_scan/protocol.rb'
+    - 'lib/ssh_scan/scan_engine.rb'
 
 # Offense count: 9
 Metrics/CyclomaticComplexity:
@@ -111,12 +62,12 @@ Metrics/CyclomaticComplexity:
 # Configuration parameters: AllowHeredoc, AllowURI, URISchemes.
 # URISchemes: http, https
 Metrics/LineLength:
-  Max: 1037
+  Max: 85
 
 # Offense count: 17
 # Configuration parameters: CountComments.
 Metrics/MethodLength:
-  Max: 89
+  Max: 150
 
 # Offense count: 7
 Metrics/PerceivedComplexity:
@@ -617,16 +568,6 @@ Style/TrailingWhitespace:
     - 'lib/ssh_scan/ssh_lib/ciscossh.rb'
     - 'scripts/Ubuntu.rb'
 
-# Offense count: 3
-# Cop supports --auto-correct.
-# Configuration parameters: ExactNameMatch, AllowPredicates, AllowDSLWriters, IgnoreClassMethods, Whitelist.
-# Whitelist: to_ary, to_a, to_c, to_enum, to_h, to_hash, to_i, to_int, to_io, to_open, to_path, to_proc, to_r, to_regexp, to_str, to_s, to_sym
-Style/TrivialAccessors:
-  Exclude:
-    - 'lib/ssh_scan/os/raspbian.rb'
-    - 'lib/ssh_scan/os/ubuntu.rb'
-    - 'lib/ssh_scan/ssh_lib/dropbear.rb'
-
 # Offense count: 1
 # Cop supports --auto-correct.
 Style/UnneededInterpolation:
@@ -639,9 +580,3 @@ Style/UnneededInterpolation:
 # SupportedStyles: percent, brackets
 Style/WordArray:
   Enabled: false
-
-# Offense count: 2
-Style/ZeroLengthPredicate:
-  Exclude:
-    - 'bin/ssh_scan'
-    - 'lib/ssh_scan/os/ubuntu.rb'

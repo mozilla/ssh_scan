@@ -9,13 +9,12 @@ describe SSHScan::API do
     SSHScan::API.new
   end
 
-
   it "should be able to GET / correctly" do
     get "/"
-    expect(last_response.status).to eql(404)
+    expect(last_response.status).to eql(200)
     expect(last_response.body).to eql(
-      "Invalid request, see API documentation here: " +
-      "https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API"
+      "See API documentation here: \
+https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
     )
   end
 
@@ -38,7 +37,8 @@ describe SSHScan::API do
   # $ curl -k https://127.0.0.1:8000/api/v1/__lbheartbeat__
   # {"status":"OK","message":"Keep sending requests. I am still alive."}
   #
-  # it "should send a positive response on GET __lbheartbeat__ if the API is working" do
+  # it "should send a positive response on GET __lbheartbeat__\
+  # if the API is working" do
   #   get "/api/v#{SSHScan::API_VERSION}/__lbheartbeat__"
   #   expect(last_response.status).to eql(200)
   #   expect(last_response.body).to eql({
@@ -60,7 +60,9 @@ describe SSHScan::API do
   #   expect(parsed_response_body.first["ssh_scan_version"]).to eql(SSHScan::VERSION)
   #   expect(parsed_response_body.first["ip"]).to eql(bad_ip)
   #   expect(parsed_response_body.first["port"]).to eql(port)
-  #   expect(parsed_response_body.first["error"]).to match(/ConnectTimeout: (Connection|Operation) timed out - user specified timeout/)
+  #   expect(parsed_response_body.first["error"]).to match(
+  #     /ConnectTimeout: (Connection|Operation) timed out - user specified timeout/
+  #   )
   #   expect(parsed_response_body.first["hostname"]).to eql("")
   # end
 end

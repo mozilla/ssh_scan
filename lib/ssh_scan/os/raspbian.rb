@@ -1,6 +1,8 @@
 module SSHScan
   module OS
     class Raspbian
+      attr_reader :version
+
       class Version
         def initialize(version_string)
           @version_string = version_string
@@ -29,10 +31,6 @@ module SSHScan
 
       def cpe
         "o:raspbian:raspbian"
-      end
-
-      def version
-        @version
       end
     end
   end

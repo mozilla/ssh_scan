@@ -1,6 +1,6 @@
 module SSHScan
   module Error
-    class NoKexResponse < Exception
+    class NoKexResponse < RuntimeError
       def initialize(message)
         @message = message
       end
