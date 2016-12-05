@@ -130,19 +130,23 @@ scan") do |file|
     options["unit_test"] = true
   end
 
-  opts.on("-V", "--verbosity",
-          "Set the logger level (Accepted Params: INFO, DEBUG, WARN, \
-ERROR, FATAL)") do |verbosity|
-    options["logger"].level = case verbosity
-      when "INFO" then Logger::INFO
-      when "DEBUG" then Logger::DEBUG
-      when "WARN" then Logger::WARN
-      when "ERROR" then Logger::ERROR
-      when "FATAL" then Logger::FATAL
-      else
-        puts "Can't convert #{options["verbosity"]} to any of the Logger \
-level constants"
-        exit
+  opts.on("-V", "--verbosity [STD_LOGGING_LEVEL]", "File to write JSON output to") do |verb|
+    case verb
+    when "INFO"
+      options["logger"].level ==  Logger::INFO
+    when "WARN"
+      options["logger"].level ==  Logger::WARN
+    when "DEBUG"
+      options["logger"].level ==  Logger::DEBUG
+    when "WARN"
+      options["logger"].level ==  Logger::WARN
+    when "ERROR"
+      options["logger"].level ==  Logger::ERROR
+    when "FATAL"
+      options["logger"].level ==  Logger::FATAL
+    else
+      options["logger"].fatal("Unrecognized logging verbosity level #{verb}")
+      exit 1
     end
   end
 

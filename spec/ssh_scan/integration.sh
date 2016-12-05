@@ -78,3 +78,13 @@ else
   echo "Integration Test #6: Fail (Help Output)"
   exit 1
 fi
+
+# Integration Test #7 (verbose scan)
+$SSH_SCAN_BINARY -t ssh.mozilla.com -V DEBUG
+if [ $? -eq 0 ]
+then
+  echo "Integration Test #7: Pass (verbose scan)"
+else
+  echo "Integration Test #7: Fail (verbose scan)"
+  exit 1
+fi
