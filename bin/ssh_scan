@@ -21,6 +21,25 @@ options = {
   "fingerprint_database" => "./fingerprints.db"
 }
 
+# Reorder arguments before parsing
+def reorder_args!(order, opt_parser)
+  old_args = opt_parser.default_argv
+  new_args = []
+  len = opt_parser.default_argv.length
+  order.each do |next_keyset|
+    i = 0
+    (0...len).each do
+      if next_keyset.include?(opt_parser.default_argv[i])
+        new_args << old_args.delete_at(i) << old_args.delete_at(i)
+      else
+        i += 1
+      end
+    end
+  end
+  new_args += old_args
+  opt_parser.default_argv = new_args
+end
+
 target_parser = SSHScan::TargetParser.new()
 
 opt_parser = OptionParser.new do |opts|
@@ -180,6 +199,7 @@ scan") do |file|
   end
 end
 
+reorder_args!([["-t", "--target"], ["-p", "--port"]], opt_parser)
 opt_parser.parse!
 
 if options["sockets"].nil?
