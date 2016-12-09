@@ -111,9 +111,9 @@ https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
         uuid = params['uuid']
         worker_id = params['worker_id']
 
-          if worker_id.empty? || uuid.empty?
-            return {"deleted" => "false"}.to_json
-          end
+        if worker_id.empty? || uuid.empty?
+          return {"deleted" => "false"}.to_json
+        end
 
         settings.db.delete_scan(worker_id, uuid)
       end
