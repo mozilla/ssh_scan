@@ -89,7 +89,7 @@ https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
         }
         options[:sockets] <<
           "#{params[:target]}:#{params[:port] ? params[:port] : "22"}"
-        options[:policy_file] = SSHScan::Policy.from_file(options[:policy])
+        options[:policy_file] = options[:policy]
         options[:uuid] = SecureRandom.uuid
         settings.job_queue.add(options)
         {

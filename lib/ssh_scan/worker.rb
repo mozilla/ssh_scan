@@ -36,6 +36,8 @@ module SSHScan
         rescue Errno::ECONNREFUSED
           @logger.error("Cannot reach API endpoint, waiting 5 seconds")
           sleep 5
+        rescue RuntimeError => e
+          @logger.error(e.inspect)
         end
       end
     end
