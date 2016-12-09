@@ -101,7 +101,7 @@ https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
         uuid = params[:uuid]
 
         if uuid.empty?
-          '{"I am not finished yet"}'
+          return {"completed" => false}.to_json
         end
 
         settings.db.find_scan_result(uuid)
