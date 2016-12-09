@@ -177,7 +177,7 @@ module SSHScan
       # Decorate all the results with compliance information
       results.each do |result|
         # Do this only when we have all the information we need
-        if !opts["policy_file"].nil? &&
+        if !opts["policy"].nil? &&
            !result[:key_algorithms].nil? &&
            !result[:server_host_key_algorithms].nil? &&
            !result[:encryption_algorithms_client_to_server].nil? &&
@@ -188,7 +188,9 @@ module SSHScan
            !result[:compression_algorithms_server_to_client].nil? &&
            !result[:languages_client_to_server].nil? &&
            !result[:languages_server_to_client].nil?
-          policy_mgr = SSHScan::PolicyManager.new(result, opts["policy_file"])
+
+          policy = SSHScan::Policy.from_file(opts["policy"])
+          policy_mgr = SSHScan::PolicyManager.new(result, policy)
           result['compliance'] = policy_mgr.compliance_results
         end
       end

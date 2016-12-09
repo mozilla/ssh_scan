@@ -4,6 +4,7 @@ require 'ssh_scan/version'
 require 'ssh_scan/policy'
 require 'ssh_scan/job_queue'
 require 'ssh_scan/worker'
+require 'ssh_scan/api_db'
 require 'json'
 require 'haml'
 require 'secure_headers'
@@ -88,7 +89,7 @@ https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
         }
         options[:sockets] <<
           "#{params[:target]}:#{params[:port] ? params[:port] : "22"}"
-        options[:policy_file] = SSHScan::Policy.from_file(options[:policy])
+        options[:policy_file] = options[:policy]
         options[:uuid] = SecureRandom.uuid
         settings.job_queue.add(options)
         {
@@ -97,8 +98,28 @@ https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
       end
 
       get '/scan/results' do
-        # TODO: get a given scan result, by UUID and return it as JSON
-        '{"I am not finished yet"}'
+        uuid = params[:uuid]
+
+        if uuid.empty?
+          return {"completed" => false}.to_json
+        end
+
+        settings.db.find_scan_result(uuid)
+      end
+
+      post '/scan/results/delete/:worker_id/:uuid' do
+        uuid = params['uuid']
+        worker_id = params['worker_id']
+
+        if worker_id.empty? || uuid.empty?
+          return {"deleted" => "false"}.to_json
+        end
+
+        settings.db.delete_scan(worker_id, uuid)
+      end
+
+      get '/scan/results/delete/all' do
+        settings.db.delete_all
       end
 
       get '/work' do
@@ -122,9 +143,7 @@ https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
           return {"accepted" => "false"}.to_json
         end
 
-        # TODO: add work results to datastore, whatever that ends up being
-
-        return {"accepted" => "true"}.to_json
+        settings.db.find_work_result(worker_id, uuid)
       end
 
       get '/__version__' do
@@ -150,6 +169,7 @@ https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
         set :server, "thin"
         set :logger, Logger.new(STDOUT)
         set :job_queue, JobQueue.new()
+        set :db, APIDatabaseHelper.new("api.db")
         set :results, {}
         set :authentication, options["authentication"]
         set :authenticator, SSHScan::Authenticator.from_config_file(
