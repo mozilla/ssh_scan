@@ -43,3 +43,6 @@ gh-pages/
 # https ssl certificates
 cert.pem
 key.pem
+
+# API Database
+api.db
