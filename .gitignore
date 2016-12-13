@@ -46,3 +46,7 @@ key.pem
 
 # API Database
 api.db
+
+# Config files
+bin/ssh_scan_api_example_config.yml
+bin/ssh_scan_worker_example_config.yml

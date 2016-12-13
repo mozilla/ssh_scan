@@ -29,6 +29,7 @@ Gem::Specification.new do |s|
   s.add_dependency('bindata', '~> 2.0')
   s.add_dependency('netaddr')
   s.add_dependency('net-ssh')
+  s.add_dependency('mongo')
   s.add_dependency('sqlite3')
   s.add_dependency('sinatra')
   s.add_dependency('sinatra-contrib')

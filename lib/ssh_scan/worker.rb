@@ -1,7 +1,6 @@
 require 'ssh_scan/scan_engine'
 require 'openssl'
 require 'net/https'
-require 'ssh_scan/api_db'
 
 module SSHScan
   class Worker
@@ -14,10 +13,9 @@ module SSHScan
       @poll_interval = 5 # seconds
       @worker_id = SecureRandom.uuid
       @verify_ssl = false
-      @api_db = SSHScan::APIDatabaseHelper.new('./api.db')
     end
 
-    def setup_logger(logger)    
+    def setup_logger(logger)
       case logger
       when Logger
         return logger
@@ -40,7 +38,6 @@ module SSHScan
           if response["work"]
             job = response["work"]
             results = perform_work(job)
-            @api_db.add_scan(@worker_id, job["uuid"], results.to_json)
             post_results(results, job)
           else
             @logger.info("No jobs available (waiting 5 seconds)")
