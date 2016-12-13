@@ -1,10 +1,11 @@
 require 'sinatra/base'
 require 'sinatra/namespace'
+require 'sinatra/config_file'
 require 'ssh_scan/version'
 require 'ssh_scan/policy'
 require 'ssh_scan/job_queue'
+require 'ssh_scan/database'
 require 'ssh_scan/worker'
-require 'ssh_scan/api_db'
 require 'json'
 require 'haml'
 require 'secure_headers'
@@ -73,6 +74,13 @@ https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
       SSHScan::Constants::CONTRIBUTE_JSON.to_json
     end
 
+    get '/__version__' do
+      {
+        :ssh_scan_version => SSHScan::VERSION,
+        :api_version => SSHScan::API_VERSION,
+      }.to_json
+    end
+
     namespace "/api/v#{SSHScan::API_VERSION}" do
       before do
         content_type :json
@@ -107,22 +115,17 @@ https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
       get '/scan/results' do
         uuid = params[:uuid]
 
-        if uuid.empty?
-          return {"completed" => false}.to_json
-        end
+        return {"completed" => false}.to_json if uuid.empty?
 
         settings.db.find_scan_result(uuid)
       end
 
-      post '/scan/results/delete/:worker_id/:uuid' do
+      post '/scan/results/delete/:uuid' do
         uuid = params['uuid']
-        worker_id = params['worker_id']
 
-        if worker_id.empty? || uuid.empty?
-          return {"deleted" => "false"}.to_json
-        end
+        return {"deleted" => "false"}.to_json if uuid.empty?
 
-        settings.db.delete_scan(worker_id, uuid)
+        settings.db.delete_scan(uuid)
       end
 
       get '/scan/results/delete/all' do
@@ -150,14 +153,7 @@ https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
           return {"accepted" => "false"}.to_json
         end
 
-        settings.db.find_work_result(worker_id, uuid)
-      end
-
-      get '/__version__' do
-        {
-          :ssh_scan_version => SSHScan::VERSION,
-          :api_version => SSHScan::API_VERSION,
-        }.to_json
+        settings.db.add_scan(worker_id, uuid, JSON.parse(request.body.first).first)
       end
 
       get '/__lbheartbeat__' do
@@ -165,6 +161,17 @@ https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
           :status  => "OK",
           :message => "Keep sending requests. I am still alive."
         }.to_json
+      end
+    end
+
+    register Sinatra::ConfigFile
+    config_file './database/database_config.yml'
+
+    def self.set_database
+      if settings.database["type"].eql? "mongodb"
+        return SSHScan::Database::MongoDb.from_config_file(settings.db_path)
+      elsif settings.database["type"].eql? "sqlite"
+        return SSHScan::Database::SQLite.from_config_file(settings.db_path)
       end
     end
 
@@ -176,7 +183,8 @@ https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
         set :server, "thin"
         set :logger, Logger.new(STDOUT)
         set :job_queue, JobQueue.new()
-        set :db, APIDatabaseHelper.new("api.db")
+        set :db_path, './lib/ssh_scan/database/database_config.yml'
+        set :db, set_database
         set :results, {}
         set :authentication, options["authentication"]
         set :authenticator, SSHScan::Authenticator.from_config_file(
