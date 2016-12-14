@@ -137,7 +137,7 @@ module SSHScan
       missing_policy_kex.empty? &&
       missing_policy_compression.empty? &&
       out_of_policy_auth_methods.empty? &&
-      out_of_policy_ssh_version
+      !out_of_policy_ssh_version
     end
 
     def recommendations
