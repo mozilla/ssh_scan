@@ -12,7 +12,6 @@ require 'logger'
 #Default options
 options = {
   "sockets" => [],
-  "policy" => File.join(Dir.pwd, '/config/policies/mozilla_modern.yml'),
   "unit_test" => false,
   "timeout" => 2,
   "threads" => 5,
@@ -127,6 +126,12 @@ scan") do |file|
   opts.on("-P", "--policy [FILE]",
           "Custom policy file (Default: Mozilla Modern)") do |policy|
     options["policy"] = policy
+    unless File.exist?(options["policy"])
+      puts opt_parser.help
+      puts "\nReason: policy file supplied is not a file"
+      exit 1
+    end
+    options["policy_file"] = SSHScan::Policy.from_file(options["policy"])
   end
 
   opts.on("--threads [NUMBER]",
@@ -226,12 +231,6 @@ options["sockets"].each do |socket|
   end
 end
 
-unless File.exist?(options["policy"])
-  puts opt_parser.help
-  puts "\nReason: policy file supplied is not a file"
-  exit 1
-end
-
 # Check to see if we're running the latest released version
 if !options["suppress_update_status"]
   update = SSHScan::Update.new
@@ -252,8 +251,6 @@ ssh_scan' to get the latest"
     end
   end
 end
-
-options["policy_file"] = SSHScan::Policy.from_file(options["policy"])
 
 # Perform scan and get results
 scan_engine = SSHScan::ScanEngine.new()

@@ -174,6 +174,9 @@ module SSHScan
 
       # Decorate all the results with compliance information
       results.each do |result|
+        if opts["policy"].nil?
+          opts["policy"] = SSHScan::Policy.first_match(result)
+        end
         # Do this only when we have all the information we need
         if !opts["policy"].nil? &&
            !result[:key_algorithms].nil? &&
