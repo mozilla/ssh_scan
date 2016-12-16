@@ -1,5 +1,13 @@
-# The location of the API server
-server: 127.0.0.1
+# The location of the API server URL
+server_url: 127.0.0.1
 
 # The port of the API server
 port: 8000
+
+# Scheme (http/https)
+scheme: http
+
+# SSL/TLS verify
+# false - don't verify SSL/TLS (useful for development)
+# true - verify SSL/TLS (recommended for production)
+verify: false
