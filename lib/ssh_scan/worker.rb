@@ -6,23 +6,23 @@ require 'ssh_scan/api_db'
 module SSHScan
   class Worker
     def initialize(opts = {})
-      @server = opts[:server] || "127.0.0.1"
-      @scheme = opts[:scheme] || "http"
-      @verify = opts[:verify] || "false"
-      @port = opts[:port] || 8000
-      @logger = setup_logger(opts[:logger])
+      @server = opts["server"] || "127.0.0.1"
+      @scheme = opts["scheme"] || "http"
+      @verify = opts["verify"] || "false"
+      @port = opts["port"] || 8000
+      @logger = setup_logger(opts["logger"])
       @poll_interval = 5 # seconds
       @worker_id = SecureRandom.uuid
       @verify_ssl = false
       @api_db = SSHScan::APIDatabaseHelper.new('./api.db')
     end
 
-    def setup_logger(logger)
+    def setup_logger(logger)    
       case logger
       when Logger
-        return opts[:logger]
+        return logger
       when String
-        return Logger.new(opts[:logger])
+        return Logger.new(logger)
       end
 
       return Logger.new(STDOUT)
