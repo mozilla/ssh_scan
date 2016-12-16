@@ -3,3 +3,13 @@ server: 127.0.0.1
 
 # The port of the API server
 port: 8000
+
+# Scheme (http/https)
+# http - useful for development
+# https - recommended for production
+scheme: http
+
+# SSL/TLS verify - has no effect is scheme is not set to https
+# false - don't verify SSL/TLS (useful for development)
+# true - verify SSL/TLS (recommended for production)
+verify: false

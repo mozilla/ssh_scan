@@ -7,6 +7,8 @@ module SSHScan
   class Worker
     def initialize(opts = {})
       @server = opts[:server] || "127.0.0.1"
+      @scheme = opts[:scheme] || "http"
+      @verify = opts[:verify] || "false"
       @port = opts[:port] || 8000
       @logger = opts[:logger] || Logger.new(STDOUT)
       @poll_interval = 5 # seconds
@@ -51,17 +53,21 @@ module SSHScan
       end
 
       uri = URI(
-        "https://#{@server}:#{@port}/api/v#{SSHScan::API_VERSION}/\
+        "#{@scheme}://#{@server}:#{@port}/api/v#{SSHScan::API_VERSION}/\
 work?worker_id=#{@worker_id}"
       )
       http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = true
-      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      options_mask =
-        OpenSSL::SSL::OP_NO_SSLv2 +
-        OpenSSL::SSL::OP_NO_SSLv3 +
-        OpenSSL::SSL::OP_NO_COMPRESSION
-      http.ssl_options = options_mask
+
+      if @scheme == "https"
+        http.use_ssl = true
+        http.verify_mode = OpenSSL::SSL::VERIFY_NONE if @verify == false
+        options_mask =
+          OpenSSL::SSL::OP_NO_SSLv2 +
+          OpenSSL::SSL::OP_NO_SSLv3 +
+          OpenSSL::SSL::OP_NO_COMPRESSION
+        http.ssl_options = options_mask
+      end
+
       request = Net::HTTP::Get.new(uri.path)
       response = http.request(request)
       JSON.parse(response.body)
@@ -77,17 +83,21 @@ work?worker_id=#{@worker_id}"
 
     def post_results(results, job)
       uri = URI(
-        "https://#{@server}:#{@port}/api/v#{SSHScan::API_VERSION}/\
+        "#{@scheme}://#{@server}:#{@port}/api/v#{SSHScan::API_VERSION}/\
 work/results/#{@worker_id}/#{job["uuid"]}"
       )
       http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = true
-      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      options_mask =
-        OpenSSL::SSL::OP_NO_SSLv2 +
-        OpenSSL::SSL::OP_NO_SSLv3 +
-        OpenSSL::SSL::OP_NO_COMPRESSION
-      http.ssl_options = options_mask
+
+      if @scheme == "https"
+        http.use_ssl = true
+        http.verify_mode = OpenSSL::SSL::VERIFY_NONE if @verify == false
+        options_mask =
+          OpenSSL::SSL::OP_NO_SSLv2 +
+          OpenSSL::SSL::OP_NO_SSLv3 +
+          OpenSSL::SSL::OP_NO_COMPRESSION
+        http.ssl_options = options_mask
+      end
+
       request = Net::HTTP::Post.new(uri.path)
       request.body = results.to_json
       http.request(request)
