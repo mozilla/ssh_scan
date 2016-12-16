@@ -10,11 +10,22 @@ module SSHScan
       @scheme = opts[:scheme] || "http"
       @verify = opts[:verify] || "false"
       @port = opts[:port] || 8000
-      @logger = opts[:logger] || Logger.new(STDOUT)
+      @logger = setup_logger(opts[:logger])
       @poll_interval = 5 # seconds
       @worker_id = SecureRandom.uuid
       @verify_ssl = false
       @api_db = SSHScan::APIDatabaseHelper.new('./api.db')
+    end
+
+    def setup_logger(logger)
+      case logger
+      when Logger
+        return opts[:logger]
+      when String
+        return Logger.new(opts[:logger])
+      end
+
+      return Logger.new(STDOUT)
     end
 
     def self.from_config_file(file_string)
