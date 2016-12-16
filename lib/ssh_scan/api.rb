@@ -178,18 +178,8 @@ https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
       end
 
       super do |server|
-        server.ssl = true
-        ssl_opts = {
-        :verify_peer => false,
-        :ssl_version => :TLSv1_2,
-        :ssl_ciphers => "ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:\
-          ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:\
-          ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:\
-          ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256"
-        }
-        ssl_opts[:cert_chain_file] = options["crt"] if options["crt"]
-        ssl_opts[:private_key_file] = options["key"] if options["key"]
-        server.ssl_options = ssl_opts
+        # No SSL on app, SSL termination happens in nginx for a prod deployment
+        server.ssl = false
       end
     end
   end
