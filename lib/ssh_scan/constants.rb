@@ -83,6 +83,9 @@ and policy scanning",
         "ruby",
         "sinatra",
       ],
+      :urls => {
+        :dev => "https://sshscan.rubidus.com",
+      }
     }.freeze
   end
 end
