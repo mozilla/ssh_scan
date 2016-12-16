@@ -1,5 +1,5 @@
 # The location of the API server URL
-server_url: 127.0.0.1
+server: 127.0.0.1
 
 # The port of the API server
 port: 8000
