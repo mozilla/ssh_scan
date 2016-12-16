@@ -6,15 +6,26 @@ require 'ssh_scan/api_db'
 module SSHScan
   class Worker
     def initialize(opts = {})
-      @server = opts[:server] || "127.0.0.1"
-      @scheme = opts[:scheme] || "http"
-      @verify = opts[:verify] || "false"
-      @port = opts[:port] || 8000
-      @logger = opts[:logger] || Logger.new(STDOUT)
+      @server = opts["server"] || "127.0.0.1"
+      @scheme = opts["scheme"] || "http"
+      @verify = opts["verify"] || "false"
+      @port = opts["port"] || 8000
+      @logger = setup_logger(opts["logger"])
       @poll_interval = 5 # seconds
       @worker_id = SecureRandom.uuid
       @verify_ssl = false
       @api_db = SSHScan::APIDatabaseHelper.new('./api.db')
+    end
+
+    def setup_logger(logger)    
+      case logger
+      when Logger
+        return logger
+      when String
+        return Logger.new(logger)
+      end
+
+      return Logger.new(STDOUT)
     end
 
     def self.from_config_file(file_string)
@@ -32,7 +43,8 @@ module SSHScan
             @api_db.add_scan(@worker_id, job["uuid"], results.to_json)
             post_results(results, job)
           else
-            sleep 0.5
+            @logger.info("No jobs available (waiting 5 seconds)")
+            sleep 5
             next
           end
         rescue Errno::ECONNREFUSED
@@ -74,10 +86,10 @@ work?worker_id=#{@worker_id}"
     end
 
     def perform_work(job)
-      @logger.info("Worker #{@worker_id} started job")
+      @logger.info("Started job: #{job["uuid"]}")
       scan_engine = SSHScan::ScanEngine.new
       results = scan_engine.scan(job)
-      @logger.info("Worker #{@worker_id} finished job")
+      @logger.info("Completed job: #{job["uuid"]}")
       return results
     end
 
@@ -101,7 +113,7 @@ work/results/#{@worker_id}/#{job["uuid"]}"
       request = Net::HTTP::Post.new(uri.path)
       request.body = results.to_json
       http.request(request)
-      @logger.info("Worker #{@worker_id} posted results for job")
+      @logger.info("Posted job: #{job["uuid"]}")
     end
   end
 end
