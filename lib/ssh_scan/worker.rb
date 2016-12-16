@@ -32,7 +32,8 @@ module SSHScan
             @api_db.add_scan(@worker_id, job["uuid"], results.to_json)
             post_results(results, job)
           else
-            sleep 0.5
+            @logger.info("No jobs available (waiting 5 seconds)")
+            sleep 5
             next
           end
         rescue Errno::ECONNREFUSED
@@ -74,10 +75,10 @@ work?worker_id=#{@worker_id}"
     end
 
     def perform_work(job)
-      @logger.info("Worker #{@worker_id} started job")
+      @logger.info("Started job: #{job["uuid"]}")
       scan_engine = SSHScan::ScanEngine.new
       results = scan_engine.scan(job)
-      @logger.info("Worker #{@worker_id} finished job")
+      @logger.info("Completed job: #{job["uuid"]}")
       return results
     end
 
@@ -101,7 +102,7 @@ work/results/#{@worker_id}/#{job["uuid"]}"
       request = Net::HTTP::Post.new(uri.path)
       request.body = results.to_json
       http.request(request)
-      @logger.info("Worker #{@worker_id} posted results for job")
+      @logger.info("Posted job: #{job["uuid"]}")
     end
   end
 end
