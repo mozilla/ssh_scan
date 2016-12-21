@@ -14,6 +14,13 @@ require 'ssh_scan/authenticator'
 
 module SSHScan
   class API < Sinatra::Base
+    if ENV['RACK_ENV'] == 'test'
+      configure do
+        set :job_queue, JobQueue.new()
+        set :authentication, false
+      end
+    end
+
     # Configure all the secure headers we want to use
     use SecureHeaders::Middleware
     SecureHeaders::Configuration.default do |config|
