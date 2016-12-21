@@ -1,6 +1,5 @@
 require 'sinatra/base'
 require 'sinatra/namespace'
-require 'sinatra/config_file'
 require 'ssh_scan/version'
 require 'ssh_scan/policy'
 require 'ssh_scan/job_queue'
@@ -164,17 +163,6 @@ https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
       end
     end
 
-    register Sinatra::ConfigFile
-    config_file './database/database_config.yml'
-
-    def self.set_database
-      if settings.database["type"].eql? "mongodb"
-        return SSHScan::Database::MongoDb.from_config_file(settings.db_path)
-      elsif settings.database["type"].eql? "sqlite"
-        return SSHScan::Database::SQLite.from_config_file(settings.db_path)
-      end
-    end
-
     def self.run!(options = {}, &block)
       set options
 
@@ -183,8 +171,7 @@ https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
         set :server, "thin"
         set :logger, Logger.new(STDOUT)
         set :job_queue, JobQueue.new()
-        set :db_path, './lib/ssh_scan/database/database_config.yml'
-        set :db, set_database
+        set :db, SSHScan::DatabaseConfig.set_database
         set :results, {}
         set :authentication, options["authentication"]
         set :authenticator, SSHScan::Authenticator.from_config_file(
