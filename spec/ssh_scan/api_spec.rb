@@ -20,7 +20,7 @@ https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
   end
 
   it "should be able to GET __version__ correctly" do
-    get "/api/v#{SSHScan::API_VERSION}/__version__"
+    get "/__version__"
     expect(last_response.status).to eql(200)
     expect(last_response.body).to eql({
       :ssh_scan_version => SSHScan::VERSION,
