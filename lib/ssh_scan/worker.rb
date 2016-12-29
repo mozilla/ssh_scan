@@ -27,7 +27,7 @@ module SSHScan
     end
 
     def self.from_config_file(file_string)
-      opts = YAML.load_file(file_string)
+      opts = SSHScan::ConfigLoader.load(file_string, self, @logger)
       SSHScan::Worker.new(opts)
     end
 

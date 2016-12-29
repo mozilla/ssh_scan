@@ -1,4 +1,4 @@
-require 'yaml'
+require 'ssh_scan/config_loader'
 
 module SSHScan
   class Policy
@@ -17,12 +17,12 @@ module SSHScan
     end
 
     def self.from_file(file)
-      opts = YAML.load_file(file)
+      opts = SSHScan::ConfigLoader.load(file, self)
       self.new(opts)
     end
 
     def self.from_string(string)
-      opts = YAML.load(string)
+      opts = SSHScan::ConfigLoader.load(string, self)
       self.new(opts)
     end
   end

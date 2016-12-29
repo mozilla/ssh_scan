@@ -15,6 +15,7 @@ require 'ssh_scan/update'
 require 'ssh_scan/job_queue'
 require 'ssh_scan/worker'
 require 'ssh_scan/api'
+require 'ssh_scan/config_loader'
 
 #Monkey Patches
 require 'string_ext'

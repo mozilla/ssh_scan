@@ -7,7 +7,7 @@ module SSHScan
     end
 
     def self.from_config_file(config_file)
-      opts = YAML.load_file(config_file)
+      opts = SSHScan::ConfigLoader.load(config_file, self)
       SSHScan::Authenticator.new(opts)
     end
 

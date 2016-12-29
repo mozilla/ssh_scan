@@ -1,0 +1,11 @@
+allowed:
+  - rules
+  - ruleset
+  - name
+  - ssh_version
+  - auth_methods
+  - kex
+  - encryption
+  - macs
+  - compression
+  - references

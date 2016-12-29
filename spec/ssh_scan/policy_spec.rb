@@ -40,7 +40,7 @@ encryption:\n- aes256-ctr\n- aes192-ctr\n\
 references:\n- https://wiki.mozilla.org/Security/Guidelines/OpenSSH\n"
 
     it "should load all the attributes properly" do
-      file = Tempfile.new('foo')
+      file = Tempfile.new(['foo', '.yml']) # enforcing extension
       file.write(yaml_string)
       file.close
 
