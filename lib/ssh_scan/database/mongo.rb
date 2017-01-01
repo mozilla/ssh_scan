@@ -6,7 +6,11 @@ module   SSHScan
   module Database
     class MongoDb
       def initialize(opts = {})
-        name = opts["database"]["name"] || "ssh_scan"
+        name = if !opts || opts.empty?
+                 'ssh_scan'
+               else
+                 opts["database"]["name"]
+               end
         socket = "#{opts["database"]["server"]}:#{opts["database"]["port"]}"
         @db = Mongo::Client.new([socket], :database => name)
         @scans = @db[:scans]

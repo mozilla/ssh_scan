@@ -94,9 +94,8 @@ https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
       post '/scan' do
         options = {
           :sockets => [],
-          :policy => File.expand_path(
-            "../../../policies/mozilla_modern.yml", __FILE__
-          ),
+          :policy => File.join(Dir.pwd,
+                               '/config/policies/mozilla_modern.yml'),
           :timeout => 2,
           :verbosity => nil,
           :fingerprint_database => "fingerprints.db",

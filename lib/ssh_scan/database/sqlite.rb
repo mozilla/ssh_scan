@@ -4,7 +4,11 @@ module   SSHScan
   module Database
     class SQLite
       def initialize(opts = {})
-        database_name = opts["database"]["name"] || "ssh_scan"
+        database_name = if !opts || opts.empty?
+                          'ssh_scan'
+                        else
+                          opts["database"]["name"]
+                        end
         if File.exist?(database_name)
           @db = ::SQLite3::Database.open(database_name)
         else
