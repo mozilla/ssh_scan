@@ -170,7 +170,7 @@ https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
         set :server, "thin"
         set :logger, Logger.new(STDOUT)
         set :job_queue, JobQueue.new()
-        set :db, SSHScan::DatabaseConfig.set_database
+        set :db, SSHScan::DatabaseConfig.from_config_file
         set :results, {}
         set :authentication, options["authentication"]
         set :authenticator, SSHScan::Authenticator.from_config_file(

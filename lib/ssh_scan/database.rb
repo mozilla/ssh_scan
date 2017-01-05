@@ -16,10 +16,6 @@ module SSHScan
       @db_path = File.join(Dir.pwd, '/config/database/database_config.yml')
       db_opts = YAML.load_file(@db_path)
       SSHScan::DatabaseConfig.new(db_opts)
-    end
-
-    def self.set_database
-      from_config_file
       if @@db_type.eql? 'mongodb'
         return SSHScan::Database::MongoDb.from_config_file(@db_path)
       elsif @@db_type.eql? 'sqlite'
