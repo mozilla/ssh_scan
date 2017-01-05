@@ -16,11 +16,6 @@ module   SSHScan
         @scans = @db[:scans]
       end
 
-      def self.from_config_file(file_string)
-        opts = YAML.load_file(file_string)
-        SSHScan::Database::MongoDb.new(opts)
-      end
-
       def add_scan(worker_id, uuid, result)
         @scans.insert_one("uuid" => uuid, "scan" => result,
                           "worker_id" => worker_id, "scanned_on" => Time.now)
