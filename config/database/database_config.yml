@@ -1,0 +1,20 @@
+# MongoDB Example
+# database:
+#   type: mongodb
+#   name: ssh_scan
+#   server: 127.0.0.1
+#   port: 27017
+
+# MySQL
+# database:
+#   type: mysql
+#   name: api.db
+#   server: 127.0.0.1
+#   port: 3306
+#   user: foo
+#   pass: bar
+
+# SQLite Example
+database:
+  type: sqlite
+  name: ssh_scan

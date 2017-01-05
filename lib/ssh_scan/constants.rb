@@ -67,8 +67,8 @@ and policy scanning",
           "pwnbus",
           "kang",
         ],
-        :glitter => "https://gitter.im/mozilla-ssh_scan/Lobby",
-        :glitter_contacts => [
+        :gitter => "https://gitter.im/mozilla-ssh_scan/Lobby",
+        :gitter_contacts => [
           "claudijd",
           "pwnbus",
           "kang",
