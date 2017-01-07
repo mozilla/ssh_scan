@@ -166,13 +166,15 @@ https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
         uuid = params['uuid']
         result = JSON.parse(request.body.first).first
         socket = {}
-        socket[:ip] = result['ip']
+        socket[:target] = result['ip']
         socket[:port] = result['port']
 
         if worker_id.empty? || uuid.empty?
           return {"accepted" => "false"}.to_json
         end
 
+        available_result = settings.db.fetch_available_result(socket)
+        settings.db.delete_scan(available_result) unless available_result.nil?
         settings.db.add_scan(worker_id, uuid, result, socket)
       end
 
