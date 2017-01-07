@@ -47,6 +47,14 @@ module SSHScan
         
         return nil
       end
+
+      def fetch_available_result(socket)
+        results = @scans.find(:target => socket[:target], :port => socket[:port])
+        return nil if results.count.zero?
+        results.each do |doc|
+          return doc[:uuid]
+        end
+      end
     end
   end
 end

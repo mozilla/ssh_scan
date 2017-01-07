@@ -71,6 +71,17 @@ module SSHScan
         end
         return nil
       end
+
+      def fetch_available_result(socket)
+        uuid = []
+        @db.execute(
+          "select uuid from api_schema where target like ( ? ) and port like ( ? )",
+          [socket[:target], socket[:port]]
+        ) do |row|
+          uuid << row[3]
+        end
+        return uuid
+      end
     end
   end
 end

@@ -103,6 +103,11 @@ https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
         options[:sockets] <<
           "#{params[:target]}:#{params[:port] ? params[:port] : "22"}"
         options[:policy_file] = options[:policy]
+        options[:force] = params[:force] ? params[:force] : false
+        unless (options[:force] == 'true')
+          available_result = settings.db.fetch_available_result(params)
+          return { uuid: available_result }.to_json unless available_result.nil?
+        end
         options[:uuid] = SecureRandom.uuid
         settings.job_queue.add(options)
         {
@@ -158,12 +163,16 @@ https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
       post '/work/results/:worker_id/:uuid' do
         worker_id = params['worker_id']
         uuid = params['uuid']
+        result = JSON.parse(request.body.first).first
+        socket = {}
+        socket[:ip] = result['ip']
+        socket[:port] = result['port']
 
         if worker_id.empty? || uuid.empty?
           return {"accepted" => "false"}.to_json
         end
 
-        settings.db.add_scan(worker_id, uuid, JSON.parse(request.body.first).first)
+        settings.db.add_scan(worker_id, uuid, result, socket)
       end
 
       get '/__lbheartbeat__' do
