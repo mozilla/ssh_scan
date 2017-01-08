@@ -107,12 +107,18 @@ https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
         options[:force] = params[:force] ? params[:force] : false
         unless (options[:force] == 'true')
           available_result = settings.db.fetch_available_result(params)
-          return { uuid: available_result }.to_json unless available_result.nil?
+          unless available_result.nil? || ((Time.now - available_result[:scanned_on])/(60*60*24) > 1)
+            return {
+              uuid: available_result[:uuid],
+              scanned_on: available_result[:scanned_on].localtime
+            }.to_json
+          end
         end
         options[:uuid] = SecureRandom.uuid
         settings.job_queue.add(options)
         {
-          uuid: options[:uuid]
+          uuid: options[:uuid],
+          scanned_on: 'fresh scan'
         }.to_json
       end
 
@@ -174,7 +180,7 @@ https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
         end
 
         available_result = settings.db.fetch_available_result(socket)
-        settings.db.delete_scan(available_result) unless available_result.nil?
+        settings.db.delete_scan(available_result[:uuid]) unless available_result.nil?
         settings.db.add_scan(worker_id, uuid, result, socket)
       end
 
