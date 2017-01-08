@@ -149,7 +149,8 @@ scan") do |file|
     options["unit_test"] = true
   end
 
-  opts.on("-V", "--verbosity [STD_LOGGING_LEVEL]", "File to write JSON output to") do |verb|
+  opts.on("-V", "--verbosity [STD_LOGGING_LEVEL]",
+          "File to write JSON output to") do |verb|
     case verb
     when "INFO"
       options["logger"].level ==  Logger::INFO
@@ -157,8 +158,6 @@ scan") do |file|
       options["logger"].level ==  Logger::WARN
     when "DEBUG"
       options["logger"].level ==  Logger::DEBUG
-    when "WARN"
-      options["logger"].level ==  Logger::WARN
     when "ERROR"
       options["logger"].level ==  Logger::ERROR
     when "FATAL"

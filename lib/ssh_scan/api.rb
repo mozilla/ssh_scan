@@ -105,10 +105,12 @@ https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
           "#{params[:target]}:#{params[:port] ? params[:port] : "22"}"
         options[:policy_file] = options[:policy]
         options[:force] = params[:force] ? params[:force] : false
-        unless (options[:force] == 'true')
+        unless options[:force] == 'true'
           available_result = settings.db.fetch_available_result(params)
           unless available_result.nil?
-            if ((Time.now - Time.parse(available_result[:scanned_on].to_s))/(60*60*24) < 1)
+            if (Time.now -
+                Time.parse(available_result[:scanned_on].to_s)
+               ) / (60 * 60 * 24) < 1
               return {
                 uuid: available_result[:uuid],
                 scanned_on: available_result[:scanned_on]
@@ -183,7 +185,8 @@ https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
 
         available_result = settings.db.fetch_available_result(socket)
         unless available_result.nil?
-          settings.db.delete_scan(available_result[:uuid]) unless available_result[:uuid] == params['uuid']
+          settings.db.delete_scan(available_result[:uuid]) unless
+            available_result[:uuid] == params['uuid']
         end
         settings.db.add_scan(worker_id, uuid, result, socket)
       end
