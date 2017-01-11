@@ -1,29 +1,43 @@
 require 'sqlite3'
 
-module   SSHScan
-  module Database
+module SSHScan
+  module DB
     class SQLite
       attr_reader :file, :database
 
-      def initialize(opts = {})
-        @file = opts[:file]
-        @database = if File.exists?(@file)
-                ::SQLite3::Database.open(@file)
-              else
-                ::SQLite3::Database.new(@file)
-                create_schema
-              end
+      def initialize(database)
+        @database = database # the SQLite database object
       end
 
-      def create_schema
-        @database.execute <<-SQL
-          create table ssh_scan (
-            uuid varchar(100),
-            result json,
-            worker_id varchar(100),
-            scanned_on datetime
-          );
+      # Helps us create a SSHScan::DB::SQLite object with a hash
+      def self.from_hash(opts)
+        file_name = opts["file"]
+
+        if File.exist?(file_name)
+          db = ::SQLite3::Database.open(file_name)
+        else
+          db = ::SQLite3::Database.new(file_name)
+        end
+
+        #Check to see if the schema is setup or not
+        result = db.execute <<-SQL
+          SELECT count(*) FROM sqlite_master WHERE type = 'table' AND name = 'ssh_scan';
         SQL
+
+        # If not, create it
+        if result == [[0]]
+          # Create the schema for the database
+          db.execute <<-SQL
+            create table ssh_scan (
+              uuid varchar(100),
+              result json,
+              worker_id varchar(100),
+              scanned_on datetime
+            );
+          SQL
+        end
+
+        return SSHScan::DB::SQLite.new(db)
       end
 
       def add_scan(worker_id, uuid, result)

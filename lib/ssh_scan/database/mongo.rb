@@ -3,7 +3,7 @@ require 'mongo'
 Mongo::Logger.logger.level = ::Logger::FATAL
 
 module   SSHScan
-  module Database
+  module DB
     class MongoDb
       def initialize(opts = {})
         name = if !opts || opts.empty?

@@ -4,18 +4,15 @@ require 'securerandom'
 require 'tempfile'
 require 'json'
 
-describe SSHScan::Database::SQLite do
+describe SSHScan::DB::SQLite do
   it "should create a SSHScan::Database::SQLite object from scratch" do
     temp_file = Tempfile.new('sqlite_database_file')
 
     opts = {
-      :file => temp_file.path
+      "file" => temp_file.path
     }
 
-    sqlite_db = SSHScan::Database::SQLite.new(opts)
-    sqlite_db.create_schema
-
-    expect(sqlite_db.file).to eql(temp_file.path)
+    sqlite_db = SSHScan::DB::SQLite.from_hash(opts)
     expect(sqlite_db.database).to be_kind_of(::SQLite3::Database)
 
     temp_file.close
@@ -29,19 +26,17 @@ describe SSHScan::Database::SQLite do
     temp_file = Tempfile.new('sqlite_database_file')
 
     opts = {
-      :file => temp_file.path
+      "file" => temp_file.path
     }
 
-    sqlite_db = SSHScan::Database::SQLite.new(opts)
-    sqlite_db.create_schema
-
+    sqlite_db = SSHScan::DB::SQLite.from_hash(opts)
     sqlite_db.add_scan(worker_id, uuid, result)
 
     response = sqlite_db.database.execute("select * from ssh_scan where uuid like ( ? )", uuid)
 
     expect(response.size).to eql(1)
     expect(response.first[0]).to eql(uuid)
-    expect(response.first[1]).to eql(result.to_json) 
+    expect(response.first[1]).to eql(result.to_json)
     expect(response.first[2]).to eql(worker_id)
 
     #Example: "2017-01-05 14:08:08 -0500"
@@ -59,12 +54,10 @@ describe SSHScan::Database::SQLite do
     temp_file = Tempfile.new('sqlite_database_file')
 
     opts = {
-      :file => temp_file.path
+      "file" => temp_file.path
     }
 
-    sqlite_db = SSHScan::Database::SQLite.new(opts)
-    sqlite_db.create_schema
-
+    sqlite_db = SSHScan::DB::SQLite.from_hash(opts)
     sqlite_db.add_scan(worker_id, uuid1, result)
     sqlite_db.add_scan(worker_id, uuid2, result)
 
@@ -77,7 +70,7 @@ describe SSHScan::Database::SQLite do
     response2 = sqlite_db.database.execute("select * from ssh_scan where worker_id like ( ? )", worker_id)
     expect(response2.size).to eql(1)
     expect(response2.first[0]).to eql(uuid2)
-    expect(response2.first[1]).to eql(result.to_json) 
+    expect(response2.first[1]).to eql(result.to_json)
     expect(response2.first[2]).to eql(worker_id)
 
     temp_file.close
@@ -92,12 +85,10 @@ describe SSHScan::Database::SQLite do
     temp_file = Tempfile.new('sqlite_database_file')
 
     opts = {
-      :file => temp_file.path
+      "file" => temp_file.path
     }
 
-    sqlite_db = SSHScan::Database::SQLite.new(opts)
-    sqlite_db.create_schema
-
+    sqlite_db = SSHScan::DB::SQLite.from_hash(opts)
     sqlite_db.add_scan(worker_id, uuid1, result)
     sqlite_db.add_scan(worker_id, uuid2, result)
 
@@ -124,12 +115,10 @@ describe SSHScan::Database::SQLite do
     temp_file = Tempfile.new('sqlite_database_file')
 
     opts = {
-      :file => temp_file.path
+      "file" => temp_file.path
     }
 
-    sqlite_db = SSHScan::Database::SQLite.new(opts)
-    sqlite_db.create_schema
-
+    sqlite_db = SSHScan::DB::SQLite.from_hash(opts)
     sqlite_db.add_scan(worker_id, uuid1, result1)
     sqlite_db.add_scan(worker_id, uuid2, result2)
 
