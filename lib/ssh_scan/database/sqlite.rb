@@ -59,6 +59,11 @@ module   SSHScan
         end
         return scans
       end
+
+      def size
+        count = @db.execute("select count() from api_schema")
+        return count
+      end
     end
   end
 end

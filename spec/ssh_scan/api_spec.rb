@@ -28,6 +28,31 @@ https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
     }.to_json)
   end
 
+  it "should be able to POST /scan correctly" do
+    bad_ip = "192.168.255.255"
+    port = "999"
+    post "/api/v#{SSHScan::API_VERSION}/scan", {:target => bad_ip, :port => port}
+    expect(last_response.status).to eql(200)
+    expect(last_response["Content-Type"]).to eql("application/json")
+  end
+
+  it "should be able to GET /scan/results correctly" do
+    get "/api/v#{SSHScan::API_VERSION}/scan/results"
+    expect(last_response.status).to eql(200)
+    expect(last_response.body).to eql({
+      "scan" => "not found"
+    }.to_json)
+  end
+
+  it "should be able to POST /scan/results/delete correctly" do
+    bad_uuid = ""
+    post "/api/v#{SSHScan::API_VERSION}/scan/results/delete", {:uuid => bad_uuid}
+    expect(last_response.status).to eql(200)
+    expect(last_response.body).to eql({
+      "deleted" => "false"
+    }.to_json)
+  end
+
   it "should send a positive response on GET __lbheartbeat__\
   if the API is working" do
     get "/api/v#{SSHScan::API_VERSION}/__lbheartbeat__"
@@ -44,5 +69,6 @@ https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
     post "/api/v#{SSHScan::API_VERSION}/scan", {:target => bad_ip, :port => port}
     expect(last_response.status).to eql(200)
     expect(last_response.body).to be_kind_of(::String)
+    expect(last_response["Content-Type"]).to eql("application/json")
   end
 end

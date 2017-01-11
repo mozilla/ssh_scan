@@ -1,0 +1,4 @@
+# SQLite Example
+database:
+  type: sqlite
+  name: ssh_scan
