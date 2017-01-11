@@ -40,7 +40,7 @@ describe SSHScan::DB::SQLite do
     expect(response.first[2]).to eql(worker_id)
 
     #Example: "2017-01-05 14:08:08 -0500"
-    expect(response.first[3]).to match(/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} -\d{4}/)
+    expect(response.first[3]).to match(/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} [-\+]\d{4}/)
 
     temp_file.close
   end

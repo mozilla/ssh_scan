@@ -3,7 +3,7 @@ require 'sqlite3'
 module SSHScan
   module DB
     class SQLite
-      attr_reader :file, :database
+      attr_reader :database
 
       def initialize(database)
         @database = database # the SQLite database object
