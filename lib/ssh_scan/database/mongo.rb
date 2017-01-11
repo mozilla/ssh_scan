@@ -39,6 +39,10 @@ module   SSHScan
           return doc[:scan].to_json
         end
       end
+
+      def size
+        return @scans.count
+      end
     end
   end
 end

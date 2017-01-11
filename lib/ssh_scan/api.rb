@@ -113,15 +113,22 @@ https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
       get '/scan/results' do
         uuid = params[:uuid]
 
-        return {"completed" => false}.to_json if uuid.empty?
+        return {"scan" => "not found"}.to_json if uuid.nil? || uuid.empty?
 
         settings.db.find_scan_result(uuid)
       end
 
-      post '/scan/results/delete/:uuid' do
-        uuid = params['uuid']
+      post '/scan/results/delete' do
+        uuid = params[:uuid]
 
-        return {"deleted" => "false"}.to_json if uuid.empty?
+        if uuid.nil? || uuid.empty?
+          return {"deleted" => "false"}.to_json
+        else
+          scan = settings.db.find_scan_result(uuid)
+          if scan.empty?
+            return {"deleted" => "false"}.to_json
+          end
+        end
 
         settings.db.delete_scan(uuid)
       end

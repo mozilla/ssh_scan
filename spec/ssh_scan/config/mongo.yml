@@ -1,0 +1,6 @@
+# MongoDB Example
+database:
+  type: mongodb
+  name: ssh_scan
+  server: 127.0.0.1
+  port: 27017
