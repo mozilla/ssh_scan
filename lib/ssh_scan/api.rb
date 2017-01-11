@@ -166,11 +166,12 @@ https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
       set options
 
       configure do
+        enable :logging
         set :bind, options["bind"] || '127.0.0.1'
         set :server, "thin"
         set :logger, Logger.new(STDOUT)
         set :job_queue, JobQueue.new()
-        set :db, SSHScan::DatabaseConfig.from_config_file
+        set :db, SSHScan::Database.from_hash(options)
         set :results, {}
         set :authentication, options["authentication"]
         set :authenticator, SSHScan::Authenticator.from_config_file(

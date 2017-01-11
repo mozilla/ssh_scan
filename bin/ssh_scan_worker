@@ -7,7 +7,7 @@ require 'ssh_scan'
 config_file = ARGV[0] ||
               File.join(
                 File.dirname(__FILE__),
-                "ssh_scan_worker_example_config.yml"
+                "../config/worker/config.yml"
               )
 
 worker = SSHScan::Worker.from_config_file(config_file)

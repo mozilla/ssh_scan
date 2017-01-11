@@ -8,7 +8,7 @@ require 'ssh_scan'
 config_file = ARGV[0] ||
               File.join(
                 File.dirname(__FILE__),
-                "ssh_scan_api_example_config.yml"
+                "../config/api/config.yml"
               )
 opts = YAML.load_file(config_file)
 opts["config_file"] = config_file

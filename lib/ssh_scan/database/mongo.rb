@@ -3,7 +3,7 @@ require 'mongo'
 Mongo::Logger.logger.level = ::Logger::FATAL
 
 module   SSHScan
-  module Database
+  module DB
     class MongoDb
       def initialize(opts = {})
         name = if !opts || opts.empty?
@@ -14,11 +14,6 @@ module   SSHScan
         socket = "#{opts["database"]["server"]}:#{opts["database"]["port"]}"
         @db = Mongo::Client.new([socket], :database => name)
         @scans = @db[:scans]
-      end
-
-      def self.from_config_file(file_string)
-        opts = YAML.load_file(file_string)
-        SSHScan::Database::MongoDb.new(opts)
       end
 
       def add_scan(worker_id, uuid, result)

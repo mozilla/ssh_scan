@@ -1,58 +1,65 @@
 require 'sqlite3'
 
-module   SSHScan
-  module Database
+module SSHScan
+  module DB
     class SQLite
-      def initialize(opts = {})
-        database_name = if !opts || opts.empty?
-                          'ssh_scan'
-                        else
-                          opts["database"]["name"]
-                        end
-        if File.exist?(database_name)
-          @db = ::SQLite3::Database.open(database_name)
+      attr_reader :database
+
+      def initialize(database)
+        @database = database # the SQLite database object
+      end
+
+      # Helps us create a SSHScan::DB::SQLite object with a hash
+      def self.from_hash(opts)
+        file_name = opts["file"]
+
+        if File.exist?(file_name)
+          db = ::SQLite3::Database.open(file_name)
         else
-          @db = ::SQLite3::Database.new(database_name)
-          create_schema
+          db = ::SQLite3::Database.new(file_name)
         end
-      end
 
-      def self.from_config_file(file_string)
-        opts = YAML.load_file(file_string)
-        SSHScan::Database::SQLite.new(opts)
-      end
-
-      def create_schema
-        @db.execute <<-SQL
-          create table api_schema (
-            uuid varchar(100),
-            result json,
-            worker_id varchar(100),
-            scanned_on datetime
-          );
+        #Check to see if the schema is setup or not
+        result = db.execute <<-SQL
+          SELECT count(*) FROM sqlite_master WHERE type = 'table' AND name = 'ssh_scan';
         SQL
+
+        # If not, create it
+        if result == [[0]]
+          # Create the schema for the database
+          db.execute <<-SQL
+            create table ssh_scan (
+              uuid varchar(100),
+              result json,
+              worker_id varchar(100),
+              scanned_on datetime
+            );
+          SQL
+        end
+
+        return SSHScan::DB::SQLite.new(db)
       end
 
       def add_scan(worker_id, uuid, result)
-        @db.execute "insert into api_schema values ( ? , ? , ? , ? )",
+        @database.execute "insert into ssh_scan values ( ? , ? , ? , ? )",
                     [uuid, result.to_json, worker_id, Time.now.to_s]
       end
 
       def delete_scan(uuid)
-        @db.execute(
-          "delete from api_schema where uuid = ?",
+        @database.execute(
+          "delete from ssh_scan where uuid = ?",
           uuid
         )
       end
 
       def delete_all
-        @db.execute("delete from api_schema")
+        @database.execute("delete from ssh_scan")
       end
 
       def find_scan_result(uuid)
         scans = []
-        @db.execute(
-          "select * from api_schema where uuid like ( ? )",
+        @database.execute(
+          "select * from ssh_scan where uuid like ( ? )",
           uuid
         ) do |row|
           scans << row[1]
