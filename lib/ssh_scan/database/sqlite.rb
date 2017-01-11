@@ -40,6 +40,11 @@ module SSHScan
         return SSHScan::DB::SQLite.new(db)
       end
 
+      def size
+        count = @database.execute("select count() from api_schema")
+        return count
+      end
+
       def add_scan(worker_id, uuid, result)
         @database.execute "insert into ssh_scan values ( ? , ? , ? , ? )",
                     [uuid, result.to_json, worker_id, Time.now.to_s]

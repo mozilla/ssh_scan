@@ -34,6 +34,11 @@ describe SSHScan::DB::SQLite do
 
     response = sqlite_db.database.execute("select * from ssh_scan where uuid like ( ? )", uuid)
 
+    # Example:
+    # [["c61baa9d-055b-487f-87dc-517889a74703",
+    #   "{\"ip\":\"127.0.0.1\",\"port\":1337,\"foo\":\"bar\",\"biz\":\"baz\"}",
+    #   "116f5b0b-a768-44f4-a663-31237710139c",
+    #   "2017-01-11 16:21:01 -0500"]]
     expect(response.size).to eql(1)
     expect(response.first[0]).to eql(uuid)
     expect(response.first[1]).to eql(result.to_json)
