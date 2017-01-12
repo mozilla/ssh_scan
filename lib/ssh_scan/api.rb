@@ -115,7 +115,11 @@ https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
 
         return {"scan" => "not found"}.to_json if uuid.nil? || uuid.empty?
 
-        settings.db.find_scan_result(uuid)
+        result = settings.db.find_scan_result(uuid)
+
+        return {"scan" => "not found"}.to_json if result.nil?
+
+        return result.to_json
       end
 
       post '/scan/results/delete' do

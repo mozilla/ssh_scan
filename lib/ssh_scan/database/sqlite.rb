@@ -1,4 +1,5 @@
 require 'sqlite3'
+require 'json'
 
 module SSHScan
   module DB
@@ -62,14 +63,13 @@ module SSHScan
       end
 
       def find_scan_result(uuid)
-        scans = []
         @database.execute(
           "select * from ssh_scan where uuid like ( ? )",
           uuid
         ) do |row|
-          scans << row[1]
+          return JSON.parse(row[1])
         end
-        return scans
+        return nil
       end
     end
   end

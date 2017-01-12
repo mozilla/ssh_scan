@@ -42,8 +42,10 @@ module SSHScan
       # LEFT OFF HERE: the results of this method should be the exact same format as with SQLite
       def find_scan_result(uuid)
         @collection.find(:uuid => uuid).each do |doc|
-          return doc[:scan]
+          return doc[:scan].to_hash
         end
+        
+        return nil
       end
     end
   end
