@@ -44,5 +44,3 @@ matrix:
           else \
             exit 0 ;\
           fi
-after_success:
-  - coveralls
