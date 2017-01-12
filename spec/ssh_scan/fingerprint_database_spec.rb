@@ -1,3 +1,4 @@
+require 'spec_helper'
 require 'rspec'
 require 'tempfile'
 require 'ssh_scan/fingerprint_database'

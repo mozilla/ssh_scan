@@ -1,3 +1,4 @@
+require 'spec_helper'
 require 'rspec'
 require 'timeout'
 require 'ssh_scan/client'

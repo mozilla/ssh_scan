@@ -1,4 +1,5 @@
 ENV['RACK_ENV'] = 'test'
+require 'spec_helper'
 require 'ssh_scan/api'
 require 'rack/test'
 require 'json'

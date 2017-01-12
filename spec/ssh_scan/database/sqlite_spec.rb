@@ -1,3 +1,4 @@
+require 'spec_helper'
 require 'rspec'
 require 'ssh_scan/database/sqlite'
 require 'securerandom'
