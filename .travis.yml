@@ -7,6 +7,8 @@ matrix:
   - rvm: 2.3.0
     env:
       - LABEL=unit_tests
+    after_success:
+      - coveralls
   - rvm: 2.2.0
     env:
       - LABEL=unit_tests
@@ -44,5 +46,3 @@ matrix:
           else \
             exit 0 ;\
           fi
-after_success:
-  - coveralls
