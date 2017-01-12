@@ -6,13 +6,13 @@ matrix:
       - LABEL=unit_tests
     services:
       - mongodb
+    after_success:
+      - coveralls
   - rvm: 2.3.0
     env:
       - LABEL=unit_tests
     services:
       - mongodb
-    after_success:
-      - coveralls
   - rvm: 2.2.0
     env:
       - LABEL=unit_tests
