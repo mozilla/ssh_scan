@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+require 'spec_helper'
 require 'open3'
 
 VALID_KEY_IDS = {

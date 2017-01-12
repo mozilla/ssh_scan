@@ -1,3 +1,4 @@
+require 'spec_helper'
 require 'rspec'
 require 'ssh_scan/policy_manager'
 require 'ssh_scan/policy'
