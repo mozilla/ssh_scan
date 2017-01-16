@@ -31,6 +31,8 @@ module SSHScan
           db.execute <<-SQL
             create table ssh_scan (
               uuid varchar(100),
+              target varchar(100),
+              port varchar(100),
               result json,
               worker_id varchar(100),
               scanned_on datetime
@@ -42,13 +44,14 @@ module SSHScan
       end
 
       def size
-        count = @database.execute("select count() from api_schema")
+        count = @database.execute("select count() from ssh_scan")
         return count
       end
 
-      def add_scan(worker_id, uuid, result)
-        @database.execute "insert into ssh_scan values ( ? , ? , ? , ? )",
-                    [uuid, result.to_json, worker_id, Time.now.to_s]
+      def add_scan(worker_id, uuid, result, socket)
+        @database.execute "insert into ssh_scan values ( ? , ? , ? , ? , ? , ? )",
+                    [uuid, socket[:target], socket[:port],
+                     result.to_json, worker_id, Time.now.to_s]
       end
 
       def delete_scan(uuid)
@@ -67,15 +70,15 @@ module SSHScan
           "select * from ssh_scan where uuid like ( ? )",
           uuid
         ) do |row|
-          return JSON.parse(row[1])
+          return JSON.parse(row[3])
         end
         return nil
       end
 
       def fetch_available_result(socket)
         result = {}
-        results = @db.execute(
-          "select uuid, scanned_on from api_schema
+        results = @database.execute(
+          "select uuid, scanned_on from ssh_scan
           where target like ( ? ) and port like ( ? )",
           [socket[:target], socket[:port]]
         )

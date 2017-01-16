@@ -18,7 +18,7 @@ module SSHScan
       configure do
         set :job_queue, JobQueue.new()
         set :authentication, false
-        set :db, SSHScan::DatabaseConfig.from_config_file
+        set :db, SSHScan::Database.from_hash(options)
       end
     end
 
