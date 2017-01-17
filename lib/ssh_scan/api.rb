@@ -18,7 +18,13 @@ module SSHScan
       configure do
         set :job_queue, JobQueue.new()
         set :authentication, false
-        set :db, SSHScan::Database.from_hash(options)
+        config_file = File.join(
+                File.expand_path(Dir.pwd),
+                "/config/api/config.yml"
+              )
+        opts = YAML.load_file(config_file)
+        opts["config_file"] = config_file
+        set :db, SSHScan::Database.from_hash(opts)
       end
     end
 
@@ -122,7 +128,7 @@ https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
         settings.job_queue.add(options)
         {
           uuid: options[:uuid],
-          scanned_on: 'fresh scan'
+          scanned_on: Time.now
         }.to_json
       end
 

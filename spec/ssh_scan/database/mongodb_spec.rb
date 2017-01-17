@@ -23,10 +23,11 @@ describe SSHScan::DB::MongoDb do
     worker_id = SecureRandom.uuid
     uuid = SecureRandom.uuid
     result = {"ip" => "127.0.0.1", "port" => 1337, "foo" => "bar", "biz" => "baz"}
+    socket = {"target" => "127.0.0.1", "port" => 1337}
 
     temp_file = Tempfile.new('sqlite_database_file')
 
-    @mongodb.add_scan(worker_id, uuid, result)
+    @mongodb.add_scan(worker_id, uuid, result, socket)
 
     # Emulate the retrieval process
     doc = @mongodb.collection.find(:uuid => uuid).first
@@ -45,9 +46,10 @@ describe SSHScan::DB::MongoDb do
     uuid1 = SecureRandom.uuid
     uuid2 = SecureRandom.uuid
     result = {"ip" => "127.0.0.1", "port" => 1337, "foo" => "bar", "biz" => "baz"}
+    socket = {"target" => "127.0.0.1", "port" => 1337}
 
-    @mongodb.add_scan(worker_id, uuid1, result)
-    @mongodb.add_scan(worker_id, uuid2, result)
+    @mongodb.add_scan(worker_id, uuid1, result, socket)
+    @mongodb.add_scan(worker_id, uuid2, result, socket)
 
     # Verify that we now have two entries in the DB
     first_docs = @mongodb.collection.find(:worker_id => worker_id)
@@ -67,9 +69,10 @@ describe SSHScan::DB::MongoDb do
     uuid1 = SecureRandom.uuid
     uuid2 = SecureRandom.uuid
     result = {"ip" => "127.0.0.1", "port" => 1337, "foo" => "bar", "biz" => "baz"}
+    socket = {"target" => "127.0.0.1", "port" => 1337}
 
-    @mongodb.add_scan(worker_id, uuid1, result)
-    @mongodb.add_scan(worker_id, uuid2, result)
+    @mongodb.add_scan(worker_id, uuid1, result, socket)
+    @mongodb.add_scan(worker_id, uuid2, result, socket)
 
     # Let's delete all of them via the collection
     @mongodb.delete_all
@@ -85,9 +88,10 @@ describe SSHScan::DB::MongoDb do
     uuid2 = SecureRandom.uuid
     result1 = {"ip" => "127.0.0.1", "port" => 1337, "foo" => "bar", "biz" => "baz"}
     result2 = {"ip" => "127.0.0.1", "port" => 1337, "foo" => "bar2", "biz" => "baz2"}
+    socket = {"target" => "127.0.0.1", "port" => 1337}
 
-    @mongodb.add_scan(worker_id, uuid1, result1)
-    @mongodb.add_scan(worker_id, uuid2, result2)
+    @mongodb.add_scan(worker_id, uuid1, result1, socket)
+    @mongodb.add_scan(worker_id, uuid2, result2, socket)
 
     # It should find the first scan
     response1 = @mongodb.find_scan_result(uuid1)
@@ -105,8 +109,9 @@ describe SSHScan::DB::MongoDb do
     uuid1 = SecureRandom.uuid
     bogus_uuid = SecureRandom.uuid
     result1 = {"ip" => "127.0.0.1", "port" => 1337, "foo" => "bar", "biz" => "baz"}
+    socket = {"target" => "127.0.0.1", "port" => 1337}
 
-    @mongodb.add_scan(worker_id, uuid1, result1)
+    @mongodb.add_scan(worker_id, uuid1, result1, socket)
 
     # It should return nil for a non-existant uuid
     response = @mongodb.find_scan_result(bogus_uuid)
