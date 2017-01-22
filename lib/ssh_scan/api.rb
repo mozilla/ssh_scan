@@ -18,10 +18,7 @@ module SSHScan
       configure do
         set :job_queue, JobQueue.new()
         set :authentication, false
-        config_file = File.join(
-                File.expand_path(Dir.pwd),
-                "/config/api/config.yml"
-              )
+        config_file = File.join(Dir.pwd, "/config/api/config.yml")
         opts = YAML.load_file(config_file)
         opts["config_file"] = config_file
         set :db, SSHScan::Database.from_hash(opts)
