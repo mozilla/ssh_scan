@@ -104,6 +104,13 @@ https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
           "#{params[:target]}:#{params[:port] ? params[:port] : "22"}"
         options[:policy_file] = options[:policy]
         options[:uuid] = SecureRandom.uuid
+        settings.count_req += 1
+        if (Time.now - settings.curr_time) > 60.0
+          settings.requests_per_min = 0
+          settings.curr_time = Time.now
+        else
+          settings.requests_per_min += 1
+        end
         settings.job_queue.add(options)
         {
           uuid: options[:uuid]
@@ -162,8 +169,25 @@ https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
         if worker_id.empty? || uuid.empty?
           return {"accepted" => "false"}.to_json
         end
+        results = JSON.parse(request.body.first).first
+        settings.current_avg = settings.current_avg +
+        (results['scan_duration_seconds'] - settings.current_avg) / settings.count_req
+        settings.db.add_scan(worker_id, uuid, results)
+      end
 
-        settings.db.add_scan(worker_id, uuid, JSON.parse(request.body.first).first)
+      get '/stats' do
+        time_spent = Time.now - settings.curr_time
+        if time_spent > 60.0
+          settings.curr_time = Time.now
+          settings.requests_per_min = 0
+        end
+
+        {
+          :items_queued => settings.job_queue.size,
+          :total_scan_requests => settings.count_req,
+          :avg_time_worker => settings.current_avg,
+          :requests_per_min => settings.requests_per_min
+        }.to_json
       end
 
       get '/__lbheartbeat__' do
@@ -184,6 +208,10 @@ https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
         set :logger, Logger.new(STDOUT)
         set :job_queue, JobQueue.new()
         set :db, SSHScan::Database.from_hash(options)
+        set :count_req, 0
+        set :current_avg, 0.0
+        set :requests_per_min, 0
+        set :curr_time, Time.now
         set :results, {}
         set :authentication, options["authentication"]
         set :authenticator, SSHScan::Authenticator.from_config_file(
