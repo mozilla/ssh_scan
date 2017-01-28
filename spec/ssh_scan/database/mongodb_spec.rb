@@ -36,9 +36,6 @@ describe SSHScan::DB::MongoDb do
     expect(doc["uuid"]).to eql(uuid)
     expect(doc["scan"]).to eql(result)
     expect(doc["worker_id"]).to eql(worker_id)
-
-    #Example: "2017-01-05 14:08:08 -0500"
-    expect(doc["scanned_on"].to_s).to match(/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} UTC/)
   end
 
   it "should #delete_scan only the scan we ask it to" do

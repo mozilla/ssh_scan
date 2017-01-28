@@ -31,8 +31,7 @@ module SSHScan
                           "target" => socket[:target],
                           "port" => socket[:port],
                           "scan" => result,
-                          "worker_id" => worker_id,
-                          "scanned_on" => Time.now)
+                          "worker_id" => worker_id)
       end
 
       def delete_scan(uuid)
@@ -52,13 +51,14 @@ module SSHScan
         return nil
       end
 
-      def fetch_available_result(socket)
+      def fetch_cached_result(socket)
         results = @collection.find(:target => socket[:target], :port => socket[:port])
+        results = results.skip(results.count() - 1)
         return nil if results.count.zero?
         result = {}
-        results.each do |doc|
-          result[:scanned_on] = doc[:scanned_on]
-          result[:uuid] = doc[:uuid]
+        results.each do |result|
+          result[:uuid] = result[:uuid]
+          result[:start_time] = result[:scan][:start_time]
           return result
         end
       end

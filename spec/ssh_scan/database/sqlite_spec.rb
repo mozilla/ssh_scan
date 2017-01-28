@@ -41,14 +41,10 @@ describe SSHScan::DB::SQLite do
     #   "{\"ip\":\"127.0.0.1\",\"port\":1337,\"foo\":\"bar\",\"biz\":\"baz\"}",
     #   "116f5b0b-a768-44f4-a663-31237710139c",
     #   "2017-01-11 16:21:01 -0500"]]
-    puts response.inspect
     expect(response.size).to eql(1)
     expect(response.first[0]).to eql(uuid)
     expect(response.first[3]).to eql(result.to_json)
     expect(response.first[4]).to eql(worker_id)
-
-    #Example: "2017-01-05 14:08:08 -0500"
-    expect(response.first[5]).to match(/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} [-\+]\d{4}/)
 
     temp_file.close
   end

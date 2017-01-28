@@ -54,8 +54,8 @@ module SSHScan
     end
 
     # @return [Hash] result
-    def fetch_available_result(socket)
-      @database.fetch_available_result(socket)
+    def fetch_cached_result(socket)
+      @database.fetch_cached_result(socket)
     end
   end
 end

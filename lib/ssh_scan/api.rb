@@ -18,7 +18,7 @@ module SSHScan
       configure do
         set :job_queue, JobQueue.new()
         set :authentication, false
-        config_file = File.join(Dir.pwd, "/config/api/config.yml")
+        config_file = File.join(Dir.pwd, "./config/api/config.yml")
         opts = YAML.load_file(config_file)
         opts["config_file"] = config_file
         set :db, SSHScan::Database.from_hash(opts)
@@ -52,6 +52,12 @@ module SSHScan
       headers "Server" => "ssh_scan_api"
       headers "Cache-control" => "no-store"
       headers "Pragma" => "no-cache"
+    end
+
+    helpers do
+      def cache_valid?(start_time)
+        (Time.now - Time.parse(start_time.to_s)) / (60 * 60 * 24) < 1
+      end
     end
 
     # Custom 404 handling
@@ -108,15 +114,13 @@ https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
           "#{params[:target]}:#{params[:port] ? params[:port] : "22"}"
         options[:policy_file] = options[:policy]
         options[:force] = params[:force] ? params[:force] : false
+
         unless options[:force] == 'true'
-          available_result = settings.db.fetch_available_result(params)
+          available_result = settings.db.fetch_cached_result(params)
           unless available_result.nil?
-            if (Time.now -
-                Time.parse(available_result[:scanned_on].to_s)
-               ) / (60 * 60 * 24) < 1
+            if cache_valid?(available_result[:start_time])
               return {
-                uuid: available_result[:uuid],
-                scanned_on: available_result[:scanned_on]
+                uuid: available_result[:uuid]
               }.to_json
             end
           end
@@ -124,20 +128,15 @@ https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
         options[:uuid] = SecureRandom.uuid
         settings.job_queue.add(options)
         {
-          uuid: options[:uuid],
-          scanned_on: Time.now
+          uuid: options[:uuid]
         }.to_json
       end
 
       get '/scan/results' do
         uuid = params[:uuid]
-
         return {"scan" => "not found"}.to_json if uuid.nil? || uuid.empty?
-
         result = settings.db.find_scan_result(uuid)
-
         return {"scan" => "not found"}.to_json if result.nil?
-
         return result.to_json
       end
 
@@ -186,11 +185,6 @@ https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
           return {"accepted" => "false"}.to_json
         end
 
-        available_result = settings.db.fetch_available_result(socket)
-        unless available_result.nil?
-          settings.db.delete_scan(available_result[:uuid]) unless
-            available_result[:uuid] == params['uuid']
-        end
         settings.db.add_scan(worker_id, uuid, result, socket)
       end
 

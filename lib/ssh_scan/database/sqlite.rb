@@ -34,8 +34,7 @@ module SSHScan
               target varchar(100),
               port varchar(100),
               result json,
-              worker_id varchar(100),
-              scanned_on datetime
+              worker_id varchar(100)
             );
           SQL
         end
@@ -49,9 +48,9 @@ module SSHScan
       end
 
       def add_scan(worker_id, uuid, result, socket)
-        @database.execute "insert into ssh_scan values ( ? , ? , ? , ? , ? , ? )",
+        @database.execute "insert into ssh_scan values ( ? , ? , ? , ? , ? )",
                     [uuid, socket[:target], socket[:port],
-                     result.to_json, worker_id, Time.now.to_s]
+                     result.to_json, worker_id]
       end
 
       def delete_scan(uuid)
@@ -75,16 +74,16 @@ module SSHScan
         return nil
       end
 
-      def fetch_available_result(socket)
+      def fetch_cached_result(socket)
         result = {}
         results = @database.execute(
-          "select uuid, scanned_on from ssh_scan
+          "select uuid, result from ssh_scan
           where target like ( ? ) and port like ( ? )",
           [socket[:target], socket[:port]]
         )
         return nil if results == []
-        result[:uuid] = results[0][0]
-        result[:scanned_on] = results[0][1]
+        result[:uuid] = results[result.length()-1][0]
+        result[:start_time] = JSON.parse(results[result.length()-1][1])["start_time"]
         return result
       end
     end
