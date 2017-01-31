@@ -127,7 +127,6 @@ https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
           end
         end
         options[:uuid] = SecureRandom.uuid
-        settings.stats.new_scan_request
         settings.job_queue.add(options)
         {
           uuid: options[:uuid]
@@ -186,7 +185,7 @@ https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
         if worker_id.empty? || uuid.empty?
           return {"accepted" => "false"}.to_json
         end
-
+        settings.stats.new_scan_request
         settings.db.add_scan(worker_id, uuid, result, socket)
       end
 
