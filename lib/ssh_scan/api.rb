@@ -16,7 +16,10 @@ module SSHScan
   class API < Sinatra::Base
     if ENV['RACK_ENV'] == 'test'
       configure do
-        set :job_queue, JobQueue.new()
+        config_file = File.join(Dir.pwd, "./config/api/config.yml")
+        opts = YAML.load_file(config_file)
+        opts["config_file"] = config_file
+        set :job_queue, JobQueue.from_hash(opts)
         set :authentication, false
       end
     end
@@ -112,11 +115,8 @@ https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
 
       get '/scan/results' do
         uuid = params[:uuid]
-
         return {"scan" => "not found"}.to_json if uuid.nil? || uuid.empty?
-
         result = settings.db.find_scan_result(uuid)
-
         return {"scan" => "not found"}.to_json if result.nil?
 
         return result.to_json
@@ -182,7 +182,7 @@ https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
         set :bind, options["bind"] || '127.0.0.1'
         set :server, "thin"
         set :logger, Logger.new(STDOUT)
-        set :job_queue, JobQueue.new()
+        set :job_queue, SSHScan::JobQueue.from_hash(options)
         set :db, SSHScan::Database.from_hash(options)
         set :results, {}
         set :authentication, options["authentication"]
