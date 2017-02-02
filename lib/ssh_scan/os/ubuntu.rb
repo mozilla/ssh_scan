@@ -217,6 +217,10 @@ module SSHScan
         "ubuntu"
       end
 
+      # Get the FINGERPRINTS constant hash, generated from the
+      # scraping script.
+      # @return [Hash<String, Array<String>>] FINGERPRINTS constant
+      #   hash
       def fingerprints
         OS::Ubuntu::FINGERPRINTS
       end

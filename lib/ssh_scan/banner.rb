@@ -7,10 +7,19 @@ module SSHScan
       @string = string
     end
 
+    # Create {SSHScan::Banner} object based on target's SSH banner.
+    # @param string [String] String from which the banner should be
+    #   constructed.
+    # @return [SSHScan::Banner] {SSHScan::Banner} object
+    #   constructed from string.
     def self.read(string)
       return SSHScan::Banner.new(string)
     end
 
+    # Guess target's SSH version.
+    # @return [String] If SSH version string looks like "SSH-1.81"
+    #   or "SSH-number" then return the number, else return
+    #   "unknown"
     def ssh_version()
       if version = @string.match(/SSH-(\d+[\.\d+]+)/)[1]
         return version.to_f
@@ -19,6 +28,10 @@ module SSHScan
       end
     end
 
+    # Guess target's SSH Library (OpenSSH, LibSSH ...).
+    # See {SSHScan::SSHLib} for a list of SSH libraries supported.
+    # @return [SSHScan::SSHLib] Guessed {SSHScan::SSHLib} instance,
+    #   otherwise {SSHScan::SSHLib::Unknown} instance.
     def ssh_lib_guess()
       case @string
       when /OpenSSH/i
@@ -54,6 +67,10 @@ module SSHScan
       end
     end
 
+    # Guess target's OS (Ubuntu, CentOS ...).
+    # See {SSHScan::OS} for a list of OS(s) supported.
+    # @return [SSHScan::OS] Guessed {SSHScan::OS} instance,
+    #   otherwise {SSHScan::OS::Unknown} instance. 
     def os_guess()
       case @string
       when /Ubuntu/i

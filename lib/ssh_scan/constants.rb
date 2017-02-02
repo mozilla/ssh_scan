@@ -3,6 +3,7 @@ require 'ssh_scan/banner'
 require 'ssh_scan/protocol'
 
 module SSHScan
+  # House all the constants we need.
   module Constants
     DEFAULT_CLIENT_BANNER = SSHScan::Banner.new("SSH-2.0-ssh_scan")
     DEFAULT_SERVER_BANNER = SSHScan::Banner.new("SSH-2.0-server")

@@ -1,4 +1,5 @@
 module SSHScan
+  # Policy management methods, compliance checking and recommendations.
   class PolicyManager
     def initialize(result, policy)
       @policy = policy

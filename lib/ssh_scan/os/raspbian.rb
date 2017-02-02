@@ -18,6 +18,11 @@ module SSHScan
         @version = Raspbian::Version.new(raspbian_version_guess)
       end
 
+      # Guess Raspbian OS version. Typically, Raspbian banners 
+      # are like "SSH-2.0-Raspbian-something", where something 
+      # is the Raspbian version.
+      # @return [String] version string matched from banner, nil
+      #   if not matched
       def raspbian_version_guess
         return nil if @banner.nil?
         match = @banner.match(/SSH-2.0-Raspbian-(\d+)/)
