@@ -6,8 +6,8 @@
 port: 8000
 
 # API Tokens (a crude mechanism for adding auth to your API)
-#authentication: true
-authentication: false
+authentication: true
+# authentication: false
 
 # If authentication is to true, the authentication tokens you generate below
 # will be required to access certain API functions.
@@ -22,6 +22,10 @@ authentication: false
 #     token       : INSERT_GROOT_TOKEN
 #   - username    : gamora
 #     token       : INSERT_GAMORA_TOKEN
+
+workers:
+  - worker_name    : worker1
+    token       : token1
 
 # Define database configuration
 # MongoDB Example

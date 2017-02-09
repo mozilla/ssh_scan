@@ -18,6 +18,12 @@ module SSHScan
         end
       end
 
+      if @config["workers"]
+        @config["workers"].each do |worker|
+          return true if worker["token"] == token
+        end
+      end
+
       return false
     end
   end
