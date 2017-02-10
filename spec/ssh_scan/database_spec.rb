@@ -22,9 +22,10 @@ describe SSHScan::Database do
     worker_id = SecureRandom.uuid
     uuid = SecureRandom.uuid
     result = {:ip => "127.0.0.1", :port => 1337, :foo => "bar", :biz => "baz"}
+    socket = {:target => "127.0.0.1", :port => 1337}
 
-    expect(@test_database).to receive(:add_scan).with(worker_id, uuid, result)
-    @abstract_database.add_scan(worker_id, uuid, result)
+    expect(@test_database).to receive(:add_scan).with(worker_id, uuid, result, socket)
+    @abstract_database.add_scan(worker_id, uuid, result, socket)
   end
 
   it "should defer #delete_scan calls to the specific DB implementation" do

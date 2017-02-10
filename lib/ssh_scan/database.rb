@@ -32,8 +32,8 @@ module SSHScan
     # @param [String] uuid
     # @param [Hash] result
     # @return [Nil]
-    def add_scan(worker_id, uuid, result)
-      @database.add_scan(worker_id, uuid, result)
+    def add_scan(worker_id, uuid, result, socket)
+      @database.add_scan(worker_id, uuid, result, socket)
       return nil
     end
 
@@ -51,6 +51,11 @@ module SSHScan
     # @return [Hash] result
     def find_scan_result(uuid)
       @database.find_scan_result(uuid)
+    end
+
+    # @return [Hash] result
+    def fetch_cached_result(socket)
+      @database.fetch_cached_result(socket)
     end
   end
 end

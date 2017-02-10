@@ -26,9 +26,12 @@ module SSHScan
       # @param [String] worker_id
       # @param [String] uuid
       # @param [Hash] result
-      def add_scan(worker_id, uuid, result)
-        @collection.insert_one("uuid" => uuid, "scan" => result,
-                          "worker_id" => worker_id, "scanned_on" => Time.now)
+       def add_scan(worker_id, uuid, result, socket)
+        @collection.insert_one("uuid" => uuid,
+                          "target" => socket[:target],
+                          "port" => socket[:port],
+                          "scan" => result,
+                          "worker_id" => worker_id)
       end
 
       def delete_scan(uuid)
@@ -46,6 +49,18 @@ module SSHScan
         end
         
         return nil
+      end
+
+      def fetch_cached_result(socket)
+        results = @collection.find(:target => socket[:target], :port => socket[:port])
+        results = results.skip(results.count() - 1)
+        return nil if results.count.zero?
+        result = {}
+        results.each do |result|
+          result[:uuid] = result[:uuid]
+          result[:start_time] = result[:scan][:start_time]
+          return result
+        end
       end
     end
   end
