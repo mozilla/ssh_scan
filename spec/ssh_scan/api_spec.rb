@@ -64,10 +64,10 @@ https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
     }.to_json)
   end
 
-  it "should say ConnectTimeout for bad IP, and return valid JSON" do
-    bad_ip = "192.168.255.255"
-    port = "999"
-    post "/api/v#{SSHScan::API_VERSION}/scan", {:target => bad_ip, :port => port}
+  it "should return string uuid" do
+    ip = "192.168.1.1"
+    port = "22"
+    post "/api/v#{SSHScan::API_VERSION}/scan", {:target => ip, :port => port}
     expect(last_response.status).to eql(200)
     expect(last_response.body).to be_kind_of(::String)
     expect(last_response["Content-Type"]).to eql("application/json") 
