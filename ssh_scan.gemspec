@@ -5,9 +5,9 @@ require 'date'
 Gem::Specification.new do |s|
   s.name = 'ssh_scan'
   s.version = SSHScan::VERSION
-  s.authors = ["Jonathan Claudius", "Jinank Jain"]
+  s.authors = ["Jonathan Claudius", "Jinank Jain", "Harsh Vardhan", "Rishabh Saxena", "Ashish Gaurav"]
   s.date = Date.today.to_s
-  s.email = 'claudijd@yahoo.com'
+  s.email = 'jclaudius@mozilla.com'
   s.platform = Gem::Platform::RUBY
   s.files = Dir.glob("lib/**/*") +
             Dir.glob("bin/**/*") +
