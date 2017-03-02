@@ -5,6 +5,7 @@ require 'ssh_scan/policy'
 require 'ssh_scan/job_queue'
 require 'ssh_scan/database'
 require 'ssh_scan/worker'
+require 'ssh_scan/stats'
 require 'json'
 require 'haml'
 require 'secure_headers'
@@ -191,8 +192,12 @@ https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
         if worker_id.empty? || uuid.empty?
           return {"accepted" => "false"}.to_json
         end
-
+        settings.stats.new_scan_request
         settings.db.add_scan(worker_id, uuid, result, socket)
+      end
+
+      get '/stats' do
+        settings.stats.get_stats(settings.job_queue.size)
       end
 
       get '/__lbheartbeat__' do
@@ -214,6 +219,7 @@ https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
         set :job_queue, JobQueue.new()
         set :db, SSHScan::Database.from_hash(options)
         set :results, {}
+        set :stats, SSHScan::Stats.new
         set :authentication, options["authentication"]
         set :authenticator, SSHScan::Authenticator.from_config_file(
           options["config_file"]

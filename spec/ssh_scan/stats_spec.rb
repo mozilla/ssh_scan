@@ -3,12 +3,12 @@ require 'ssh_scan/stats'
 
 describe SSHScan::Stats do
   it "should have zero requests to start with" do
-    stats = SSHScan::Stats.new()
+    stats = SSHScan::Stats.new
     expect(stats.size).to eql(0)
   end
 
   it "should increment requests with new_scan_request" do
-    stats = SSHScan::Stats.new()
+    stats = SSHScan::Stats.new
     expect(stats.size).to eql(0)
 
     stats.new_scan_request
@@ -19,7 +19,7 @@ describe SSHScan::Stats do
   end
 
   it "should track requests per min" do
-    stats = SSHScan::Stats.new()
+    stats = SSHScan::Stats.new
 
     # Should see the request in the search path
     stats.new_scan_request
@@ -32,14 +32,14 @@ describe SSHScan::Stats do
   end
 
   it "should purge old requests" do
-    stats = SSHScan::Stats.new()
+    stats = SSHScan::Stats.new
 
     # Should see the request in the search path
     stats.new_scan_request
     expect(stats.size).to eql(1)
     stats.purge_old_requests
     expect(stats.size).to eql(1)
-   
+
     # After the time window, it should have fallen off
     sleep 3
     stats.purge_old_requests(2)

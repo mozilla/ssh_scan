@@ -6,6 +6,16 @@ module SSHScan
 
     def new_scan_request
       @requests << Time.now
+      # Purges the request queue of old requests
+      purge_old_requests
+    end
+
+    def get_stats(queue_size)
+      {
+         :items_queued => queue_size,
+         :avg_requests_per_min => requests_avg_per,
+         :requests_per_min => requests_per
+      }.to_json
     end
 
     def size
@@ -18,7 +28,8 @@ module SSHScan
       @requests.delete_if {|request_time| request_time < Time.now - seconds}
     end
 
-    # Determines the number of requests in a second-based time period (up to 60 seconds)
+    # Determines the number of requests in a second-based
+    # time period (up to 60 seconds)
     # @param [Fixnum] seconds
     # @return [Fixnum] request per time period
     def requests_per(seconds = 60)
@@ -26,9 +37,7 @@ module SSHScan
       past_time = Time.now - seconds
 
       @requests.each do |request_time|
-        if request_time >= past_time
-          requests_per += 1
-         end
+        requests_per += 1 if request_time >= past_time
       end
 
       return requests_per
