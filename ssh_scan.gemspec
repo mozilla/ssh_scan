@@ -5,9 +5,9 @@ require 'date'
 Gem::Specification.new do |s|
   s.name = 'ssh_scan'
   s.version = SSHScan::VERSION
-  s.authors = ["Jonathan Claudius", "Jinank Jain"]
+  s.authors = ["Jonathan Claudius", "Jinank Jain", "Harsh Vardhan", "Rishabh Saxena", "Ashish Gaurav"]
   s.date = Date.today.to_s
-  s.email = 'claudijd@yahoo.com'
+  s.email = 'jclaudius@mozilla.com'
   s.platform = Gem::Platform::RUBY
   s.files = Dir.glob("lib/**/*") +
             Dir.glob("bin/**/*") +
@@ -30,14 +30,6 @@ Gem::Specification.new do |s|
   s.add_dependency('bindata', '~> 2.0')
   s.add_dependency('netaddr')
   s.add_dependency('net-ssh')
-  s.add_dependency('mongo')
-  s.add_dependency('sqlite3')
-  s.add_dependency('sinatra')
-  s.add_dependency('sinatra-contrib')
-  s.add_dependency('haml')
-  s.add_dependency('secure_headers')
-  s.add_dependency('thin')
-  s.add_development_dependency('rack-test')
   s.add_development_dependency('pry')
   s.add_development_dependency('rspec', '~> 3.0')
   s.add_development_dependency('rspec-its', '~> 1.2')

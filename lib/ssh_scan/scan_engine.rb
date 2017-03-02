@@ -1,7 +1,7 @@
 require 'socket'
 require 'ssh_scan/client'
 require 'ssh_scan/crypto'
-require 'ssh_scan/fingerprint_database'
+#require 'ssh_scan/fingerprint_database'
 require 'net/ssh'
 require 'logger'
 

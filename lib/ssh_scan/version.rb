@@ -1,4 +1,3 @@
 module SSHScan
-  VERSION = '0.0.16'
-  API_VERSION = '1'
+  VERSION = '0.0.17'
 end
