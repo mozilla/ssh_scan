@@ -95,7 +95,14 @@ https://github.com/mozilla/ssh_scan/wiki/ssh_scan-Web-API\n"
         content_type :json
         if settings.authentication == true
           token = request.env['HTTP_SSH_SCAN_AUTH_TOKEN']
-          unless token && settings.authenticator.valid_token?(token)
+
+          # If a token is not provided, only localhost can proceed
+          if token.nil? && request.ip != "127.0.0.1"
+            halt '{"error" : "authentication failure"}'
+          end
+
+          # If a token is provided, it must be valid to proceed
+          if token && settings.authenticator.valid_token?(token) == false
             halt '{"error" : "authentication failure"}'
           end
         end
