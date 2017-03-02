@@ -1,5 +1,6 @@
 $: << "lib"
 require 'ssh_scan/version'
+require 'date'
 
 Gem::Specification.new do |s|
   s.name = 'ssh_scan'

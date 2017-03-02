@@ -13,6 +13,7 @@ module SSHScan
       @poll_interval = 5 # seconds
       @worker_id = SecureRandom.uuid
       @verify_ssl = false
+      @auth_token = opts["auth_token"] || nil
     end
 
     def setup_logger(logger)
@@ -78,7 +79,7 @@ work?worker_id=#{@worker_id}"
       end
 
       request = Net::HTTP::Get.new(uri.path)
-      request.add_field("SSH_SCAN_AUTH_TOKEN", ENV.fetch('HTTP_SSH_SCAN_AUTH_TOKEN'))
+      request.add_field("SSH_SCAN_AUTH_TOKEN", @auth_token) unless @auth_token.nil?
       response = http.request(request)
       JSON.parse(response.body)
     end
@@ -109,7 +110,7 @@ work/results/#{@worker_id}/#{job["uuid"]}"
       end
 
       request = Net::HTTP::Post.new(uri.path)
-      request.add_field("SSH_SCAN_AUTH_TOKEN", ENV.fetch('HTTP_SSH_SCAN_AUTH_TOKEN'))
+      request.add_field("SSH_SCAN_AUTH_TOKEN", @auth_token) unless @auth_token.nil?
       request.body = results.to_json
       http.request(request)
       @logger.info("Posted job: #{job["uuid"]}")
