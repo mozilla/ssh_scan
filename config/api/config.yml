@@ -32,6 +32,7 @@ authentication: false
 # database:
 #   type: mongodb
 #   name: ssh_scan
+#   queue_db_name: ssh_scan_queue
 #   server: 127.0.0.1
 #   port: 27017
 
@@ -39,3 +40,4 @@ authentication: false
 database:
   type: sqlite
   file: ssh_scan.db
+  queue_db_file: ssh_scan_queue.db
