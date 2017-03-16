@@ -47,7 +47,7 @@ module SSHScan
         client = SSHScan::Client.new(target, port, timeout)
         client.connect()
         result = client.get_kex_result()
-        result[:hostname] = ""
+        result[:hostname] = target.resolve_ptr
         return result if result.include?(:error)
       end
 

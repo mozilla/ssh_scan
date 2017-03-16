@@ -55,7 +55,18 @@ class String
   end
 
   def resolve_fqdn
-    @fqdn ||= TCPSocket.gethostbyname(self)[3]
+    TCPSocket.gethostbyname(self)[3]
+  end
+
+  def resolve_ptr(timeout = 3)
+    begin
+      Timeout::timeout(timeout) {
+        reversed_dns = Resolv.new.getname(self)
+        return reversed_dns
+      }
+    rescue Timeout::Error
+      return ""
+    end
   end
 
   def fqdn?
