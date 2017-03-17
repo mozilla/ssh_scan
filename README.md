@@ -78,7 +78,6 @@ Usage: ssh_scan [options]
     -V [STD_LOGGING_LEVEL],          File to write JSON output to
         --verbosity
     -v, --version                    Display just version info
-    -l, --listen                     Listen and serve API requests
     -h, --help                       Show this message
 
 Examples:
