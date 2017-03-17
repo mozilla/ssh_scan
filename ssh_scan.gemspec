@@ -11,6 +11,7 @@ Gem::Specification.new do |s|
   s.platform = Gem::Platform::RUBY
   s.files = Dir.glob("lib/**/*") +
             Dir.glob("bin/**/*") +
+            Dir.glob("config/**/*") +
             Dir.glob("policies/**/*") +
             [".gitignore",
              ".rspec",

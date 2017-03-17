@@ -64,7 +64,7 @@ class String
         reversed_dns = Resolv.new.getname(self)
         return reversed_dns
       }
-    rescue Timeout::Error
+    rescue Timeout::Error,Resolv::ResolvError
       return ""
     end
   end
