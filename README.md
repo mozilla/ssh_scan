@@ -75,7 +75,7 @@ Usage: ssh_scan [options]
         --fingerprint-db [FILE]      File location of fingerprint database (Default: ./fingerprints.db)
         --suppress-update-status     Do not check for updates
     -u, --unit-test [FILE]           Throw appropriate exit codes based on compliance status
-    -V [STD_LOGGING_LEVEL],          File to write JSON output to
+    -V [STD_LOGGING_LEVEL],
         --verbosity
     -v, --version                    Display just version info
     -h, --help                       Show this message

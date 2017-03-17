@@ -149,8 +149,7 @@ scan") do |file|
     options["unit_test"] = true
   end
 
-  opts.on("-V", "--verbosity [STD_LOGGING_LEVEL]",
-          "File to write JSON output to") do |verb|
+  opts.on("-V", "--verbosity [STD_LOGGING_LEVEL]") do |verb|
     case verb
     when "INFO"
       options["logger"].level ==  Logger::INFO
@@ -171,11 +170,6 @@ scan") do |file|
   opts.on("-v", "--version",
           "Display just version info") do
     puts SSHScan::VERSION
-    exit
-  end
-
-  opts.on("-l", "--listen", "Listen and serve API requests") do
-    SSHScan::API.run!
     exit
   end
 
