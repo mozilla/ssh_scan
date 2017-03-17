@@ -12,7 +12,7 @@ require 'logger'
 #Default options
 options = {
   "sockets" => [],
-  "policy" => File.join(Dir.pwd, '/config/policies/mozilla_modern.yml'),
+  "policy" => File.join(File.dirname(__FILE__),"../config/policies/mozilla_modern.yml"),
   "unit_test" => false,
   "timeout" => 2,
   "threads" => 5,
@@ -227,7 +227,7 @@ end
 
 unless File.exist?(options["policy"])
   puts opt_parser.help
-  puts "\nReason: policy file supplied is not a file"
+  puts "\nReason: policy file supplied is not a file #{options["policy"]}"
   exit 1
 end
 
