@@ -1,3 +1,3 @@
 module SSHScan
-  VERSION = '0.0.17.pre'
+  VERSION = '0.0.17'
 end
