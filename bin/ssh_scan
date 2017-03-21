@@ -18,7 +18,7 @@ options = {
   "threads" => 5,
   "verbosity" => nil,
   "logger" => Logger.new(STDERR),
-  "fingerprint_database" => "./fingerprints.db"
+  "fingerprint_database" => File.join(File.dirname(__FILE__),"../data/fingerprints.db")
 }
 
 # Reorder arguments before parsing
