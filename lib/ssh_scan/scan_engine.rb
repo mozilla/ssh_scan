@@ -88,6 +88,7 @@ module SSHScan
             pkey = SSHScan::Crypto::PublicKey.new(host_keys[i + 1])
             result['fingerprints'].merge!({
               "dsa" => {
+                "known_bad" => pkey.bad_key?.to_s,
                 "md5" => pkey.fingerprint_md5,
                 "sha1" => pkey.fingerprint_sha1,
                 "sha256" => pkey.fingerprint_sha256,
@@ -99,6 +100,7 @@ module SSHScan
             pkey = SSHScan::Crypto::PublicKey.new(host_keys[i + 1])
             result['fingerprints'].merge!({
               "rsa" => {
+                "known_bad" => pkey.bad_key?.to_s,
                 "md5" => pkey.fingerprint_md5,
                 "sha1" => pkey.fingerprint_sha1,
                 "sha256" => pkey.fingerprint_sha256,

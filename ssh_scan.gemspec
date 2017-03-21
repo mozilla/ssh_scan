@@ -32,6 +32,7 @@ Gem::Specification.new do |s|
   s.add_dependency('netaddr')
   s.add_dependency('net-ssh')
   s.add_dependency('sqlite3')
+  s.add_dependency('sshkey')
   s.add_development_dependency('pry')
   s.add_development_dependency('rspec', '~> 3.0')
   s.add_development_dependency('rspec-its', '~> 1.2')
