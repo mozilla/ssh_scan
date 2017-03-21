@@ -1,7 +1,7 @@
 [
   {
-    "ssh_scan_version": "0.0.13",
-    "ip": "192.30.253.113",
+    "ssh_scan_version": "0.0.17",
+    "ip": "192.30.253.112",
     "port": 22,
     "server_banner": "SSH-2.0-libssh-0.7.0",
     "ssh_version": 2.0,
@@ -9,7 +9,7 @@
     "os_cpe": "o:unknown",
     "ssh_lib": "libssh",
     "ssh_lib_cpe": "a:libssh:libssh",
-    "cookie": "41dab36bef4c686f0cb0d9f71f1d712b",
+    "cookie": "9914248c3ca6bae7ea1bbc149ff1a474",
     "key_algorithms": [
       "curve25519-sha256@libssh.org",
       "ecdh-sha2-nistp256",
@@ -71,10 +71,26 @@
       "publickey"
     ],
     "fingerprints": {
-      "md5": "f6:ce:1e:d1:87:52:2d:26:81:89:ec:e6:d3:8f:9f:69",
-      "sha1": "4d:b1:29:4f:e8:de:1c:14:1f:11:47:45:4e:8c:9a:c8:a8:45:76:40",
-      "sha256": "9e:16:bf:1a:99:1b:b9:f6:9a:f9:24:fd:b2:55:29:51:d8:d2:20:06:14:c8:03:b0:bf:bb:95:9a:d1:a7:83:0f"
+      "dsa": {
+        "known_bad": "false",
+        "md5": "ad:1c:08:a4:40:e3:6f:9c:f5:66:26:5d:4b:33:5d:8c",
+        "sha1": "74:91:97:3e:5f:8b:39:d5:32:7c:d4:e0:8b:c8:1b:05:f7:71:0b:49",
+        "sha256": "6e:bf:48:8c:5b:29:9b:5b:f1:47:78:80:df:91:56:13:ee:15:4f:2c:f5:85:85:4b:20:4d:ad:d7:f0:9e:c9:64"
+      },
+      "rsa": {
+        "known_bad": "false",
+        "md5": "16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48",
+        "sha1": "bf:6b:68:25:d2:97:7c:51:1a:47:5b:be:fb:88:aa:d5:4a:92:ac:73",
+        "sha256": "9d:38:5b:83:a9:17:52:92:56:1a:5e:c4:d4:81:8e:0a:ca:51:a2:64:f1:74:20:11:2e:f8:8a:c3:a1:39:49:8f"
+      }
     },
+    "start_time": "2017-03-21 01:05:16 -0400",
+    "end_time": "2017-03-21 01:05:17 -0400",
+    "scan_duration_seconds": 1.31775,
+    "duplicate_host_key_ips": [
+      "192.30.253.113",
+      "192.168.10.160"
+    ],
     "compliance": {
       "policy": "Mozilla Modern",
       "compliant": false,
@@ -90,9 +106,6 @@
       "references": [
         "https://wiki.mozilla.org/Security/Guidelines/OpenSSH"
       ]
-    },
-    "start_time": "2016-09-13 09:23:00 -0400",
-    "end_time": "2016-09-13 09:23:02 -0400",
-    "scan_duration_seconds": 2.312332
+    }
   }
 ]
