@@ -39,7 +39,7 @@ describe String do
     end
   end
 
-  context "when resolving a DNS name into IP adress" do
+  context "when resolving a DNS name into IP address" do
   testing_host = "localhost"
     it "should load all the attributes properly" do
       expected_result = "::1"
