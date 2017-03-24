@@ -12,6 +12,7 @@ Gem::Specification.new do |s|
   s.files = Dir.glob("lib/**/*") +
             Dir.glob("bin/**/*") +
             Dir.glob("config/**/*") +
+            Dir.glob("data/**/*") +
             Dir.glob("policies/**/*") +
             [".gitignore",
              ".rspec",
