@@ -17,7 +17,7 @@ class String
       IPAddr.new(self)
 
     # Using ArgumentError instead of IPAddr::InvalidAddressError
-    # for 1.9.3 backward compatability
+    # for 1.9.3 backward compatibility
     rescue ArgumentError
       return false
     end
