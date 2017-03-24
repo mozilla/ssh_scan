@@ -168,7 +168,6 @@ module SSHScan
             host_key_algo.each do |fingerprint|
               key, value = fingerprint
               next if key == "known_bad"
-
               fingerprint_db.find_fingerprints(value).each do |other_ip|
                 next if ip == other_ip
                 result['duplicate_host_key_ips'] << other_ip
