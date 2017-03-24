@@ -150,8 +150,10 @@ module SSHScan
         fingerprint_db.clear_fingerprints(result[:ip])
         if result['fingerprints']
           result['fingerprints'].values.each do |host_key_algo|
-            host_key_algo.values.each do |fingerprint|
-              fingerprint_db.add_fingerprint(fingerprint, result[:ip])
+            host_key_algo.each do |fingerprint|
+              key, value = fingerprint
+              next if key == "known_bad"
+              fingerprint_db.add_fingerprint(value, result[:ip])
             end
           end
         end
@@ -163,8 +165,11 @@ module SSHScan
           ip = result[:ip]
           result['duplicate_host_key_ips'] = []
           result['fingerprints'].values.each do |host_key_algo|
-            host_key_algo.values.each do |fingerprint|
-              fingerprint_db.find_fingerprints(fingerprint).each do |other_ip|
+            host_key_algo.each do |fingerprint|
+              key, value = fingerprint
+              next if key == "known_bad"
+
+              fingerprint_db.find_fingerprints(value).each do |other_ip|
                 next if ip == other_ip
                 result['duplicate_host_key_ips'] << other_ip
               end
