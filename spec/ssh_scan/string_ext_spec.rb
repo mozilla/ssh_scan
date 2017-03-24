@@ -42,9 +42,9 @@ describe String do
   context "when resolving a DNS name into IP adress" do
   testing_host = "localhost"
     it "should load all the attributes properly" do
-      expected_result = "::1"
+      expected_result = /^::1$|^127.0.0.1$/
       test_result = testing_host.resolve_fqdn
-      expect(test_result).to eql(expected_result)
+      expect(test_result).to match(expected_result)
     end
   end
 
