@@ -9,11 +9,20 @@ describe SSHScan::FingerprintDatabase do
 
       #start with a known good state
       File.unlink(file_name) if File.exists?(file_name)
-
       expect(File.exist?(file_name)).to eql(false)
+
       database = SSHScan::FingerprintDatabase.new(file_name)
       expect(database).to be_kind_of(SSHScan::FingerprintDatabase)
+
+      # The file isn't created until something is written
+      expect(File.exist?(file_name)).to eql(false)
+
+      # Write something, to trigger file creation
+      database.add_fingerprint("hello_world", "192.168.1.1")
+
+      # Verify the file exists now
       expect(File.exist?(file_name)).to eql(true)
+      
       File.unlink(file_name) #clean up after ourselves
     end
 
@@ -24,20 +33,14 @@ describe SSHScan::FingerprintDatabase do
       File.unlink(file_name) if File.exists?(file_name)
 
       # Create a pre-existing DB
-      db = ::SQLite3::Database.new(file_name)
-      db.execute <<-SQL
-        create table fingerprints (
-          fingerprint varchar(100),
-          ip varchar(100)
-        );
-      SQL
-      db.execute "insert into fingerprints values ( ?, ? )", ["fake_fingerprint", "127.0.0.1"]
+      database = SSHScan::FingerprintDatabase.new(file_name)
+      database.add_fingerprint("hello_world", "192.168.1.1")
 
       expect(File.exist?(file_name)).to eql(true)
-      database = SSHScan::FingerprintDatabase.new(file_name)
-      expect(database).to be_kind_of(SSHScan::FingerprintDatabase)
+      database2 = SSHScan::FingerprintDatabase.new(file_name)
+      expect(database2).to be_kind_of(SSHScan::FingerprintDatabase)
 
-      expect(database.find_fingerprints("fake_fingerprint")).to eql(["127.0.0.1"])
+      expect(database2.find_fingerprints("hello_world")).to eql(["192.168.1.1"])
       File.unlink(file_name) #clean up after ourselves
     end
   end
