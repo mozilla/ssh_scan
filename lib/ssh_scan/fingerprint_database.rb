@@ -14,6 +14,7 @@ module SSHScan
 
     def add_fingerprint(fingerprint, ip)
       @store.transaction do
+        @store[ip] = [] if @store[ip].nil?
         @store[ip] << fingerprint
       end
     end
