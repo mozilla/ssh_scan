@@ -11,6 +11,9 @@ matrix:
       - LABEL=unit_tests
     after_success:
       - coveralls
+  - rvm: 2.4.1
+    env:
+      - LABEL=unit_tests
   - rvm: 2.3.0
     env:
       - LABEL=unit_tests
