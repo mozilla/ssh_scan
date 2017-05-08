@@ -54,3 +54,23 @@ matrix:
           else \
             exit 0 ;\
           fi
+
+branches:
+  only:
+    - master
+  before_deploy:
+    - bundle exec rake package
+  deploy:
+    provider: releases
+    api_key:
+      secure: $GITHUB_OAUTH_TOKEN
+    file:
+      - "ssh_scan-#{$TRAVIS_TAG}-linux-x86.tar.gz"
+      - "ssh_scan-#{$TRAVIS_TAG}-linux-x86_64.tar.gz"
+      - "ssh_scan-#{$TRAVIS_TAG}-osx.tar.gz"
+      - "ssh_scan-#{$TRAVIS_TAG}-win32.tar.gz"
+    skip_cleanup: true
+    on:
+      tags: true
+  after_deploy:
+    - echo "Binary Artifacts Released successfully"
