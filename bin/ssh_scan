@@ -226,25 +226,25 @@ unless File.exist?(options["policy"])
 end
 
 # Check to see if we're running the latest released version
-if !options["suppress_update_status"]
-  update = SSHScan::Update.new
-  if update.newer_gem_available?
-    options["logger"].warn(
-      "You're NOT using the latest version of ssh_scan, try 'gem update \
-ssh_scan' to get the latest"
-    )
-  else
-    if update.errors.any?
-      update.errors.each do |error|
-        options["logger"].error(error)
-      end
-    else
-      options["logger"].info(
-        "You're using the latest version of ssh_scan #{SSHScan::VERSION}"
-      )
-    end
-  end
-end
+#if !options["suppress_update_status"]
+#  update = SSHScan::Update.new
+#  if update.newer_gem_available?
+#    options["logger"].warn(
+#      "You're NOT using the latest version of ssh_scan, try 'gem update \
+#ssh_scan' to get the latest"
+#    )
+#  else
+#    if update.errors.any?
+#      update.errors.each do |error|
+#        options["logger"].error(error)
+#      end
+#    else
+#      options["logger"].info(
+#        "You're using the latest version of ssh_scan #{SSHScan::VERSION}"
+#      )
+#    end
+#  end
+#end
 
 # Limit scope of fingerprints DB to (per scan)
 if options["fingerprint_database"] && File.exists?(options["fingerprint_database"])
