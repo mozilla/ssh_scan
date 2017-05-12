@@ -99,6 +99,12 @@ Examples:
 - See here for [example output](https://github.com/mozilla/ssh_scan/blob/master/examples/192.168.1.1.json)
 - See here for [example policies](https://github.com/mozilla/ssh_scan/blob/master/config/policies)
 
+## ssh_scan as a service/api?
+
+This project is soley for ssh_scan engine/command-line usage.
+
+If you would like to run ssh_scan as a service, please refer to [the ssh_scan_api project](https://github.com/mozilla/ssh_scan_api)
+
 ## Rubies Supported
 
 This project is integrated with [travis-ci](http://about.travis-ci.org/) and is regularly tested to work with the following rubies:
