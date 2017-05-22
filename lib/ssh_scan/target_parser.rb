@@ -2,7 +2,12 @@ require 'netaddr'
 require 'string_ext'
 
 module SSHScan
+  # Enumeration methods for IP notations.
   class TargetParser
+    # Enumerate CIDR addresses, single IPs and IP ranges.
+    # @param ip [String] IP address
+    # @param port [Fixnum] port
+    # @return [Array] array of enumerated addresses
     def enumerateIPRange(ip,port)
       if ip.fqdn?
         if port.nil?

@@ -4,6 +4,7 @@ require 'ssh_scan/version'
 require 'net/http'
 
 module SSHScan
+  # Handle {SSHScan} updates.
   class Update
     def initialize
       @errors = []
@@ -33,6 +34,9 @@ module SSHScan
       return [major_num.to_s, "0", "0"].join(".")
     end
 
+    # Returns true if the given gem version exists.
+    # @param version [String] version string
+    # @return [Boolean] true if given gem exists, else false
     def gem_exists?(version = SSHScan::VERSION)
       uri = URI("https://rubygems.org/gems/ssh_scan/versions/#{version}")
 
@@ -54,6 +58,11 @@ module SSHScan
       @errors.uniq
     end
 
+    # Tries to check if the next patch, minor or major version
+    # is available or not. If so, returns true.
+    # @param version [String] version string
+    # @return [Boolean] true if next major/minor version available,
+    #   else false
     def newer_gem_available?(version = SSHScan::VERSION)
       if gem_exists?(next_patch_version(version))
         return true

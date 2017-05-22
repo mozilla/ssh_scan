@@ -200,6 +200,7 @@ module SSHScan
     end
 
     # Summarize as Hash
+    # @return [Hash] summary
     def to_hash
       {
         :cookie => self.cookie.hexify,
@@ -220,6 +221,10 @@ module SSHScan
       }
     end
 
+    # Generate a {SSHScan::KeyExchangeInit} object from given Ruby hash.
+    # @param opts [Hash] options
+    # @return [SSHScan::KeyExchangeInit] {SSHScan::KeyExchangeInit}
+    #   instance initialized using passed opts
     def self.from_hash(opts)
       kex_init = SSHScan::KeyExchangeInit.new()
       kex_init.cookie = opts[:cookie]
@@ -244,6 +249,7 @@ module SSHScan
     end
 
     # Summarize as JSON
+    # @return [String] JSON representation for summary hash
     def to_json
       self.to_hash.to_json
     end

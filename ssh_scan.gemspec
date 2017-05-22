@@ -28,6 +28,7 @@ Gem::Specification.new do |s|
   s.summary = 'Ruby-based SSH Scanner'
   s.description = 'A Ruby-based SSH scanner for configuration and policy scanning'
   s.homepage = 'http://rubygems.org/gems/ssh_scan'
+  s.metadata["yard.run"] = "yri" # use "yard" to build full HTML docs
 
   s.add_dependency('bindata', '~> 2.0')
   s.add_dependency('netaddr')

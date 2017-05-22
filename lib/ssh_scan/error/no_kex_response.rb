@@ -1,5 +1,6 @@
 module SSHScan
   module Error
+    # Failed to do key exchange.
     class NoKexResponse < RuntimeError
       def initialize(message)
         @message = message

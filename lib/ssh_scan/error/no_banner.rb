@@ -1,5 +1,6 @@
 module SSHScan
   module Error
+    # Target did not respond with an SSH banner.
     class NoBanner < RuntimeError
       def initialize(message)
         @message = message

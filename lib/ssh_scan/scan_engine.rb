@@ -6,8 +6,13 @@ require 'net/ssh'
 require 'logger'
 
 module SSHScan
+  # Handle scanning of targets.
   class ScanEngine
 
+    # Scan a single target.
+    # @param socket [String] ip:port specification
+    # @param opts [Hash] options (timeout, ...)
+    # @return [Hash] result
     def scan_target(socket, opts)
       target, port = socket.chomp.split(':')
       if port.nil?
@@ -119,6 +124,10 @@ module SSHScan
       return result
     end
 
+    # Utilize multiple threads to scan multiple targets, combine
+    # results and check for compliance.
+    # @param opts [Hash] options (sockets, threads ...)
+    # @return [Hash] results
     def scan(opts)
       sockets = opts["sockets"]
       threads = opts["threads"] || 5
