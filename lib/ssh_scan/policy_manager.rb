@@ -146,48 +146,48 @@ module SSHScan
 
       # Add these items to be compliant
       if missing_policy_kex.any?
-        recommendations << "Add these Key Exchange Algos: \
+        recommendations << "Add these key exchange algorithms: \
 #{missing_policy_kex.join(",")}"
       end
 
       if missing_policy_macs.any?
-        recommendations << "Add these MAC Algos: \
+        recommendations << "Add these MAC algorithms: \
 #{missing_policy_macs.join(",")}"
       end
 
       if missing_policy_encryption.any?
-        recommendations << "Add these Encryption Ciphers: \
+        recommendations << "Add these encryption ciphers: \
 #{missing_policy_encryption.join(",")}"
       end
 
       if missing_policy_compression.any?
-        recommendations << "Add these Compression Algos: \
+        recommendations << "Add these compression algorithms: \
 #{missing_policy_compression.join(",")}"
       end
 
       # Remove these items to be compliant
       if out_of_policy_kex.any?
-        recommendations << "Remove these Key Exchange Algos: \
+        recommendations << "Remove these key exchange algorithms: \
 #{out_of_policy_kex.join(", ")}"
       end
 
       if out_of_policy_macs.any?
-        recommendations << "Remove these MAC Algos: \
+        recommendations << "Remove these MAC algorithms: \
 #{out_of_policy_macs.join(", ")}"
       end
 
       if out_of_policy_encryption.any?
-        recommendations << "Remove these Encryption Ciphers: \
+        recommendations << "Remove these encryption ciphers: \
 #{out_of_policy_encryption.join(", ")}"
       end
 
       if out_of_policy_compression.any?
-        recommendations << "Remove these Compression Algos: \
+        recommendations << "Remove these compression algorithms: \
 #{out_of_policy_compression.join(", ")}"
       end
 
       if out_of_policy_auth_methods.any?
-        recommendations << "Remove these Authentication Methods: \
+        recommendations << "Remove these authentication methods: \
 #{out_of_policy_auth_methods.join(", ")}"
       end
 
