@@ -1,6 +1,6 @@
 [
   {
-    "ssh_scan_version": "0.0.17",
+    "ssh_scan_version": "0.0.21",
     "ip": "192.30.253.112",
     "port": 22,
     "server_banner": "SSH-2.0-libssh-0.7.0",
@@ -9,7 +9,7 @@
     "os_cpe": "o:unknown",
     "ssh_lib": "libssh",
     "ssh_lib_cpe": "a:libssh:libssh",
-    "cookie": "9914248c3ca6bae7ea1bbc149ff1a474",
+    "cookie": "3027e8e34a03febab31da1ad74d4533b",
     "key_algorithms": [
       "curve25519-sha256@libssh.org",
       "ecdh-sha2-nistp256",
@@ -84,28 +84,27 @@
         "sha256": "9d:38:5b:83:a9:17:52:92:56:1a:5e:c4:d4:81:8e:0a:ca:51:a2:64:f1:74:20:11:2e:f8:8a:c3:a1:39:49:8f"
       }
     },
-    "start_time": "2017-03-21 01:05:16 -0400",
-    "end_time": "2017-03-21 01:05:17 -0400",
-    "scan_duration_seconds": 1.31775,
+    "start_time": "2017-05-26 00:57:04 -0400",
+    "end_time": "2017-05-26 00:57:05 -0400",
+    "scan_duration_seconds": 1.286953,
     "duplicate_host_key_ips": [
-      "192.30.253.113",
-      "192.168.10.160"
+
     ],
     "compliance": {
       "policy": "Mozilla Modern",
       "compliant": false,
       "recommendations": [
-        "Add these Key Exchange Algos: ecdh-sha2-nistp521,ecdh-sha2-nistp384,diffie-hellman-group-exchange-sha256",
-        "Add these MAC Algos: hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,umac-128@openssh.com",
-        "Add these Encryption Ciphers: aes256-gcm@openssh.com,aes128-gcm@openssh.com",
-        "Remove these Key Exchange Algos: diffie-hellman-group14-sha1, diffie-hellman-group1-sha1",
-        "Remove these MAC Algos: hmac-sha1",
-        "Remove these Encryption Ciphers: aes256-cbc, aes192-cbc, aes128-cbc, blowfish-cbc",
-        "Remove these Compression Algos: zlib"
+        "Add these key exchange algorithms: ecdh-sha2-nistp521,ecdh-sha2-nistp384,diffie-hellman-group-exchange-sha256",
+        "Add these MAC algorithms: hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,umac-128@openssh.com",
+        "Add these encryption ciphers: aes256-gcm@openssh.com,aes128-gcm@openssh.com",
+        "Remove these key exchange algorithms: diffie-hellman-group14-sha1, diffie-hellman-group1-sha1",
+        "Remove these MAC algorithms: hmac-sha1",
+        "Remove these encryption ciphers: aes256-cbc, aes192-cbc, aes128-cbc, blowfish-cbc"
       ],
       "references": [
         "https://wiki.mozilla.org/Security/Guidelines/OpenSSH"
-      ]
+      ],
+      "grade": "F"
     }
   }
 ]
