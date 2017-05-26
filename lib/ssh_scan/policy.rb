@@ -15,7 +15,7 @@ module SSHScan
       @compression = opts['compression'] || []
       @references = opts['references'] || []
       @auth_methods = opts['auth_methods'] || []
-      @ssh_version = opts['ssh_version'] || false
+      @ssh_version = opts['ssh_version'] || nil
     end
 
     # Generate a {SSHScan::Policy} object from YAML file.

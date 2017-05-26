@@ -220,4 +220,137 @@ describe SSHScan::PolicyManager do
     end
   end
 
+  context "when checking compression on a policy that doesn't specify compression" do
+    yaml_string =
+      "---\nname: Mozilla Intermediate\nkex:\n" +
+      "- diffie-hellman-group-exchange-sha256\n" +
+      "encryption:\n- aes256-ctr\n- aes192-ctr\n" +
+      "- aes128-ctr\nmacs:\n- hmac-sha2-512\n" +
+      "- hmac-sha2-256\n" +
+      "references:\n- https://wiki.mozilla.org/Security/Guidelines/OpenSSH\n" +
+      "auth_methods:\n- publickey\n" +
+      "ssh_version: 2.0\n"
+    result = {
+                :compression_algorithms_client_to_server => [
+                  "none",
+                  "zlib",
+                  "zlib@openssh.com"
+                ],
+                :compression_algorithms_server_to_client => [
+                  "none",
+                  "zlib",
+                  "zlib@openssh.com"
+                ]
+             }
+
+    it "should not complain about compression" do
+      policy = SSHScan::Policy.from_string(yaml_string)
+      policy_manager = SSHScan::PolicyManager.new(result, policy)
+      expect(policy_manager.out_of_policy_compression).to eql([])
+    end
+
+    it "should not complain about compression" do
+      policy = SSHScan::Policy.from_string(yaml_string)
+      policy_manager = SSHScan::PolicyManager.new(result, policy)
+      expect(policy_manager.missing_policy_compression).to eql([])
+    end
+  end
+
+  context "when checking encryption on a policy that doesn't specify encryption" do
+    yaml_string =
+      "---\nname: Mozilla Intermediate\nkex:\n" +
+      "- diffie-hellman-group-exchange-sha256\n" +
+      "macs:\n- hmac-sha2-512\n" +
+      "- hmac-sha2-256\n" +
+      "references:\n- https://wiki.mozilla.org/Security/Guidelines/OpenSSH\n" +
+      "auth_methods:\n- publickey\n" +
+      "ssh_version: 2.0\n"
+    result = {
+                :encryption_algorithms_client_to_server => [
+                  "chacha20-poly1305@openssh.com",
+                  "aes256-ctr",
+                  "aes192-ctr",
+                  "aes128-ctr",
+                ],
+                :encryption_algorithms_server_to_client => [
+                  "chacha20-poly1305@openssh.com",
+                  "aes256-ctr",
+                  "aes192-ctr",
+                  "aes128-ctr",
+                ],
+             }
+
+    it "should not complain about encryption" do
+      policy = SSHScan::Policy.from_string(yaml_string)
+      policy_manager = SSHScan::PolicyManager.new(result, policy)
+      expect(policy_manager.out_of_policy_encryption).to eql([])
+    end
+
+    it "should not complain about encryption" do
+      policy = SSHScan::Policy.from_string(yaml_string)
+      policy_manager = SSHScan::PolicyManager.new(result, policy)
+      expect(policy_manager.missing_policy_encryption).to eql([])
+    end
+  end
+
+  context "when checking macs on a policy that doesn't specify macs" do
+    yaml_string =
+      "---\nname: Mozilla Intermediate\nkex:\n" +
+      "- diffie-hellman-group-exchange-sha256\n" +
+      "references:\n- https://wiki.mozilla.org/Security/Guidelines/OpenSSH\n" +
+      "auth_methods:\n- publickey\n" +
+      "ssh_version: 2.0\n"
+    result = {
+              :mac_algorithms_client_to_server => [
+                "hmac-sha1",
+                "hmac-sha2-256",
+                "hmac-sha2-512"
+              ],
+              :mac_algorithms_server_to_client => [
+                "hmac-sha1",
+                "hmac-sha2-256",
+                "hmac-sha2-512"
+              ],
+             }
+
+    it "should not complain about macs" do
+      policy = SSHScan::Policy.from_string(yaml_string)
+      policy_manager = SSHScan::PolicyManager.new(result, policy)
+      expect(policy_manager.out_of_policy_macs).to eql([])
+    end
+
+    it "should not complain about macs" do
+      policy = SSHScan::Policy.from_string(yaml_string)
+      policy_manager = SSHScan::PolicyManager.new(result, policy)
+      expect(policy_manager.missing_policy_macs).to eql([])
+    end
+  end
+
+  context "when checking macs on a policy that doesn't specify kex" do
+    yaml_string =
+      "---\nname: Mozilla Intermediate\n" +
+      "macs:\n- hmac-sha2-512\n" +
+      "- hmac-sha2-256\n" +
+      "references:\n- https://wiki.mozilla.org/Security/Guidelines/OpenSSH\n" +
+      "auth_methods:\n- publickey\n" +
+      "ssh_version: 2.0\n"
+    result = {
+              :server_host_key_algorithms => [
+                "ssh-dss",
+                "ssh-rsa"
+              ],
+             }
+
+    it "should not complain about kex" do
+      policy = SSHScan::Policy.from_string(yaml_string)
+      policy_manager = SSHScan::PolicyManager.new(result, policy)
+      expect(policy_manager.out_of_policy_kex).to eql([])
+    end
+
+    it "should not complain about kex" do
+      policy = SSHScan::Policy.from_string(yaml_string)
+      policy_manager = SSHScan::PolicyManager.new(result, policy)
+      expect(policy_manager.missing_policy_kex).to eql([])
+    end
+  end
 end

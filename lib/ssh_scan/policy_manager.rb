@@ -7,6 +7,7 @@ module SSHScan
     end
 
     def out_of_policy_encryption
+      return [] if @policy.encryption.empty?
       target_encryption =
         @result[:encryption_algorithms_client_to_server] |
         @result[:encryption_algorithms_server_to_client]
@@ -18,6 +19,7 @@ module SSHScan
     end
 
     def missing_policy_encryption
+      return [] if @policy.encryption.empty?
       target_encryption =
         @result[:encryption_algorithms_client_to_server] |
         @result[:encryption_algorithms_server_to_client]
@@ -31,6 +33,7 @@ module SSHScan
     end
 
     def out_of_policy_macs
+      return [] if @policy.macs.empty?
       target_macs =
         @result[:mac_algorithms_server_to_client] |
         @result[:mac_algorithms_client_to_server]
@@ -42,6 +45,7 @@ module SSHScan
     end
 
     def missing_policy_macs
+      return [] if @policy.macs.empty?
       target_macs =
         @result[:mac_algorithms_server_to_client] |
         @result[:mac_algorithms_client_to_server]
@@ -56,6 +60,7 @@ module SSHScan
     end
 
     def out_of_policy_kex
+      return [] if @policy.kex.empty?
       target_kexs = @result[:key_algorithms]
       outliers = []
       target_kexs.each do |target_kex|
@@ -65,6 +70,7 @@ module SSHScan
     end
 
     def missing_policy_kex
+      return [] if @policy.kex.empty?
       target_kex = @result[:key_algorithms]
       outliers = []
 
@@ -77,6 +83,7 @@ module SSHScan
     end
 
     def out_of_policy_compression
+      return [] if @policy.compression.empty?
       target_compressions =
         @result[:compression_algorithms_server_to_client] |
         @result[:compression_algorithms_client_to_server]
@@ -89,6 +96,7 @@ module SSHScan
     end
 
     def missing_policy_compression
+      return [] if @policy.compression.empty?
       target_compressions =
         @result[:compression_algorithms_server_to_client] |
         @result[:compression_algorithms_client_to_server]
@@ -103,8 +111,8 @@ module SSHScan
     end
 
     def out_of_policy_auth_methods
+      return [] if @policy.auth_methods.empty?
       return [] if @result["auth_methods"].nil?
-
       target_auth_methods = @result["auth_methods"]
       outliers = []
 
@@ -119,6 +127,7 @@ module SSHScan
     end
 
     def out_of_policy_ssh_version
+      return false if @policy.ssh_version.nil?
       target_ssh_version = @result[:ssh_version]
       if @policy.ssh_version
         if target_ssh_version < @policy.ssh_version
