@@ -208,6 +208,14 @@ module SSHScan
         end
       end
 
+      # Decorate complaince results with a grade
+      results.each do |result|
+        if result['compliance']
+          grader = SSHScan::Grader.new(result)
+          result['compliance'][:grade] = grader.grade
+        end
+      end
+
       return results
     end
   end
