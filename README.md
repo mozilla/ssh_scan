@@ -60,7 +60,7 @@ bundle install
 Run `ssh_scan -h` to get this
 
 ```bash
-ssh_scan v0.0.17 (https://github.com/mozilla/ssh_scan)
+ssh_scan v0.0.21 (https://github.com/mozilla/ssh_scan)
 
 Usage: ssh_scan [options]
     -t, --target [IP/Range/Hostname] IP/Ranges/Hostname to scan
