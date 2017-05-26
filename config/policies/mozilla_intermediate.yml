@@ -12,8 +12,5 @@ encryption:
 macs:
 - hmac-sha2-512
 - hmac-sha2-256
-compression:
-- none
-- zlib@openssh.com
 references:
 - https://wiki.mozilla.org/Security/Guidelines/OpenSSH
