@@ -5,7 +5,7 @@ require 'ssh_scan'
 describe SSHScan::Grader do
   it "should provide an F grade" do
     results = {
-      :compliance => {
+      "compliance" => {
         :policy => "Test Result",
         :compliant => false,
         :recommendations => [
@@ -24,7 +24,7 @@ describe SSHScan::Grader do
 
   it "should provide an F grade" do
     results = {
-      :compliance => {
+      "compliance" => {
         :policy => "Test Result",
         :compliant => false,
         :recommendations => [
@@ -41,7 +41,7 @@ describe SSHScan::Grader do
 
   it "should provide an D grade" do
     results = {
-      :compliance => {
+      "compliance" => {
         :policy => "Test Result",
         :compliant => false,
         :recommendations => [
@@ -57,7 +57,7 @@ describe SSHScan::Grader do
 
   it "should provide an C grade" do
     results = {
-      :compliance => {
+      "compliance" => {
         :policy => "Test Result",
         :compliant => false,
         :recommendations => [
@@ -72,7 +72,7 @@ describe SSHScan::Grader do
 
   it "should provide an B grade" do
     results = {
-      :compliance => {
+      "compliance" => {
         :policy => "Test Result",
         :compliant => false,
         :recommendations => [
@@ -86,7 +86,7 @@ describe SSHScan::Grader do
 
   it "should provide an A grade" do
     results = {
-      :compliance => {
+      "compliance" => {
         :policy => "Test Result",
         :compliant => false,
         :recommendations => [
