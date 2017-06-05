@@ -19,6 +19,9 @@ module SSHScan
     def connect()
       begin
         @sock = Socket.tcp(@target, @port, connect_timeout: @timeout)
+      # rescue SocketError => e
+      #   @error = SSHScan::Error::ConnectionRefused.new(e.message)
+      #   @sock = nil
       rescue Errno::ETIMEDOUT => e
         @error = SSHScan::Error::ConnectTimeout.new(e.message)
         @sock = nil
