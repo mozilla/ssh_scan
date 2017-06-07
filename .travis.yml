@@ -35,6 +35,9 @@ matrix:
       - chmod 755 ./spec/ssh_scan/integration.sh
       - ./spec/ssh_scan/integration.sh
   - rvm: 2.3.0
+    branches:
+      only:
+      - master
     env:
       - LABEL=docker_build_push
     services:
