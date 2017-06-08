@@ -14,6 +14,7 @@ require 'ssh_scan/target_parser'
 require 'ssh_scan/update'
 require 'ssh_scan/fingerprint_database'
 require 'ssh_scan/grader'
+require 'ssh_scan/result'
 
 #Monkey Patches
 require 'string_ext'

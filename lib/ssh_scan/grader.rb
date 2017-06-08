@@ -10,17 +10,14 @@ module SSHScan
       0..60 => "F",
     }
 
-    def initialize(results)
-      @results = results
+    def initialize(result)
+      @result = result
     end
 
     def grade
       score = 100
 
-      if @results["compliance"] &&
-         @results["compliance"][:recommendations]
-
-        @results["compliance"][:recommendations].each do |recommendation|
+      if @result.compliance_recommendations.each do |recommendation|
           score -= 10
         end
       end

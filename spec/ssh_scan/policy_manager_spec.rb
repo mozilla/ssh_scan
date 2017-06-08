@@ -2,6 +2,8 @@ require 'spec_helper'
 require 'rspec'
 require 'ssh_scan/policy_manager'
 require 'ssh_scan/policy'
+require 'ssh_scan/result'
+require 'ssh_scan/protocol'
 
 describe SSHScan::PolicyManager do
   context "when checking out of policy encryption" do
@@ -13,26 +15,29 @@ describe SSHScan::PolicyManager do
       "- hmac-sha2-256\ncompression:\n- none\n" +
       "- zlib@openssh.com\n" +
       "references:\n- https://wiki.mozilla.org/Security/Guidelines/OpenSSH\n"
-    result =  {
-                :encryption_algorithms_client_to_server => [
-                  "chacha20-poly1305@openssh.com",
-                  "aes128-ctr",
-                  "aes192-ctr",
-                  "aes256-ctr",
-                  "aes128-gcm@openssh.com",
-                  "aes256-gcm@openssh.com"
-                ],
-                :encryption_algorithms_server_to_client => [
-                  "chacha20-poly1305@openssh.com",
-                  "aes128-ctr",
-                  "aes192-ctr",
-                  "aes256-ctr",
-                  "aes128-gcm@openssh.com",
-                  "aes256-gcm@openssh.com"
-                ]
-              }
 
-    it "should load all the attributes properly" do
+    # Build up a Result based on a partial kex response
+    result = SSHScan::Result.new()
+    kex = SSHScan::KeyExchangeInit.new()
+    kex.encryption_algorithms_client_to_server = [
+      "chacha20-poly1305@openssh.com",
+      "aes128-ctr",
+      "aes192-ctr",
+      "aes256-ctr",
+      "aes128-gcm@openssh.com",
+      "aes256-gcm@openssh.com"
+    ]
+    kex.encryption_algorithms_server_to_client = [
+      "chacha20-poly1305@openssh.com",
+      "aes128-ctr",
+      "aes192-ctr",
+      "aes256-ctr",
+      "aes128-gcm@openssh.com",
+      "aes256-gcm@openssh.com"
+    ]
+    result.set_kex_result(kex)
+
+    it "should have the right out of policy encryption" do
       policy = SSHScan::Policy.from_string(yaml_string)
       policy_manager = SSHScan::PolicyManager.new(result,policy)
       outliers = ["chacha20-poly1305@openssh.com",
@@ -51,26 +56,29 @@ describe SSHScan::PolicyManager do
       "- hmac-sha2-256\ncompression:\n- none\n" +
       "- zlib@openssh.com\n" +
       "references:\n- https://wiki.mozilla.org/Security/Guidelines/OpenSSH\n"
-    result = {
-                :encryption_algorithms_client_to_server => [
-                  "chacha20-poly1305@openssh.com",
-                  "aes128-ctr",
-                  "aes192-ctr",
-                  "aes256-ctr",
-                  "aes128-gcm@openssh.com",
-                  "aes256-gcm@openssh.com"
-                ],
-                :encryption_algorithms_server_to_client => [
-                  "chacha20-poly1305@openssh.com",
-                  "aes128-ctr",
-                  "aes192-ctr",
-                  "aes256-ctr",
-                  "aes128-gcm@openssh.com",
-                  "aes256-gcm@openssh.com"
-                ]
-              }
 
-    it "should load all the attributes properly" do
+    # Build up a Result based on a partial kex response
+    result = SSHScan::Result.new()
+    kex = SSHScan::KeyExchangeInit.new()
+    kex.encryption_algorithms_client_to_server = [
+      "chacha20-poly1305@openssh.com",
+      "aes128-ctr",
+      "aes192-ctr",
+      "aes256-ctr",
+      "aes128-gcm@openssh.com",
+      "aes256-gcm@openssh.com"
+    ]
+    kex.encryption_algorithms_server_to_client = [
+      "chacha20-poly1305@openssh.com",
+      "aes128-ctr",
+      "aes192-ctr",
+      "aes256-ctr",
+      "aes128-gcm@openssh.com",
+      "aes256-gcm@openssh.com"
+    ]
+    result.set_kex_result(kex)
+
+    it "should have the right missing policy encryption" do
       policy = SSHScan::Policy.from_string(yaml_string)
       policy_manager = SSHScan::PolicyManager.new(result,policy)
       outliers = []
@@ -87,34 +95,37 @@ describe SSHScan::PolicyManager do
       "- hmac-sha2-256\ncompression:\n- none\n" +
       "- zlib@openssh.com\n" +
       "references:\n- https://wiki.mozilla.org/Security/Guidelines/OpenSSH\n"
-    result =  {
-                :mac_algorithms_client_to_server => [
-                  "umac-64-etm@openssh.com",
-                  "umac-128-etm@openssh.com",
-                  "hmac-sha2-256-etm@openssh.com",
-                  "hmac-sha2-512-etm@openssh.com",
-                  "hmac-sha1-etm@openssh.com",
-                  "umac-64@openssh.com",
-                  "umac-128@openssh.com",
-                  "hmac-sha2-256",
-                  "hmac-sha2-512",
-                  "hmac-sha1"
-                ],
-                :mac_algorithms_server_to_client => [
-                  "umac-64-etm@openssh.com",
-                  "umac-128-etm@openssh.com",
-                  "hmac-sha2-256-etm@openssh.com",
-                  "hmac-sha2-512-etm@openssh.com",
-                  "hmac-sha1-etm@openssh.com",
-                  "umac-64@openssh.com",
-                  "umac-128@openssh.com",
-                  "hmac-sha2-256",
-                  "hmac-sha2-512",
-                  "hmac-sha1"
-                ]
-              }
 
-    it "should load all the attributes properly" do
+    # Build up a Result based on a partial kex response
+    result = SSHScan::Result.new()
+    kex = SSHScan::KeyExchangeInit.new()
+    kex.mac_algorithms_client_to_server = [
+      "umac-64-etm@openssh.com",
+      "umac-128-etm@openssh.com",
+      "hmac-sha2-256-etm@openssh.com",
+      "hmac-sha2-512-etm@openssh.com",
+      "hmac-sha1-etm@openssh.com",
+      "umac-64@openssh.com",
+      "umac-128@openssh.com",
+      "hmac-sha2-256",
+      "hmac-sha2-512",
+      "hmac-sha1"
+    ]
+    kex.mac_algorithms_server_to_client = [
+      "umac-64-etm@openssh.com",
+      "umac-128-etm@openssh.com",
+      "hmac-sha2-256-etm@openssh.com",
+      "hmac-sha2-512-etm@openssh.com",
+      "hmac-sha1-etm@openssh.com",
+      "umac-64@openssh.com",
+      "umac-128@openssh.com",
+      "hmac-sha2-256",
+      "hmac-sha2-512",
+      "hmac-sha1"
+    ]
+    result.set_kex_result(kex)
+
+    it "should have the right out of policy macs" do
       policy = SSHScan::Policy.from_string(yaml_string)
       policy_manager = SSHScan::PolicyManager.new(result,policy)
       outliers = ["umac-64-etm@openssh.com",
@@ -138,34 +149,37 @@ describe SSHScan::PolicyManager do
       "- hmac-sha2-256\ncompression:\n- none\n" +
       "- zlib@openssh.com\n" +
       "references:\n- https://wiki.mozilla.org/Security/Guidelines/OpenSSH\n"
-    result = {
-                :mac_algorithms_client_to_server => [
-                  "umac-64-etm@openssh.com",
-                  "umac-128-etm@openssh.com",
-                  "hmac-sha2-256-etm@openssh.com",
-                  "hmac-sha2-512-etm@openssh.com",
-                  "hmac-sha1-etm@openssh.com",
-                  "umac-64@openssh.com",
-                  "umac-128@openssh.com",
-                  "hmac-sha2-256",
-                  "hmac-sha2-512",
-                  "hmac-sha1"
-                ],
-                :mac_algorithms_server_to_client => [
-                  "umac-64-etm@openssh.com",
-                  "umac-128-etm@openssh.com",
-                  "hmac-sha2-256-etm@openssh.com",
-                  "hmac-sha2-512-etm@openssh.com",
-                  "hmac-sha1-etm@openssh.com",
-                  "umac-64@openssh.com",
-                  "umac-128@openssh.com",
-                  "hmac-sha2-256",
-                  "hmac-sha2-512",
-                  "hmac-sha1"
-                ]
-              }
 
-    it "should load all the attributes properly" do
+    # Build up a Result based on a partial kex response
+    result = SSHScan::Result.new()
+    kex = SSHScan::KeyExchangeInit.new()
+    kex.mac_algorithms_client_to_server = [
+      "umac-64-etm@openssh.com",
+      "umac-128-etm@openssh.com",
+      "hmac-sha2-256-etm@openssh.com",
+      "hmac-sha2-512-etm@openssh.com",
+      "hmac-sha1-etm@openssh.com",
+      "umac-64@openssh.com",
+      "umac-128@openssh.com",
+      "hmac-sha2-256",
+      "hmac-sha2-512",
+      "hmac-sha1"
+    ]
+    kex.mac_algorithms_server_to_client = [
+      "umac-64-etm@openssh.com",
+      "umac-128-etm@openssh.com",
+      "hmac-sha2-256-etm@openssh.com",
+      "hmac-sha2-512-etm@openssh.com",
+      "hmac-sha1-etm@openssh.com",
+      "umac-64@openssh.com",
+      "umac-128@openssh.com",
+      "hmac-sha2-256",
+      "hmac-sha2-512",
+      "hmac-sha1"
+    ]
+    result.set_kex_result(kex)
+
+    it "should have the right missing policy macs" do
       policy = SSHScan::Policy.from_string(yaml_string)
       policy_manager = SSHScan::PolicyManager.new(result,policy)
       outliers = []
@@ -183,14 +197,15 @@ describe SSHScan::PolicyManager do
       "- zlib@openssh.com\n" +
       "references:\n- https://wiki.mozilla.org/Security/Guidelines/OpenSSH\n" +
       "auth_methods:\n- publickey\n"
-    result = {
-                "auth_methods" => [
-                  "publickey",
-                  "password",
-                ]
-              }
 
-    it "should load all the attributes properly" do
+    # Build up a test Result
+    result = SSHScan::Result.new()
+    result.auth_methods = [
+      "publickey",
+      "password",
+    ]
+
+    it "should have the right out of policy auth methods" do
       policy = SSHScan::Policy.from_string(yaml_string)
       policy_manager = SSHScan::PolicyManager.new(result, policy)
       outliers = ["password"]
@@ -209,11 +224,13 @@ describe SSHScan::PolicyManager do
       "references:\n- https://wiki.mozilla.org/Security/Guidelines/OpenSSH\n" +
       "auth_methods:\n- publickey\n" +
       "ssh_version: 2.0\n"
-    result = {
-                :ssh_version => 1.9
-             }
 
-    it "should load all the attributes properly" do
+    # Build up a test Result
+    result = SSHScan::Result.new()
+
+    result.banner = SSHScan::Banner.new("SSH-1.9-server")
+
+    it "should have the right out of policy ssh version" do
       policy = SSHScan::Policy.from_string(yaml_string)
       policy_manager = SSHScan::PolicyManager.new(result, policy)
       expect(policy_manager.out_of_policy_ssh_version()).to eql(true)
@@ -230,18 +247,21 @@ describe SSHScan::PolicyManager do
       "references:\n- https://wiki.mozilla.org/Security/Guidelines/OpenSSH\n" +
       "auth_methods:\n- publickey\n" +
       "ssh_version: 2.0\n"
-    result = {
-                :compression_algorithms_client_to_server => [
-                  "none",
-                  "zlib",
-                  "zlib@openssh.com"
-                ],
-                :compression_algorithms_server_to_client => [
-                  "none",
-                  "zlib",
-                  "zlib@openssh.com"
-                ]
-             }
+
+    # Build up a Result based on a partial kex response
+    result = SSHScan::Result.new()
+    kex = SSHScan::KeyExchangeInit.new()
+    kex.compression_algorithms_client_to_server = [
+      "none",
+      "zlib",
+      "zlib@openssh.com"
+    ]
+    kex.compression_algorithms_server_to_client = [
+      "none",
+      "zlib",
+      "zlib@openssh.com"
+    ]
+    result.set_kex_result(kex)
 
     it "should not complain about compression" do
       policy = SSHScan::Policy.from_string(yaml_string)
@@ -265,26 +285,23 @@ describe SSHScan::PolicyManager do
       "references:\n- https://wiki.mozilla.org/Security/Guidelines/OpenSSH\n" +
       "auth_methods:\n- publickey\n" +
       "ssh_version: 2.0\n"
-    result = {
-                :encryption_algorithms_client_to_server => [
-                  "chacha20-poly1305@openssh.com",
-                  "aes256-ctr",
-                  "aes192-ctr",
-                  "aes128-ctr",
-                ],
-                :encryption_algorithms_server_to_client => [
-                  "chacha20-poly1305@openssh.com",
-                  "aes256-ctr",
-                  "aes192-ctr",
-                  "aes128-ctr",
-                ],
-             }
 
-    it "should not complain about encryption" do
-      policy = SSHScan::Policy.from_string(yaml_string)
-      policy_manager = SSHScan::PolicyManager.new(result, policy)
-      expect(policy_manager.out_of_policy_encryption).to eql([])
-    end
+    # Build up a Result based on a partial kex response
+    result = SSHScan::Result.new()
+    kex = SSHScan::KeyExchangeInit.new()
+    kex.encryption_algorithms_client_to_server = [
+      "chacha20-poly1305@openssh.com",
+      "aes256-ctr",
+      "aes192-ctr",
+      "aes128-ctr",
+    ]
+    kex.encryption_algorithms_server_to_client = [
+      "chacha20-poly1305@openssh.com",
+      "aes256-ctr",
+      "aes192-ctr",
+      "aes128-ctr",
+    ]
+    result.set_kex_result(kex)
 
     it "should not complain about encryption" do
       policy = SSHScan::Policy.from_string(yaml_string)
@@ -300,24 +317,21 @@ describe SSHScan::PolicyManager do
       "references:\n- https://wiki.mozilla.org/Security/Guidelines/OpenSSH\n" +
       "auth_methods:\n- publickey\n" +
       "ssh_version: 2.0\n"
-    result = {
-              :mac_algorithms_client_to_server => [
-                "hmac-sha1",
-                "hmac-sha2-256",
-                "hmac-sha2-512"
-              ],
-              :mac_algorithms_server_to_client => [
-                "hmac-sha1",
-                "hmac-sha2-256",
-                "hmac-sha2-512"
-              ],
-             }
 
-    it "should not complain about macs" do
-      policy = SSHScan::Policy.from_string(yaml_string)
-      policy_manager = SSHScan::PolicyManager.new(result, policy)
-      expect(policy_manager.out_of_policy_macs).to eql([])
-    end
+    # Build up a Result based on a partial kex response
+    result = SSHScan::Result.new()
+    kex = SSHScan::KeyExchangeInit.new()
+    kex.mac_algorithms_client_to_server = [
+      "hmac-sha1",
+      "hmac-sha2-256",
+      "hmac-sha2-512"
+    ]
+    kex.mac_algorithms_server_to_client = [
+      "hmac-sha1",
+      "hmac-sha2-256",
+      "hmac-sha2-512"
+    ]
+    result.set_kex_result(kex)
 
     it "should not complain about macs" do
       policy = SSHScan::Policy.from_string(yaml_string)
@@ -334,18 +348,15 @@ describe SSHScan::PolicyManager do
       "references:\n- https://wiki.mozilla.org/Security/Guidelines/OpenSSH\n" +
       "auth_methods:\n- publickey\n" +
       "ssh_version: 2.0\n"
-    result = {
-              :server_host_key_algorithms => [
-                "ssh-dss",
-                "ssh-rsa"
-              ],
-             }
 
-    it "should not complain about kex" do
-      policy = SSHScan::Policy.from_string(yaml_string)
-      policy_manager = SSHScan::PolicyManager.new(result, policy)
-      expect(policy_manager.out_of_policy_kex).to eql([])
-    end
+    # Build up a Result based on a partial kex response
+    result = SSHScan::Result.new()
+    kex = SSHScan::KeyExchangeInit.new()
+    kex.server_host_key_algorithms = [
+      "ssh-dss",
+      "ssh-rsa"
+    ]
+    result.set_kex_result(kex)
 
     it "should not complain about kex" do
       policy = SSHScan::Policy.from_string(yaml_string)

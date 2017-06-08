@@ -21,8 +21,8 @@ module SSHScan
     #   or "SSH-number" then return the number, else return
     #   "unknown"
     def ssh_version()
-      if version = @string.match(/SSH-(\d+[\.\d+]+)/)[1]
-        return version.to_f
+      if match = @string.match(/SSH-(\d+[\.\d+]+)/)
+        return match[1].to_f
       else
         return "unknown"
       end

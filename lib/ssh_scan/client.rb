@@ -6,19 +6,33 @@ require 'ssh_scan/error'
 
 module SSHScan
   class Client
-    def initialize(target, port, timeout = 3)
-      @target = target
+    def initialize(ip, port, timeout = 3)
+      @ip = ip
       @timeout = timeout
 
-      @port = port
+      @port = port.to_i
       @client_banner = SSHScan::Constants::DEFAULT_CLIENT_BANNER
       @server_banner = nil
       @kex_init_raw = SSHScan::Constants::DEFAULT_KEY_INIT.to_binary_s
     end
 
+    def ip
+      @ip
+    end
+
+    def port
+      @port
+    end
+
+    def banner
+      @server_banner
+    end
+
     def connect()
+      @error = nil
+
       begin
-        @sock = Socket.tcp(@target, @port, connect_timeout: @timeout)
+        @sock = Socket.tcp(@ip, @port, connect_timeout: @timeout)
       rescue SocketError => e
         @error = SSHScan::Error::ConnectionRefused.new(e.message)
         @sock = nil
@@ -56,58 +70,53 @@ module SSHScan
       end
     end
 
+    def error?
+      !@error.nil?
+    end
+
+    def error
+      @error
+    end
+
     def get_kex_result(kex_init_raw = @kex_init_raw)
-      # Common options for all cases
-      result = {}
-      result[:ssh_scan_version] = SSHScan::VERSION
-      result[:ip] = @target
-      result[:port] = @port
-
       if !@sock
-        result[:error] = @error
-        return result
+        @error = "Socket is no longer valid"
+        return nil
       end
-
-      # Assemble and print results
-      result[:server_banner] = @server_banner.to_s
-      result[:ssh_version] = @server_banner.ssh_version
-      result[:os] = @server_banner.os_guess.common
-      result[:os_cpe] = @server_banner.os_guess.cpe
-      result[:ssh_lib] = @server_banner.ssh_lib_guess.common
-      result[:ssh_lib_cpe] = @server_banner.ssh_lib_guess.cpe
 
       begin
         @sock.write(kex_init_raw)
         resp = @sock.read(4)
 
         if resp.nil?
-          result[:error] = SSHScan::Error::NoKexResponse.new(
+          @error = SSHScan::Error::NoKexResponse.new(
             "service did not respond to our kex init request"
           )
           @sock = nil
-          return result
+          return nil
         end
 
         resp += @sock.read(resp.unpack("N").first)
         @sock.close
 
         kex_exchange_init = SSHScan::KeyExchangeInit.read(resp)
-        result.merge!(kex_exchange_init.to_hash)
       rescue Errno::ETIMEDOUT => e
         @error = SSHScan::Error::ConnectTimeout.new(e.message)
         @sock = nil
+        return nil
       rescue Errno::ECONNREFUSED,
              Errno::ENETUNREACH,
              Errno::ECONNRESET,
              Errno::EACCES,
              Errno::EHOSTUNREACH
-        result[:error] = SSHScan::Error::NoKexResponse.new(
+        @error = SSHScan::Error::NoKexResponse.new(
           "service did not respond to our kex init request"
         )
         @sock = nil
+        return nil
       end
 
-      return result
+      return kex_exchange_init.to_hash
     end
   end
 end

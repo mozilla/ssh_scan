@@ -4,6 +4,7 @@ require 'ssh_scan/crypto'
 #require 'ssh_scan/fingerprint_database'
 require 'net/ssh'
 require 'logger'
+require 'open3'
 
 module SSHScan
   # Handle scanning of targets.
@@ -19,41 +20,65 @@ module SSHScan
         port = 22
       end
       timeout = opts["timeout"]
-      result = []
+      
+      result = SSHScan::Result.new()
+      result.port = port.to_i
 
-      start_time = Time.now
+      # Start the scan timer
+      result.set_start_time
 
       if target.fqdn?
+        result.hostname = target
+
+        # If doesn't resolve as IPv6, we'll try IPv4
         if target.resolve_fqdn_as_ipv6.nil?
           client = SSHScan::Client.new(
             target.resolve_fqdn_as_ipv4.to_s, port, timeout
           )
           client.connect()
-          result = client.get_kex_result()
-          result[:hostname] = target
-          return result if result.include?(:error)
+          result.set_client_attributes(client)
+          kex_result = client.get_kex_result()
+          result.set_kex_result(kex_result) unless kex_result.nil?
+          result.error = client.error if client.error?
+        # If it does resolve as IPv6, we're try IPv6
         else
           client = SSHScan::Client.new(
             target.resolve_fqdn_as_ipv6.to_s, port, timeout
           )
           client.connect()
-          result = client.get_kex_result()
-          if result.include?(:error)
+          result.set_client_attributes(client)
+          kex_result = client.get_kex_result()
+          result.set_kex_result(kex_result) unless kex_result.nil?
+          result.error = client.error if client.error?
+
+          # If resolves as IPv6, but somehow we get an client error, fall-back to IPv4
+          if result.error?
             client = SSHScan::Client.new(
               target.resolve_fqdn_as_ipv4.to_s, port, timeout
             )
             client.connect()
-            result = client.get_kex_result()
-            result[:hostname] = target
-            return result if result.include?(:error)
+            result.set_client_attributes(client)
+            kex_result = client.get_kex_result()
+            result.set_kex_result(kex_result) unless kex_result.nil?
+            result.error = client.error if client.error?
           end
         end
       else
         client = SSHScan::Client.new(target, port, timeout)
         client.connect()
-        result = client.get_kex_result()
-        result[:hostname] = target.resolve_ptr
-        return result if result.include?(:error)
+        result.set_client_attributes(client)
+        kex_result = client.get_kex_result()
+        result.set_kex_result(kex_result)
+
+        # Attempt to suppliment a hostname that wasn't provided
+        result.hostname = target.resolve_ptr
+        
+        result.error = client.error if client.error?
+      end
+
+      if result.error?
+        result.set_end_time
+        return result
       end
 
       # Connect and get results (Net-SSH)
@@ -69,57 +94,54 @@ module SSHScan
           net_ssh_session, :auth_methods => ["none"]
         )
         auth_session.authenticate("none", "test", "test")
-        result['auth_methods'] = auth_session.allowed_auth_methods
+        result.auth_methods = auth_session.allowed_auth_methods
         net_ssh_session.close
       rescue Net::SSH::ConnectionTimeout => e
-        result[:error] = e
-        result[:error] = SSHScan::Error::ConnectTimeout.new(e.message)
+        result.error = SSHScan::Error::ConnectTimeout.new(e.message)
       rescue Net::SSH::Disconnect => e
-        result[:error] = e
-        result[:error] = SSHScan::Error::Disconnected.new(e.message)
+        result.error = SSHScan::Error::Disconnected.new(e.message)
       rescue Net::SSH::Exception => e
         if e.to_s.match(/could not settle on/)
-          result[:error] = e
+          result.error = e
         else
           raise e
         end
-      else
-        result['fingerprints'] = {}
-        host_keys = `ssh-keyscan -t rsa,dsa #{target} 2>/dev/null`.split
-        host_keys_len = host_keys.length - 1
+      end
 
-        for i in 0..host_keys_len
-          if host_keys[i].eql? "ssh-dss"
-            pkey = SSHScan::Crypto::PublicKey.new(host_keys[i + 1])
-            result['fingerprints'].merge!({
-              "dsa" => {
-                "known_bad" => pkey.bad_key?.to_s,
-                "md5" => pkey.fingerprint_md5,
-                "sha1" => pkey.fingerprint_sha1,
-                "sha256" => pkey.fingerprint_sha256,
-              }
-            })
-          end
+      # Figure out what rsa or dsa fingerprints exist
+      fingerprints = {}
 
-          if host_keys[i].eql? "ssh-rsa"
-            pkey = SSHScan::Crypto::PublicKey.new(host_keys[i + 1])
-            result['fingerprints'].merge!({
-              "rsa" => {
-                "known_bad" => pkey.bad_key?.to_s,
-                "md5" => pkey.fingerprint_md5,
-                "sha1" => pkey.fingerprint_sha1,
-                "sha256" => pkey.fingerprint_sha256,
-              }
-            })
-          end
+      host_keys = `ssh-keyscan -t rsa,dsa #{target} 2>/dev/null`.split
+      host_keys_len = host_keys.length - 1
+
+      for i in 0..host_keys_len
+        if host_keys[i].eql? "ssh-dss"
+          pkey = SSHScan::Crypto::PublicKey.new(host_keys[i + 1])
+          fingerprints.merge!({
+            "dsa" => {
+              "known_bad" => pkey.bad_key?.to_s,
+              "md5" => pkey.fingerprint_md5,
+              "sha1" => pkey.fingerprint_sha1,
+              "sha256" => pkey.fingerprint_sha256,
+            }
+          })
+        end
+
+        if host_keys[i].eql? "ssh-rsa"
+          pkey = SSHScan::Crypto::PublicKey.new(host_keys[i + 1])
+          fingerprints.merge!({
+            "rsa" => {
+              "known_bad" => pkey.bad_key?.to_s,
+              "md5" => pkey.fingerprint_md5,
+              "sha1" => pkey.fingerprint_sha1,
+              "sha256" => pkey.fingerprint_sha256,
+            }
+          })
         end
       end
 
-      # Add scan times
-      end_time = Time.now
-      result['start_time'] = start_time.to_s
-      result['end_time'] = end_time.to_s
-      result['scan_duration_seconds'] = end_time - start_time
+      result.fingerprints = fingerprints
+      result.set_end_time
 
       return result
     end
@@ -156,13 +178,14 @@ module SSHScan
         opts['fingerprint_database']
       )
       results.each do |result|
-        fingerprint_db.clear_fingerprints(result[:ip])
-        if result['fingerprints']
-          result['fingerprints'].values.each do |host_key_algo|
+        fingerprint_db.clear_fingerprints(result.ip)
+
+        if result.fingerprints
+          result.fingerprints.values.each do |host_key_algo|
             host_key_algo.each do |fingerprint|
               key, value = fingerprint
               next if key == "known_bad"
-              fingerprint_db.add_fingerprint(value, result[:ip])
+              fingerprint_db.add_fingerprint(value, result.ip)
             end
           end
         end
@@ -170,53 +193,48 @@ module SSHScan
 
       # Decorate all the results with duplicate keys
       results.each do |result|
-        if result['fingerprints']
-          ip = result[:ip]
-          result['duplicate_host_key_ips'] = []
-          result['fingerprints'].values.each do |host_key_algo|
+        if result.fingerprints
+          ip = result.ip
+          result.duplicate_host_key_ips = []
+          result.fingerprints.values.each do |host_key_algo|
             host_key_algo.each do |fingerprint|
               key, value = fingerprint
               next if key == "known_bad"
               fingerprint_db.find_fingerprints(value).each do |other_ip|
                 next if ip == other_ip
-                result['duplicate_host_key_ips'] << other_ip
+                result.duplicate_host_key_ips << other_ip
               end
             end
           end
-          result['duplicate_host_key_ips'].uniq!
+          result.duplicate_host_key_ips
         end
       end
 
       # Decorate all the results with compliance information
       results.each do |result|
         # Do this only when we have all the information we need
-        if !opts["policy"].nil? &&
-           !result[:key_algorithms].nil? &&
-           !result[:server_host_key_algorithms].nil? &&
-           !result[:encryption_algorithms_client_to_server].nil? &&
-           !result[:encryption_algorithms_server_to_client].nil? &&
-           !result[:mac_algorithms_client_to_server].nil? &&
-           !result[:mac_algorithms_server_to_client].nil? &&
-           !result[:compression_algorithms_client_to_server].nil? &&
-           !result[:compression_algorithms_server_to_client].nil? &&
-           !result[:languages_client_to_server].nil? &&
-           !result[:languages_server_to_client].nil?
+        if opts["policy"] &&
+           result.key_algorithms.any? &&
+           result.server_host_key_algorithms.any? &&
+           result.encryption_algorithms_client_to_server.any? &&
+           result.encryption_algorithms_server_to_client.any? &&
+           result.mac_algorithms_client_to_server.any? &&
+           result.mac_algorithms_server_to_client.any? &&
+           result.compression_algorithms_client_to_server.any? &&
+           result.compression_algorithms_server_to_client.any?
 
           policy = SSHScan::Policy.from_file(opts["policy"])
           policy_mgr = SSHScan::PolicyManager.new(result, policy)
-          result['compliance'] = policy_mgr.compliance_results
+          result.set_compliance = policy_mgr.compliance_results
+
+          if result.compliance_policy
+            grader = SSHScan::Grader.new(result)
+            result.grade = grader.grade
+          end
         end
       end
 
-      # Decorate complaince results with a grade
-      results.each do |result|
-        if result['compliance']
-          grader = SSHScan::Grader.new(result)
-          result['compliance'][:grade] = grader.grade
-        end
-      end
-
-      return results
+      return results.map {|r| r.to_hash}
     end
   end
 end

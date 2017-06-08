@@ -9,8 +9,8 @@ module SSHScan
     def out_of_policy_encryption
       return [] if @policy.encryption.empty?
       target_encryption =
-        @result[:encryption_algorithms_client_to_server] |
-        @result[:encryption_algorithms_server_to_client]
+        @result.encryption_algorithms_client_to_server |
+        @result.encryption_algorithms_server_to_client
       outliers = []
       target_encryption.each do |target_enc|
         outliers << target_enc unless @policy.encryption.include?(target_enc)
@@ -21,8 +21,8 @@ module SSHScan
     def missing_policy_encryption
       return [] if @policy.encryption.empty?
       target_encryption =
-        @result[:encryption_algorithms_client_to_server] |
-        @result[:encryption_algorithms_server_to_client]
+        @result.encryption_algorithms_client_to_server |
+        @result.encryption_algorithms_server_to_client
       outliers = []
       @policy.encryption.each do |encryption|
         if target_encryption.include?(encryption) == false
@@ -35,8 +35,8 @@ module SSHScan
     def out_of_policy_macs
       return [] if @policy.macs.empty?
       target_macs =
-        @result[:mac_algorithms_server_to_client] |
-        @result[:mac_algorithms_client_to_server]
+        @result.mac_algorithms_server_to_client |
+        @result.mac_algorithms_client_to_server
       outliers = []
       target_macs.each do |target_mac|
         outliers << target_mac unless @policy.macs.include?(target_mac)
@@ -47,8 +47,8 @@ module SSHScan
     def missing_policy_macs
       return [] if @policy.macs.empty?
       target_macs =
-        @result[:mac_algorithms_server_to_client] |
-        @result[:mac_algorithms_client_to_server]
+        @result.mac_algorithms_server_to_client |
+        @result.mac_algorithms_client_to_server
       outliers = []
 
       @policy.macs.each do |mac|
@@ -61,7 +61,7 @@ module SSHScan
 
     def out_of_policy_kex
       return [] if @policy.kex.empty?
-      target_kexs = @result[:key_algorithms]
+      target_kexs = @result.key_algorithms
       outliers = []
       target_kexs.each do |target_kex|
         outliers << target_kex unless @policy.kex.include?(target_kex)
@@ -71,7 +71,7 @@ module SSHScan
 
     def missing_policy_kex
       return [] if @policy.kex.empty?
-      target_kex = @result[:key_algorithms]
+      target_kex = @result.key_algorithms
       outliers = []
 
       @policy.kex.each do |kex|
@@ -85,8 +85,8 @@ module SSHScan
     def out_of_policy_compression
       return [] if @policy.compression.empty?
       target_compressions =
-        @result[:compression_algorithms_server_to_client] |
-        @result[:compression_algorithms_client_to_server]
+        @result.compression_algorithms_server_to_client |
+        @result.compression_algorithms_client_to_server
       outliers = []
       target_compressions.each do |target_compression|
         outliers << target_compression unless
@@ -98,8 +98,8 @@ module SSHScan
     def missing_policy_compression
       return [] if @policy.compression.empty?
       target_compressions =
-        @result[:compression_algorithms_server_to_client] |
-        @result[:compression_algorithms_client_to_server]
+        @result.compression_algorithms_server_to_client |
+        @result.compression_algorithms_client_to_server
       outliers = []
 
       @policy.compression.each do |compression|
@@ -112,8 +112,8 @@ module SSHScan
 
     def out_of_policy_auth_methods
       return [] if @policy.auth_methods.empty?
-      return [] if @result["auth_methods"].nil?
-      target_auth_methods = @result["auth_methods"]
+      return [] if @result.auth_methods.empty?
+      target_auth_methods = @result.auth_methods
       outliers = []
 
       if not @policy.auth_methods.empty?
@@ -128,7 +128,7 @@ module SSHScan
 
     def out_of_policy_ssh_version
       return false if @policy.ssh_version.nil?
-      target_ssh_version = @result[:ssh_version]
+      target_ssh_version = @result.ssh_version
       if @policy.ssh_version
         if target_ssh_version < @policy.ssh_version
           return true
