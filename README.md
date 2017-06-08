@@ -28,7 +28,7 @@ To run from a docker container, type:
 
 ```bash
 docker pull mozilla/ssh_scan
-docker run -it mozilla/ssh_scan /app/bin/ssh_scan -t github.com
+docker run -it mozilla/ssh_scan /app/bin/ssh_scan -t sshscan.rubidus.com
 ```
 
 To install and run from source, type:
