@@ -13,7 +13,7 @@ describe SSHScan::Result do
     expect(result.banner).to be_kind_of(SSHScan::Banner)
     expect(result.banner.to_s).to eql("")
     expect(result.hostname).to eql("")
-    expect(result.ssh_version).to eql(nil)
+    expect(result.ssh_version).to eql("unknown")
     expect(result.os_guess_common).to eql("unknown")
     expect(result.os_guess_cpe).to eql("o:unknown")
     expect(result.ssh_lib_guess_common).to eql("unknown")
@@ -131,33 +131,13 @@ describe SSHScan::Result do
     end
   end
 
-  context "when setting ssh_version" do 
+  context "when setting ssh_version via banner" do 
     it "should allow setting result.ssh_version" do
       result = SSHScan::Result.new()
-      expect(result.ssh_version).to be_nil
+      expect(result.ssh_version).to eql("unknown")
 
-      result.ssh_version = 2.0
-      expect(result.ssh_version).to be_kind_of(Float)
-    end
-
-    it "should prevent setting result.ssh_version to invalid values" do
-      result = SSHScan::Result.new()
-      expect(result.ssh_version).to be_nil
-
-      invalid_inputs = [
-        65537,
-        -1,
-        "",
-        "22",
-      ]
-
-      invalid_inputs.each do |invalid_input|
-        expect { result.ssh_version = invalid_input}.to raise_error(
-          ArgumentError,
-          "Invalid attempt to set ssh_version to a non-port value"
-        )
-        expect(result.ssh_version).to be_nil
-      end
+      result.banner = SSHScan::Banner.new("SSH-2.0-server")
+      expect(result.ssh_version).to eql(2.0)
     end
   end
 
@@ -194,4 +174,21 @@ describe SSHScan::Result do
     end
   end
 
+  context "when setting compliance" do 
+    it "should allow setting of the compliance information" do
+      compliance = {
+        :policy => "Test Policy",
+        :compliant => true,
+        :recommendations => ["do this", "do that"],
+        :references => ["https://reference.example.com"],
+      }
+      result = SSHScan::Result.new()
+      result.set_compliance = compliance
+
+      expect(result.compliance_policy).to eql(compliance[:policy])
+      expect(result.compliant?).to eql(compliance[:compliant])
+      expect(result.compliance_recommendations).to eql(compliance[:recommendations])
+      expect(result.compliance_references).to eql(compliance[:references])
+    end
+  end
 end

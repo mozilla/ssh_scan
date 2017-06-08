@@ -10,6 +10,7 @@ module SSHScan
       @version = SSHScan::VERSION
       @fingerprints = nil
       @duplicate_host_key_ips = Set.new()
+      @compliance = {}
     end
 
     def version
@@ -60,16 +61,8 @@ module SSHScan
       @banner = banner
     end
 
-    def ssh_version=(ssh_version)
-      unless ssh_version.is_a?(Float)
-        raise ArgumentError, "Invalid attempt to set ssh_version to a non-port value"
-      end
-
-      @ssh_version = ssh_version
-    end
-
     def ssh_version
-      @ssh_version
+      self.banner.ssh_version
     end
 
     def os_guess_common
@@ -136,10 +129,6 @@ module SSHScan
       @hex_result_hash = kex_result.to_hash
     end
 
-    def set_auth_methods(auth_methods)
-      @auth_methods = auth_methods
-    end
-
     def set_start_time
       @start_time = Time.now
     end
@@ -192,46 +181,30 @@ module SSHScan
       @auth_methods || []
     end
 
-    def set_compliance(compliance)
+    def set_compliance=(compliance)
       @compliance = compliance
     end
 
-     def compliance_policy=(policy)
-      @compliance_policy = policy
-    end
-
     def compliance_policy
-      @compliance_policy
+      @compliance[:policy]
     end
 
-    def compliant=(compliance_status)
-      @compliance_status = compliance_status
+    def compliant?
+      @compliance[:compliant]
     end
 
-	  def compliant?
-      @compliance_status
+    def compliance_references
+      @compliance[:references]
+    end
+
+    def compliance_recommendations
+      @compliance[:recommendations]
     end
 
     def set_client_attributes(client)
       self.ip = client.ip
       self.port = client.port || 22
       self.banner = client.banner || SSHScan::Banner.new("")
-    end
-
-    def recommendations=(recommendations)
-      @compliance_recommendations = recommendations
-    end
-
-    def references=(references)
-      @compliance_references = references
-    end
-
-    def recommendations
-      @compliance_recommendations	
-    end
-
-    def references
-      @compliance_references
     end
 
     def error=(error)
@@ -278,13 +251,7 @@ module SSHScan
       	"auth_methods" => self.auth_methods,
         "fingerprints" => self.fingerprints,
         "duplicate_host_key_ips" => self.duplicate_host_key_ips,
-      	"compliance" => {
-      	  "policy" => self.compliance_policy,
-          "compliant" => self.compliant?,
-          "recommendations" => self.recommendations,
-          "references" => self.references,
-          "grade" => self.grade
-      	},
+      	"compliance" => @compliance,
         "start_time" => self.start_time,
         "end_time" => self.end_time,
         "scan_duration_seconds" => self.scan_duration,

@@ -213,33 +213,24 @@ module SSHScan
       # Decorate all the results with compliance information
       results.each do |result|
         # Do this only when we have all the information we need
-        if !opts["policy"].nil? &&
-           !result.key_algorithms.empty? &&
-           !result.server_host_key_algorithms.empty? &&
-           !result.encryption_algorithms_client_to_server.empty? &&
-           !result.encryption_algorithms_server_to_client.empty? &&
-           !result.mac_algorithms_client_to_server.empty? &&
-           !result.mac_algorithms_server_to_client.empty? &&
-           !result.compression_algorithms_client_to_server.empty? &&
-           !result.compression_algorithms_server_to_client.empty? &&
-           !result.languages_client_to_server.empty? &&
-           !result.languages_server_to_client.empty?
+        if opts["policy"] &&
+           result.key_algorithms.any? &&
+           result.server_host_key_algorithms.any? &&
+           result.encryption_algorithms_client_to_server.any? &&
+           result.encryption_algorithms_server_to_client.any? &&
+           result.mac_algorithms_client_to_server.any? &&
+           result.mac_algorithms_server_to_client.any? &&
+           result.compression_algorithms_client_to_server.any? &&
+           result.compression_algorithms_server_to_client.any?
 
           policy = SSHScan::Policy.from_file(opts["policy"])
           policy_mgr = SSHScan::PolicyManager.new(result, policy)
-          compliance_results = policy_mgr.compliance_results
-          result.compliance_policy = compliance_results[:policy]
-          result.compliant = compliance_results[:compliant]
-          result.recommendations = compliance_results[:recommendations]
-          result.references = compliance_results[:references]
-        end
-      end
+          result.set_compliance = policy_mgr.compliance_results
 
-      # Decorate complaince results with a grade
-      results.each do |result|
-        if result.compliance_policy
-          grader = SSHScan::Grader.new(result)
-          result.grade = grader.grade
+          if result.compliance_policy
+            grader = SSHScan::Grader.new(result)
+            result.grade = grader.grade
+          end
         end
       end
 
