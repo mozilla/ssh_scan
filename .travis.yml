@@ -35,9 +35,14 @@ matrix:
       - chmod 755 ./spec/ssh_scan/integration.sh
       - ./spec/ssh_scan/integration.sh
   - rvm: 2.3.0
-    branches:
-      only:
-      - master
+    env:
+      - LABEL=docker_integration_tests
+    services:
+      - docker
+    script:
+      - docker build -t mozilla/ssh_scan .
+      - docker run -it mozilla/ssh_scan /app/spec/ssh_scan/integration.sh
+  - rvm: 2.3.0
     env:
       - LABEL=docker_build_push
     services:
