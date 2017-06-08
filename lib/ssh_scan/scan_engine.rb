@@ -22,7 +22,7 @@ module SSHScan
       timeout = opts["timeout"]
       
       result = SSHScan::Result.new()
-      result.port = port
+      result.port = port.to_i
 
       # Start the scan timer
       result.set_start_time
