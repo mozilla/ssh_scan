@@ -174,7 +174,7 @@ module SSHScan
     end
 
     def duplicate_host_key_ips
-      @duplicate_host_key_ips
+      @duplicate_host_key_ips.to_a
     end
 
     def auth_methods()
@@ -258,7 +258,7 @@ module SSHScan
       }
 
       if self.error?
-        hashed_object.error = self.error
+        hashed_object["error"] = self.error
       end
 
       hashed_object
