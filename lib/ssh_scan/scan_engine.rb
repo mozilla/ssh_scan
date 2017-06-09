@@ -19,6 +19,7 @@ module SSHScan
       if port.nil?
         port = 22
       end
+
       timeout = opts["timeout"]
       
       result = SSHScan::Result.new()
@@ -68,11 +69,14 @@ module SSHScan
         client.connect()
         result.set_client_attributes(client)
         kex_result = client.get_kex_result()
-        result.set_kex_result(kex_result)
+
+        unless kex_result.nil?
+          result.set_kex_result(kex_result)
+        end
 
         # Attempt to suppliment a hostname that wasn't provided
         result.hostname = target.resolve_ptr
-        
+
         result.error = client.error if client.error?
       end
 
