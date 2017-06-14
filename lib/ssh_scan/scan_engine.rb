@@ -232,8 +232,7 @@ module SSHScan
           result.set_compliance = policy_mgr.compliance_results
 
           if result.compliance_policy
-            grader = SSHScan::Grader.new(result)
-            result.grade = grader.grade
+            result.grade = SSHScan::Grader.new(result).grade
           end
         end
       end

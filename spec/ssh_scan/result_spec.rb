@@ -191,4 +191,25 @@ describe SSHScan::Result do
       expect(result.compliance_references).to eql(compliance[:references])
     end
   end
+
+  context "when setting grade" do 
+    it "should allow setting of the grade information" do
+      compliance = {
+        :policy => "Test Policy",
+        :compliant => true,
+        :recommendations => ["do this", "do that"],
+        :references => ["https://reference.example.com"],
+      }
+      result = SSHScan::Result.new()
+      result.set_compliance = compliance
+      result.grade = "D"
+
+      expect(result.compliance_policy).to eql(compliance[:policy])
+      expect(result.compliant?).to eql(compliance[:compliant])
+      expect(result.compliance_recommendations).to eql(compliance[:recommendations])
+      expect(result.compliance_references).to eql(compliance[:references])
+      expect(result.grade).to eql("D")
+    end
+  end
+
 end
