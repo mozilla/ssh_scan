@@ -28,7 +28,11 @@ module SSHScan
           end
           return ip_array
         elsif ip.include? "/"
-          cidr = NetAddr::CIDR.create(ip)
+          begin
+            cidr = NetAddr::CIDR.create(ip)
+          rescue
+            raise ArgumentError, "Invalid target: #{ip}"
+          end
           ip_array = cidr.enumerate
           ip_array.delete(cidr.network)
           ip_array.delete(cidr.last)
