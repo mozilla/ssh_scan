@@ -220,11 +220,11 @@ module SSHScan
     end
 
     def grade=(grade)
-      @compliance_grade = grade
+      @compliance[:grade] = grade
     end
 
     def grade
-      @compliance_grade
+      @compliance[:grade] 
     end
 
     def to_hash
