@@ -36,9 +36,10 @@ module SSHScan
           client = SSHScan::Client.new(
             target.resolve_fqdn_as_ipv4.to_s, port, timeout
           )
-          client.connect()
+          client.connect
           result.set_client_attributes(client)
           kex_result = client.get_kex_result()
+          client.close
           result.set_kex_result(kex_result) unless kex_result.nil?
           result.error = client.error if client.error?
         # If it does resolve as IPv6, we're try IPv6
@@ -46,20 +47,23 @@ module SSHScan
           client = SSHScan::Client.new(
             target.resolve_fqdn_as_ipv6.to_s, port, timeout
           )
-          client.connect()
+          client.connect
           result.set_client_attributes(client)
           kex_result = client.get_kex_result()
+          client.close
           result.set_kex_result(kex_result) unless kex_result.nil?
           result.error = client.error if client.error?
 
           # If resolves as IPv6, but somehow we get an client error, fall-back to IPv4
           if result.error?
+            result.unset_error
             client = SSHScan::Client.new(
               target.resolve_fqdn_as_ipv4.to_s, port, timeout
             )
             client.connect()
             result.set_client_attributes(client)
             kex_result = client.get_kex_result()
+            client.close
             result.set_kex_result(kex_result) unless kex_result.nil?
             result.error = client.error if client.error?
           end
@@ -69,6 +73,7 @@ module SSHScan
         client.connect()
         result.set_client_attributes(client)
         kex_result = client.get_kex_result()
+        client.close
 
         unless kex_result.nil?
           result.set_kex_result(kex_result)
