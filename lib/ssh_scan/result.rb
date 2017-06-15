@@ -211,6 +211,10 @@ module SSHScan
       @error = error.to_s
     end
 
+    def unset_error
+      @error = nil
+    end
+
     def error?
       !@error.nil?
     end

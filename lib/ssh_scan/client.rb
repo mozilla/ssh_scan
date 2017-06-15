@@ -28,6 +28,17 @@ module SSHScan
       @server_banner
     end
 
+    def close()
+      begin
+        unless @sock.nil?
+          @sock.close
+        end
+      rescue
+        @sock = nil
+      end
+      return true
+    end
+
     def connect()
       @error = nil
 
