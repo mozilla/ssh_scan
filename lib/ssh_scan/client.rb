@@ -44,6 +44,7 @@ module SSHScan
 
       begin
         @sock = Socket.tcp(@ip, @port, connect_timeout: @timeout)
+        @raw_server_banner = @sock.gets
       rescue SocketError => e
         @error = SSHScan::Error::ConnectionRefused.new(e.message)
         @sock = nil
@@ -66,8 +67,6 @@ module SSHScan
         @error = SSHScan::Error::ConnectionRefused.new(e.message)
         @sock = nil
       else
-        @raw_server_banner = @sock.gets
-
         if @raw_server_banner.nil?
           @error = SSHScan::Error::NoBanner.new(
             "service did not respond with an SSH banner"
