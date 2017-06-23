@@ -1,0 +1,1 @@
+This folder is used to capture research/knowledge around the various attributes that help influence policy defaults over time.  If you think we're wrong, help educate us so we can continue to ammend our knowledge as time progresses.
