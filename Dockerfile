@@ -1,6 +1,11 @@
-FROM ruby:latest
+FROM ruby
 MAINTAINER Jonathan Claudius
-COPY . /app
-RUN cd /app && \
-    gem install bundler && \
-    bundle install
+ENV PROJECT=github.com/mozilla/ssh_scan
+
+RUN mkdir /app
+ADD . /app
+WORKDIR /app
+
+RUN gem install bundler
+RUN bundle install
+CMD /app/bin/ssh_scan
