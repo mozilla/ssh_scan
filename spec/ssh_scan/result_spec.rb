@@ -31,10 +31,7 @@ describe SSHScan::Result do
     expect(result.languages_server_to_client).to eql([])
     expect(result.start_time).to be_nil
     expect(result.end_time).to be_nil
-    expect{ result.scan_duration }.to raise_error(
-      RuntimeError,
-      "Cannot calculate scan duration without start_time set"
-    )
+    expect(result.scan_duration).to be_nil
   end
 
   context "when setting IP" do 
@@ -44,6 +41,7 @@ describe SSHScan::Result do
 
       result.ip = "192.168.1.1"
       expect(result.ip).to eql("192.168.1.1")
+      expect(result.to_hash).to be_kind_of(Hash)
     end
 
     it "should prevent setting result.ip to invalid values" do
@@ -73,6 +71,7 @@ describe SSHScan::Result do
 
       result.port = 31337
       expect(result.port).to eql(31337)
+      expect(result.to_hash).to be_kind_of(Hash)
     end
 
     it "should prevent setting result.port to invalid values" do
@@ -106,6 +105,7 @@ describe SSHScan::Result do
       result.banner = banner
       expect(result.banner).to be_kind_of(SSHScan::Banner)
       expect(result.banner.to_s).to eql("This is my SSH Banner")
+      expect(result.to_hash).to be_kind_of(Hash)
     end
 
     it "should prevent setting result.banner to invalid values" do
@@ -138,6 +138,7 @@ describe SSHScan::Result do
 
       result.banner = SSHScan::Banner.new("SSH-2.0-server")
       expect(result.ssh_version).to eql(2.0)
+      expect(result.to_hash).to be_kind_of(Hash)
     end
   end
 
@@ -148,6 +149,7 @@ describe SSHScan::Result do
 
       result.hostname = "bananas.example.com"
       expect(result.hostname).to eql("bananas.example.com")
+      expect(result.to_hash).to be_kind_of(Hash)
     end
   end
 
@@ -158,7 +160,7 @@ describe SSHScan::Result do
       result.set_end_time
 
       result_hash = result.to_hash
-      expect(result_hash).to be_kind_of(Hash)
+      expect(result.to_hash).to be_kind_of(Hash)
     end
 
     it "should translate the result into a valid JSON string" do
@@ -189,6 +191,7 @@ describe SSHScan::Result do
       expect(result.compliant?).to eql(compliance[:compliant])
       expect(result.compliance_recommendations).to eql(compliance[:recommendations])
       expect(result.compliance_references).to eql(compliance[:references])
+      expect(result.to_hash).to be_kind_of(Hash)
     end
   end
 
@@ -211,5 +214,23 @@ describe SSHScan::Result do
       expect(result.grade).to eql("D")
     end
   end
+
+  context "when dealing with errors" do 
+    it "should append errors " do
+      compliance = {
+        :policy => "Test Policy",
+        :compliant => true,
+        :recommendations => ["do this", "do that"],
+        :references => ["https://reference.example.com"],
+      }
+      result = SSHScan::Result.new()
+      result.set_compliance = compliance
+      result.error = "This is an error"
+
+      expect(result.to_hash).to be_kind_of(Hash)
+      expect(result.to_hash["error"]).to eql("This is an error")
+    end
+  end
+
 
 end
