@@ -142,12 +142,8 @@ module SSHScan
     end
 
     def scan_duration
-      if start_time.nil?
-        raise "Cannot calculate scan duration without start_time set"
-      end
-
-      if end_time.nil?
-        raise "Cannot calculate scan duration without end_time set"
+      if start_time.nil? || end_time.nil?
+        return nil
       end
 
       end_time - start_time
