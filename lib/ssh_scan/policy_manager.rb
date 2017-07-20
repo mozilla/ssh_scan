@@ -1,3 +1,5 @@
+require 'ssh_scan/attribute'
+
 module SSHScan
   # Policy management methods, compliance checking and recommendations.
   class PolicyManager
@@ -13,7 +15,7 @@ module SSHScan
         @result.encryption_algorithms_server_to_client
       outliers = []
       target_encryption.each do |target_enc|
-        outliers << target_enc unless @policy.encryption.include?(target_enc)
+        outliers << target_enc unless @policy.encryption_attributes.include?(SSHScan::Attribute.new(target_enc))
       end
       return outliers
     end
@@ -25,7 +27,7 @@ module SSHScan
         @result.encryption_algorithms_server_to_client
       outliers = []
       @policy.encryption.each do |encryption|
-        if target_encryption.include?(encryption) == false
+        if SSHScan.make_attributes(target_encryption).include?(SSHScan::Attribute.new(encryption)) == false
           outliers << encryption
         end
       end
@@ -39,7 +41,7 @@ module SSHScan
         @result.mac_algorithms_client_to_server
       outliers = []
       target_macs.each do |target_mac|
-        outliers << target_mac unless @policy.macs.include?(target_mac)
+        outliers << target_mac unless @policy.mac_attributes.include?(SSHScan::Attribute.new(target_mac))
       end
       return outliers
     end
@@ -52,7 +54,7 @@ module SSHScan
       outliers = []
 
       @policy.macs.each do |mac|
-        if target_macs.include?(mac) == false
+        if SSHScan.make_attributes(target_macs).include?(SSHScan::Attribute.new(mac)) == false
           outliers << mac
         end
       end
@@ -64,7 +66,7 @@ module SSHScan
       target_kexs = @result.key_algorithms
       outliers = []
       target_kexs.each do |target_kex|
-        outliers << target_kex unless @policy.kex.include?(target_kex)
+        outliers << target_kex unless @policy.kex_attributes.include?(SSHScan::Attribute.new(target_kex))
       end
       return outliers
     end
@@ -75,7 +77,7 @@ module SSHScan
       outliers = []
 
       @policy.kex.each do |kex|
-        if target_kex.include?(kex) == false
+        if SSHScan.make_attributes(target_kex).include?(SSHScan::Attribute.new(kex)) == false
           outliers << kex
         end
       end
@@ -90,7 +92,7 @@ module SSHScan
       outliers = []
       target_compressions.each do |target_compression|
         outliers << target_compression unless
-          @policy.compression.include?(target_compression)
+          @policy.compression_attributes.include?(SSHScan::Attribute.new(target_compression))
       end
       return outliers
     end
@@ -103,7 +105,7 @@ module SSHScan
       outliers = []
 
       @policy.compression.each do |compression|
-        if target_compressions.include?(compression) == false
+        if SSHScan.make_attributes(target_compressions).include?(SSHScan::Attribute.new(compression)) == false
           outliers << compression
         end
       end
