@@ -1,4 +1,5 @@
 require 'yaml'
+require 'ssh_scan/attribute'
 
 module SSHScan
   # Policy methods that deal with key exchange, macs, encryption methods,
@@ -25,6 +26,22 @@ module SSHScan
     def self.from_file(file)
       opts = YAML.load_file(file)
       self.new(opts)
+    end
+
+    def kex_attributes
+      SSHScan.make_attributes(@kex)
+    end
+
+    def mac_attributes
+      SSHScan.make_attributes(@macs)
+    end
+
+    def encryption_attributes
+      SSHScan.make_attributes(@encryption)
+    end
+
+    def compression_attributes
+      SSHScan.make_attributes(@compression)
     end
 
     # Generate a {SSHScan::Policy} object from YAML string.
