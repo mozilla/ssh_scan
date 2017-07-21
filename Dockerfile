@@ -1,11 +1,9 @@
 FROM ruby
 MAINTAINER Jonathan Claudius
-ENV PROJECT=github.com/mozilla/ssh_scan
-
 RUN mkdir /app
-ADD . /app
+COPY . /app
 WORKDIR /app
-
-RUN gem install bundler
-RUN bundle install
-CMD /app/bin/ssh_scan
+RUN apt-get update && \
+    apt-get install -y tor proxychains && \
+    gem install bundler && \
+    bundle install
