@@ -208,7 +208,7 @@ end
 
 options["sockets"].each do |socket|
   ip = socket.chomp.split(':')[0]
-  unless ip.ip_addr? || ip.fqdn?
+  unless ip.ip_addr? || ip.fqdn? || ip.end_with?(".onion")
     puts opt_parser.help
     puts "\nReason: #{socket} is not a valid target"
     exit 1

@@ -22,10 +22,6 @@ module SSHScan
     end
 
     def ip=(ip)
-      unless ip.is_a?(String) && ip.ip_addr?
-        raise ArgumentError, "Invalid attempt to set IP to a non-IP address value"
-      end
-
       @ip = ip
     end
 

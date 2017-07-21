@@ -36,7 +36,21 @@ module SSHScan
       # Start the scan timer
       result.set_start_time
 
-      if target.fqdn?
+      # If it's a .onion address, it won't resolve, so lets not try
+      if target.end_with?(".onion")
+        result.hostname = target
+
+        client = SSHScan::Client.new(
+            target, port, socks_proxy, timeout
+        )
+        client.connect
+        result.set_client_attributes(client)
+        kex_result = client.get_kex_result()
+        client.close
+        result.set_kex_result(kex_result) unless kex_result.nil?
+        result.error = client.error if client.error?
+
+      elsif target.fqdn?
         result.hostname = target
 
         # If doesn't resolve as IPv6, we'll try IPv4
