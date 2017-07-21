@@ -6,11 +6,11 @@ require 'ssh_scan/error'
 
 module SSHScan
   class Client
-    def initialize(ip, port, timeout = 3)
+    def initialize(ip, port, proxy, timeout = 3)
       @ip = ip
-      @timeout = timeout
-
       @port = port.to_i
+      @timeout = timeout
+      @proxy = proxy
       @client_banner = SSHScan::Constants::DEFAULT_CLIENT_BANNER
       @server_banner = nil
       @kex_init_raw = SSHScan::Constants::DEFAULT_KEY_INIT.to_binary_s
@@ -43,7 +43,13 @@ module SSHScan
       @error = nil
 
       begin
-        @sock = Socket.tcp(@ip, @port, connect_timeout: @timeout)
+        # Use a proxy is specified
+        if @proxy
+          @sock = @proxy.open(@ip, @port, connect_timeout: @timeout)
+        else
+          @sock = Socket.tcp(@ip, @port, connect_timeout: @timeout)
+        end
+
         @raw_server_banner = @sock.gets
       rescue SocketError => e
         @error = SSHScan::Error::ConnectionRefused.new(e.message)

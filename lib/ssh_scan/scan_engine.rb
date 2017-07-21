@@ -5,6 +5,7 @@ require 'ssh_scan/crypto'
 require 'net/ssh'
 require 'logger'
 require 'open3'
+require 'net/ssh/proxy/socks5'
 
 module SSHScan
   # Handle scanning of targets.
@@ -21,7 +22,14 @@ module SSHScan
       end
 
       timeout = opts["timeout"]
-      
+      proxy = opts["proxy"]
+      socks_proxy = nil
+
+      if proxy
+        proxy_host, proxy_port = proxy.split(":")
+        socks_proxy = Net::SSH::Proxy::SOCKS5.new(proxy_host, proxy_port)
+      end
+
       result = SSHScan::Result.new()
       result.port = port.to_i
 
@@ -34,7 +42,7 @@ module SSHScan
         # If doesn't resolve as IPv6, we'll try IPv4
         if target.resolve_fqdn_as_ipv6.nil?
           client = SSHScan::Client.new(
-            target.resolve_fqdn_as_ipv4.to_s, port, timeout
+            target.resolve_fqdn_as_ipv4.to_s, port, socks_proxy, timeout
           )
           client.connect
           result.set_client_attributes(client)
@@ -45,7 +53,7 @@ module SSHScan
         # If it does resolve as IPv6, we're try IPv6
         else
           client = SSHScan::Client.new(
-            target.resolve_fqdn_as_ipv6.to_s, port, timeout
+            target.resolve_fqdn_as_ipv6.to_s, port, socks_proxy, timeout
           )
           client.connect
           result.set_client_attributes(client)
@@ -58,7 +66,7 @@ module SSHScan
           if result.error?
             result.unset_error
             client = SSHScan::Client.new(
-              target.resolve_fqdn_as_ipv4.to_s, port, timeout
+              target.resolve_fqdn_as_ipv4.to_s, port, socks_proxy, timeout
             )
             client.connect()
             result.set_client_attributes(client)
@@ -69,7 +77,7 @@ module SSHScan
           end
         end
       else
-        client = SSHScan::Client.new(target, port, timeout)
+        client = SSHScan::Client.new(target, port, socks_proxy, timeout)
         client.connect()
         result.set_client_attributes(client)
         kex_result = client.get_kex_result()
@@ -96,6 +104,7 @@ module SSHScan
                             target,
                             :port => port,
                             :timeout => timeout,
+                            :proxy => socks_proxy,
                             :paranoid => Net::SSH::Verifiers::Null.new
                           )
         raise SSHScan::Error::ClosedConnection.new if net_ssh_session.closed?

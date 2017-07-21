@@ -76,6 +76,11 @@ scan") do |file|
     options["timeout"] = timeout.to_i
   end
 
+  opts.on("--proxy [host:port]",
+          "Host and port to use to proxy scans") do |proxy|
+    options["proxy"] = proxy
+  end
+
   opts.on("-L", "--logger [Log File Path]",
           "Enable logger") do |log_file|
     if log_file.nil?
