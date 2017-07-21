@@ -6,7 +6,7 @@ require 'ssh_scan/error'
 
 module SSHScan
   class Client
-    def initialize(ip, port, proxy, timeout = 3)
+    def initialize(ip, port, proxy = nil, timeout = 3)
       @ip = ip
       @port = port.to_i
       @timeout = timeout
