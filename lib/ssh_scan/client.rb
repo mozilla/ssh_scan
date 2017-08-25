@@ -98,6 +98,8 @@ module SSHScan
         return nil
       end
 
+      kex_exchange_init = nil
+
       begin
         Timeout::timeout(@timeout) {
           @sock.write(kex_init_raw)
