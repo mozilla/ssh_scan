@@ -1,4 +1,5 @@
 require 'socket'
+require 'timeout'
 require 'ssh_scan/constants'
 require 'ssh_scan/protocol'
 require 'ssh_scan/banner'
@@ -43,12 +44,15 @@ module SSHScan
       @error = nil
 
       begin
-        @sock = Socket.tcp(@ip, @port, connect_timeout: @timeout)
-        @raw_server_banner = @sock.gets
+        Timeout::timeout(@timeout) {
+          @sock = Socket.tcp(@ip, @port, connect_timeout: @timeout)
+          @raw_server_banner = @sock.gets
+        }
       rescue SocketError => e
         @error = SSHScan::Error::ConnectionRefused.new(e.message)
         @sock = nil
-      rescue Errno::ETIMEDOUT => e
+      rescue Errno::ETIMEDOUT,
+             Timeout::Error => e
         @error = SSHScan::Error::ConnectTimeout.new(e.message)
         @sock = nil
       rescue Errno::ECONNREFUSED => e
@@ -94,23 +98,28 @@ module SSHScan
         return nil
       end
 
+      kex_exchange_init = nil
+
       begin
-        @sock.write(kex_init_raw)
-        resp = @sock.read(4)
+        Timeout::timeout(@timeout) {
+          @sock.write(kex_init_raw)
+          resp = @sock.read(4)
 
-        if resp.nil?
-          @error = SSHScan::Error::NoKexResponse.new(
-            "service did not respond to our kex init request"
-          )
-          @sock = nil
-          return nil
-        end
+          if resp.nil?
+            @error = SSHScan::Error::NoKexResponse.new(
+              "service did not respond to our kex init request"
+            )
+            @sock = nil
+            return nil
+          end
 
-        resp += @sock.read(resp.unpack("N").first)
-        @sock.close
+          resp += @sock.read(resp.unpack("N").first)
+          @sock.close
 
-        kex_exchange_init = SSHScan::KeyExchangeInit.read(resp)
-      rescue Errno::ETIMEDOUT => e
+          kex_exchange_init = SSHScan::KeyExchangeInit.read(resp)
+        }
+      rescue Errno::ETIMEDOUT,
+             Timeout::Error => e
         @error = SSHScan::Error::ConnectTimeout.new(e.message)
         @sock = nil
         return nil
