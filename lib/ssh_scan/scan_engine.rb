@@ -107,7 +107,7 @@ module SSHScan
         net_ssh_session.close
       rescue Net::SSH::ConnectionTimeout => e
         result.error = SSHScan::Error::ConnectTimeout.new(e.message)
-      rescue Net::SSH::Disconnect => e
+      rescue Net::SSH::Disconnect, Errno::ECONNRESET => e
         result.error = SSHScan::Error::Disconnected.new(e.message)
       rescue Net::SSH::Exception => e
         if e.to_s.match(/could not settle on/)
