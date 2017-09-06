@@ -17,9 +17,6 @@ matrix:
   - rvm: 2.3.0
     env:
       - LABEL=unit_tests
-  - rvm: 2.2.0
-    env:
-      - LABEL=unit_tests
   - rvm: 2.3.0
     env:
       - LABEL=gem_integration_tests
