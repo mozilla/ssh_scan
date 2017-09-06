@@ -120,7 +120,22 @@ module SSHScan
       # Figure out what rsa or dsa fingerprints exist
       fingerprints = {}
 
-      host_keys = `ssh-keyscan -t rsa,dsa #{target} 2>/dev/null`.split
+      output = ""
+
+      begin
+        Timeout::timeout(timeout) {
+          stdin, stdout, stderr, wait_thr = Open3.popen3('ssh-keyscan', '-t', 'rsa,dsa', target)
+          output = stdout.gets(nil)
+          stdout.close
+          stderr.gets(nil)
+          stderr.close
+          exit_code = wait_thr.value
+        }
+      rescue Timeout::Error
+        #nop
+      end
+
+      host_keys = output.split
       host_keys_len = host_keys.length - 1
 
       for i in 0..host_keys_len
