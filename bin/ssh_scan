@@ -261,7 +261,7 @@ puts JSON.pretty_generate(results)
 
 if options["unit_test"] == true
   results.each do |result|
-    if result.compliant == false
+    if result["compliance"] && result["compliance"]["compliant"] == false
       exit 1 #non-zero means a false
     else
       exit 0 #non-zero means pass

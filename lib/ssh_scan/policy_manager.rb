@@ -212,10 +212,10 @@ module SSHScan
 
     def compliance_results
       {
-        :policy => @policy.name,
-        :compliant => compliant?,
-        :recommendations => recommendations,
-        :references => @policy.references,
+        "policy" => @policy.name,
+        "compliant" => compliant?,
+        "recommendations" => recommendations,
+        "references" => @policy.references,
       }
     end
   end
