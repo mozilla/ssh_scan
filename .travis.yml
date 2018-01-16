@@ -11,27 +11,30 @@ matrix:
       - LABEL=unit_tests
     after_success:
       - coveralls
-  - rvm: 2.4.1
+  - rvm: 2.5.0
     env:
       - LABEL=unit_tests
-  - rvm: 2.3.0
+  - rvm: 2.4.3
     env:
       - LABEL=unit_tests
-  - rvm: 2.3.0
+  - rvm: 2.3.6
+    env:
+      - LABEL=unit_tests
+  - rvm: 2.3.6
     env:
       - LABEL=gem_integration_tests
     script:
       - gem install ssh_scan
       - chmod 755 ./spec/ssh_scan/integration.sh
       - ./spec/ssh_scan/integration.sh
-  - rvm: 2.3.0
+  - rvm: 2.3.6
     env:
       - LABEL=src_integration_tests
     script:
       - bundle install
       - chmod 755 ./spec/ssh_scan/integration.sh
       - ./spec/ssh_scan/integration.sh
-  - rvm: 2.3.0
+  - rvm: 2.3.6
     env:
       - LABEL=docker_integration_tests
     services:
@@ -39,7 +42,7 @@ matrix:
     script:
       - docker build -t mozilla/ssh_scan .
       - docker run -it mozilla/ssh_scan /app/spec/ssh_scan/integration.sh
-  - rvm: 2.3.0
+  - rvm: 2.3.6
     env:
       - LABEL=docker_build_push
     services:
