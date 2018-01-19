@@ -179,18 +179,18 @@ describe SSHScan::Result do
   context "when setting compliance" do 
     it "should allow setting of the compliance information" do
       compliance = {
-        :policy => "Test Policy",
-        :compliant => true,
-        :recommendations => ["do this", "do that"],
-        :references => ["https://reference.example.com"],
+        "policy" => "Test Policy",
+        "compliant" => true,
+        "recommendations" => ["do this", "do that"],
+        "references" => ["https://reference.example.com"],
       }
       result = SSHScan::Result.new()
       result.set_compliance = compliance
 
-      expect(result.compliance_policy).to eql(compliance[:policy])
-      expect(result.compliant?).to eql(compliance[:compliant])
-      expect(result.compliance_recommendations).to eql(compliance[:recommendations])
-      expect(result.compliance_references).to eql(compliance[:references])
+      expect(result.compliance_policy).to eql(compliance["policy"])
+      expect(result.compliant?).to eql(compliance["compliant"])
+      expect(result.compliance_recommendations).to eql(compliance["recommendations"])
+      expect(result.compliance_references).to eql(compliance["references"])
       expect(result.to_hash).to be_kind_of(Hash)
     end
   end
@@ -198,19 +198,19 @@ describe SSHScan::Result do
   context "when setting grade" do 
     it "should allow setting of the grade information" do
       compliance = {
-        :policy => "Test Policy",
-        :compliant => true,
-        :recommendations => ["do this", "do that"],
-        :references => ["https://reference.example.com"],
+        "policy" => "Test Policy",
+        "compliant" => true,
+        "recommendations" => ["do this", "do that"],
+        "references" => ["https://reference.example.com"],
       }
       result = SSHScan::Result.new()
       result.set_compliance = compliance
       result.grade = "D"
 
-      expect(result.compliance_policy).to eql(compliance[:policy])
-      expect(result.compliant?).to eql(compliance[:compliant])
-      expect(result.compliance_recommendations).to eql(compliance[:recommendations])
-      expect(result.compliance_references).to eql(compliance[:references])
+      expect(result.compliance_policy).to eql(compliance["policy"])
+      expect(result.compliant?).to eql(compliance["compliant"])
+      expect(result.compliance_recommendations).to eql(compliance["recommendations"])
+      expect(result.compliance_references).to eql(compliance["references"])
       expect(result.grade).to eql("D")
     end
   end
@@ -218,10 +218,10 @@ describe SSHScan::Result do
   context "when dealing with errors" do 
     it "should append errors " do
       compliance = {
-        :policy => "Test Policy",
-        :compliant => true,
-        :recommendations => ["do this", "do that"],
-        :references => ["https://reference.example.com"],
+        "policy" => "Test Policy",
+        "compliant" => true,
+        "recommendations" => ["do this", "do that"],
+        "references" => ["https://reference.example.com"],
       }
       result = SSHScan::Result.new()
       result.set_compliance = compliance
