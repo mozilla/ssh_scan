@@ -6,9 +6,9 @@ describe SSHScan::Grader do
   it "should provide an F grade" do
     result = SSHScan::Result.new()
     result.set_compliance = {
-      :policy => "Test Result",
-      :compliant => false,
-      :recommendations => [
+      "policy" => "Test Result",
+      "compliant" => false,
+      "recommendations" => [
         "Add these Key Exchange Algos: ecdh-sha2-nistp521,ecdh-sha2-nistp384,diffie-hellman-group-exchange-sha256",
         "Add these MAC Algos: hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,umac-128@openssh.com",
         "Add these Encryption Ciphers: aes256-gcm@openssh.com,aes128-gcm@openssh.com",
@@ -24,9 +24,9 @@ describe SSHScan::Grader do
   it "should provide an F grade" do
     result = SSHScan::Result.new()
     result.set_compliance = {
-      :policy => "Test Result",
-      :compliant => false,
-      :recommendations => [
+      "policy" => "Test Result",
+      "compliant" => false,
+      "recommendations" => [
         "Add these Key Exchange Algos: ecdh-sha2-nistp521,ecdh-sha2-nistp384,diffie-hellman-group-exchange-sha256",
         "Add these MAC Algos: hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,umac-128@openssh.com",
         "Add these Encryption Ciphers: aes256-gcm@openssh.com,aes128-gcm@openssh.com",
@@ -40,9 +40,9 @@ describe SSHScan::Grader do
   it "should provide an D grade" do
     result = SSHScan::Result.new()
     result.set_compliance = {
-      :policy => "Test Result",
-      :compliant => false,
-      :recommendations => [
+      "policy" => "Test Result",
+      "compliant" => false,
+      "recommendations" => [
         "Add these Key Exchange Algos: ecdh-sha2-nistp521,ecdh-sha2-nistp384,diffie-hellman-group-exchange-sha256",
         "Add these MAC Algos: hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,umac-128@openssh.com",
         "Add these Encryption Ciphers: aes256-gcm@openssh.com,aes128-gcm@openssh.com",
@@ -55,9 +55,9 @@ describe SSHScan::Grader do
   it "should provide an C grade" do
     result = SSHScan::Result.new()
     result.set_compliance = {
-      :policy => "Test Result",
-      :compliant => false,
-      :recommendations => [
+      "policy" => "Test Result",
+      "compliant" => false,
+      "recommendations" => [
         "Add these Key Exchange Algos: ecdh-sha2-nistp521,ecdh-sha2-nistp384,diffie-hellman-group-exchange-sha256",
         "Add these MAC Algos: hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,umac-128@openssh.com",
       ]
@@ -69,9 +69,9 @@ describe SSHScan::Grader do
   it "should provide an B grade" do
     result = SSHScan::Result.new()
     result.set_compliance = {
-      :policy => "Test Result",
-      :compliant => false,
-      :recommendations => [
+      "policy" => "Test Result",
+      "compliant" => false,
+      "recommendations" => [
         "Add these Key Exchange Algos: ecdh-sha2-nistp521,ecdh-sha2-nistp384,diffie-hellman-group-exchange-sha256",
       ]
     }
@@ -82,9 +82,9 @@ describe SSHScan::Grader do
   it "should provide an A grade" do
     result = SSHScan::Result.new()
     result.set_compliance = {
-      :policy => "Test Result",
-      :compliant => false,
-      :recommendations => [
+      "policy" => "Test Result",
+      "compliant" => false,
+      "recommendations" => [
       ]
     }
     grader = SSHScan::Grader.new(result)
