@@ -182,19 +182,19 @@ module SSHScan
     end
 
     def compliance_policy
-      @compliance[:policy]
+      @compliance["policy"]
     end
 
     def compliant?
-      @compliance[:compliant]
+      @compliance["compliant"]
     end
 
     def compliance_references
-      @compliance[:references]
+      @compliance["references"]
     end
 
     def compliance_recommendations
-      @compliance[:recommendations]
+      @compliance["recommendations"]
     end
 
     def set_client_attributes(client)
