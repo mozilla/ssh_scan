@@ -124,7 +124,7 @@ module SSHScan
 
       begin
         Timeout::timeout(timeout) {
-          stdin, stdout, stderr, wait_thr = Open3.popen3('ssh-keyscan', '-t', 'rsa,dsa', target)
+          stdin, stdout, stderr, wait_thr = Open3.popen3('ssh-keyscan', '-t', 'rsa,dsa', '-p', port.to_s, target)
           output = stdout.gets(nil)
           stdout.close
           stderr.gets(nil)
