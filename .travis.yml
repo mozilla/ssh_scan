@@ -11,16 +11,23 @@ matrix:
       - LABEL=unit_tests
     after_success:
       - coveralls
-  - rvm: 2.5.0
+  - rvm: 2.5.1
     env:
       - LABEL=unit_tests
-  - rvm: 2.4.3
-    env:
-      - LABEL=unit_tests
-  - rvm: 2.3.6
+  - rvm: 2.4.4
     env:
       - LABEL=unit_tests
   - rvm: 2.3.6
+    env:
+      - LABEL=unit_tests
+  - rvm: 2.5.1
+    env:
+      - LABEL=gem_integration_tests
+    script:
+      - gem install ssh_scan
+      - chmod 755 ./spec/ssh_scan/integration.sh
+      - ./spec/ssh_scan/integration.sh
+  - rvm: 2.4.4
     env:
       - LABEL=gem_integration_tests
     script:
