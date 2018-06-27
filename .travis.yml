@@ -34,14 +34,14 @@ matrix:
       - gem install ssh_scan
       - chmod 755 ./spec/ssh_scan/integration.sh
       - ./spec/ssh_scan/integration.sh
-  - rvm: 2.3.6
+  - rvm: 2.5.0
     env:
       - LABEL=src_integration_tests
     script:
       - bundle install
       - chmod 755 ./spec/ssh_scan/integration.sh
       - ./spec/ssh_scan/integration.sh
-  - rvm: 2.3.6
+  - rvm: 2.5.0
     env:
       - LABEL=docker_integration_tests
     services:
@@ -49,17 +49,11 @@ matrix:
     script:
       - docker build -t mozilla/ssh_scan .
       - docker run -it mozilla/ssh_scan /app/spec/ssh_scan/integration.sh
-  - rvm: 2.3.6
+  - rvm: 2.5.0
     env:
-      - LABEL=docker_build_push
+      - LABEL=docker_build_and_push
     services:
       - docker
     script:
-      - docker build -t mozilla/ssh_scan .
-      - >
-          if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then \
-            docker login -u="$DOCKER_USER" -p="$DOCKER_PASS" ;\
-            docker push mozilla/ssh_scan:latest ;\
-          else \
-            exit 0 ;\
-          fi
+      - chmod u+x ./build_and_deploy_to_dockerhub.sh
+      - ./build_and_deploy_to_dockerhub.sh
