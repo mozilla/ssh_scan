@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     ssh_scan (0.0.34)
-      bindata (~> 2.0)
+      bindata (= 2.4.3)
       net-ssh (= 4.2.0)
       netaddr (= 1.5.1)
       sshkey
@@ -34,7 +34,7 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
     rainbow (3.0.0)
-    rake (10.5.0)
+    rake (12.3.1)
     rspec (3.7.0)
       rspec-core (~> 3.7.0)
       rspec-expectations (~> 3.7.0)
@@ -77,10 +77,10 @@ PLATFORMS
 
 DEPENDENCIES
   coveralls
-  pry
-  rake (~> 10.3)
-  rspec (~> 3.0)
-  rspec-its (~> 1.2)
+  pry (= 0.11.3)
+  rake (= 12.3.1)
+  rspec (= 3.7.0)
+  rspec-its (= 1.2.0)
   rubocop
   ssh_scan!
 
