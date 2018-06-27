@@ -27,14 +27,14 @@ matrix:
       - gem install ssh_scan
       - chmod 755 ./spec/ssh_scan/integration.sh
       - ./spec/ssh_scan/integration.sh
-  - rvm: 2.3.6
+  - rvm: 2.5.0
     env:
       - LABEL=src_integration_tests
     script:
       - bundle install
       - chmod 755 ./spec/ssh_scan/integration.sh
       - ./spec/ssh_scan/integration.sh
-  - rvm: 2.3.6
+  - rvm: 2.5.0
     env:
       - LABEL=docker_integration_tests
     services:
