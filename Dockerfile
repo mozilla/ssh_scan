@@ -1,4 +1,4 @@
-FROM ruby
+FROM ruby:alpine
 MAINTAINER Jonathan Claudius
 ENV PROJECT=github.com/mozilla/ssh_scan
 
@@ -6,6 +6,13 @@ RUN mkdir /app
 ADD . /app
 WORKDIR /app
 
-RUN gem install bundler
-RUN bundle install
+# required for ssh-keyscan
+RUN apk --update add openssh-client
+
+RUN apk --update add --virtual build-dependencies ruby-dev build-base && \
+    gem install bundler --no-ri --no-rdoc && \
+    bundle install && \
+    apk del build-dependencies && \
+    rm -rf /var/cache/apk/*
+
 CMD /app/bin/ssh_scan
