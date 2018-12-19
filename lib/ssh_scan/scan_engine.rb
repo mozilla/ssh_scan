@@ -96,7 +96,7 @@ module SSHScan
                             target,
                             :port => port,
                             :timeout => timeout,
-                            :paranoid => Net::SSH::Verifiers::Null.new
+                            :paranoid => false
                           )
         raise SSHScan::Error::ClosedConnection.new if net_ssh_session.closed?
         auth_session = Net::SSH::Authentication::Session.new(
