@@ -20,9 +20,9 @@ chmod 755 ./spec/ssh_scan/integration.sh
 $SSH_SCAN_BINARY -t ssh.mozilla.com > /dev/null
 if [ $? -eq 0 ]
 then
-  echo "Integration Test #1: Pass"
+  echo "Integration Test #1: Pass (Basic)"
 else
-  echo "Integration Test #1: Fail"
+  echo "Integration Test #1: Fail (Basic)"
   exit 1
 fi
 
@@ -30,9 +30,9 @@ fi
 $SSH_SCAN_BINARY -t ssh.mozilla.com -p 22 > /dev/null
 if [ $? -eq 0 ]
 then
-  echo "Integration Test #2: Pass"
+  echo "Integration Test #2: Pass (Basic + Port)"
 else
-  echo "Integration Test #2: Fail"
+  echo "Integration Test #2: Fail (Basic + Port)"
   exit 1
 fi
 
@@ -40,9 +40,9 @@ fi
 $SSH_SCAN_BINARY -t github.com -p 22 -o output.json
 if [ $? -eq 0 ]
 then
-  echo "Integration Test #3: Pass"
+  echo "Integration Test #3: Pass (Basic + File Output)"
 else
-  echo "Integration Test #3: Fail"
+  echo "Integration Test #3: Fail (Basic + File Output)"
   exit 1
 fi
 
@@ -52,20 +52,20 @@ echo "github.com" >> input.txt
 $SSH_SCAN_BINARY -t github.com -p 22 -f input.txt > /dev/null
 if [ $? -eq 0 ]
 then
-  echo "Integration Test #4: Pass"
+  echo "Integration Test #4: Pass (Basic + File Input)"
 else
-  echo "Integration Test #4: Fail"
+  echo "Integration Test #4: Fail (Basic + File Input)"
   exit 1
 fi
 
-# Integration Test #5 (File Input + File Output)
+# Integration Test #5 (File Input + File Output Rescan)
 $SSH_SCAN_BINARY -t github.com -p 22 -o output.json
 $SSH_SCAN_BINARY -O output.json -o rescan_output.json
 if [ $? -eq 0 ]
 then
-  echo "Integration Test #5: Pass"
+  echo "Integration Test #5: Pass (File Input + File Output Rescan)"
 else
-  echo "Integration Test #5: Fail"
+  echo "Integration Test #5: Fail (File Input + File Output Rescan)"
   exit 1
 fi
 
@@ -73,8 +73,8 @@ fi
 $SSH_SCAN_BINARY -h > /dev/null
 if [ $? -eq 0 ]
 then
-  echo "Integration Test #6: Pass"
+  echo "Integration Test #6: Pass (Help Output)"
 else
-  echo "Integration Test #6: Fail"
+  echo "Integration Test #6: Fail (Help Output)"
   exit 1
 fi

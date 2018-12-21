@@ -7,14 +7,18 @@ require 'json'
 require 'netaddr'
 require 'optparse'
 require 'ssh_scan'
+require 'logger'
 
 #Default options
 options = {
-  :sockets => [],
-  :policy => File.expand_path("../../policies/mozilla_modern.yml", __FILE__),
-  :unit_test => false,
-  :timeout => 2,
-  :threads => 5,
+  "sockets" => [],
+  "policy" => File.expand_path("../../policies/mozilla_modern.yml", __FILE__),
+  "unit_test" => false,
+  "timeout" => 2,
+  "threads" => 5,
+  "verbosity" => nil,
+  "logger" => Logger.new(STDERR),
+  "fingerprint_database" => "./fingerprints.db"
 }
 
 target_parser = SSHScan::TargetParser.new()
@@ -24,9 +28,10 @@ opt_parser = OptionParser.new do |opts|
                 "Usage: ssh_scan [options]"
 
   opts.on("-t", "--target [IP/Range/Hostname]", Array,
-          "IP/Ranges/Hostname to scan") do |ips|
-    ips.each do |ip|
-      options[:sockets] += target_parser.enumerateIPRange(ip)
+          "IP/Ranges/Hostname to scan") do |sockets|
+    sockets.each do |socket|
+      ip, port = socket.chomp.split(':')
+      options["sockets"] += target_parser.enumerateIPRange(ip, port)
     end
   end
 
@@ -39,15 +44,23 @@ opt_parser = OptionParser.new do |opts|
     File.open(file).each do |line|
       line.chomp.split(',').each do |socket|
         ip, port = socket.chomp.split(':')
-        port = port.nil? ? 22 : port
-        options[:sockets] += target_parser.enumerateIPRange(ip, port)
+        options["sockets"] += target_parser.enumerateIPRange(ip, port)
       end
     end
   end
 
   opts.on("-T", "--timeout [seconds]",
           "Timeout per connect after which ssh_scan gives up on the host") do |timeout|
-    options[:timeout] = timeout.to_i
+    options["timeout"] = timeout.to_i
+  end
+
+  opts.on("-L", "--logger [Log File Path]",
+          "Enable logger") do |log_file|
+    if log_file.nil?
+      options["logger"] = Logger.new(STDERR)
+    else
+      options["logger"] = Logger.new $stdout.reopen(log_file, "w")
+    end
   end
 
   opts.on("-O", "--from_json [FilePath]",
@@ -60,7 +73,7 @@ opt_parser = OptionParser.new do |opts|
     json = file.read
     parsed_json = JSON.parse(json)
     parsed_json.each do |host|
-      options[:sockets] += target_parser.enumerateIPRange(host['ip'], host['port'])
+      options["sockets"] += target_parser.enumerateIPRange(host['ip'], host['port'])
     end
   end
 
@@ -69,31 +82,68 @@ opt_parser = OptionParser.new do |opts|
     $stdout.reopen(file, "w")
   end
 
-  opts.on("-p", "--port [PORT]",
-          "Port (Default: 22)") do |port|
-    socket = options[:sockets].shift
-    ip = socket.chomp.split(':').shift
-    options[:sockets] += target_parser.enumerateIPRange(ip, port)
+  opts.on("-p", "--port [PORT]", Array,
+          "Port (Default: 22)") do |ports|
+    temp = []
+    options["sockets"].each do |socket|
+      ports.each do |port|
+        ip, old_port = socket.chomp.split(':')
+        if !old_port.nil?
+          puts "Specifying port simultaneously with -t and -p is not allowed. Please fix this and try again"
+          exit 1
+        end
+        temp += target_parser.enumerateIPRange(ip, port)
+      end
+    end
+    options["sockets"] = temp
   end
 
   opts.on("-P", "--policy [FILE]",
           "Custom policy file (Default: Mozilla Modern)") do |policy|
-    options[:policy] = policy
+    options["policy"] = policy
   end
 
   opts.on("--threads [NUMBER]",
           "Number of worker threads (Default: 5)") do |threads|
-    options[:threads] = threads.to_i
+    options["threads"] = threads.to_i
+  end
+
+  opts.on("--fingerprint-db [FILE]",
+          "File location of fingerprint database (Default: ./fingerprints.db)") do |fingerprint_db|
+    options["fingerprint_database"] = fingerprint_db
+  end
+
+  opts.on("--suppress-update-status", "Do not check for updates") do
+    options["suppress_update_status"] = true
   end
 
   opts.on("-u", "--unit-test [FILE]",
           "Throw appropriate exit codes based on compliance status") do
-    options[:unit_test] = true
+    options["unit_test"] = true
+  end
+
+  opts.on("-V", "--verbosity",
+          "Set the logger level (Accepted Params: INFO, DEBUG, WARN, ERROR, FATAL)") do |verbosity|
+    options["logger"].level = case options["verbosity"]
+      when "INFO" then Logger::INFO
+      when "DEBUG" then Logger::DEBUG
+      when "WARN" then Logger::WARN
+      when "ERROR" then Logger::ERROR
+      when "FATAL" then Logger::FATAL
+      else
+        puts "Can't convert #{options["verbosity"]} to any of the Logger level constants"
+        exit
+    end
   end
 
   opts.on("-v", "--version",
           "Display just version info") do
     puts SSHScan::VERSION
+    exit
+  end
+
+  opts.on("-l", "--listen", "Listen and serve API requests") do
+    SSHScan::API.run!
     exit
   end
 
@@ -108,6 +158,7 @@ opt_parser = OptionParser.new do |opts|
     puts "  ssh_scan -o output.json"
     puts "  ssh_scan -O output.json -o rescan_output.json"
     puts "  ssh_scan -t 192.168.1.1 -p 22222"
+    puts "  ssh_scan -t 192.168.1.1 -p 22222 -L output.log -V INFO"
     puts "  ssh_scan -t 192.168.1.1 -P custom_policy.yml"
     puts "  ssh_scan -t 192.168.1.1 --unit-test -P custom_policy.yml"
     puts ""
@@ -117,13 +168,13 @@ end
 
 opt_parser.parse!
 
-if options[:sockets].nil?
+if options["sockets"].nil?
   puts opt_parser.help
   puts "\nReason: no target specified"
   exit 1
 end
 
-options[:sockets].each do |socket|
+options["sockets"].each do |socket|
   ip, port = socket.chomp.split(':')
   unless ip.ip_addr? || ip.fqdn?
     puts opt_parser.help
@@ -132,7 +183,7 @@ options[:sockets].each do |socket|
   end
 end
 
-options[:sockets].each do |socket|
+options["sockets"].each do |socket|
   ip, port = socket.chomp.split(':')
   unless (0..65535).include?(port.to_i)
     puts opt_parser.help
@@ -141,13 +192,29 @@ options[:sockets].each do |socket|
   end
 end
 
-unless File.exists?(options[:policy])
+unless File.exists?(options["policy"])
   puts opt_parser.help
   puts "\nReason: policy file supplied is not a file"
   exit 1
 end
 
-options[:policy_file] = SSHScan::Policy.from_file(options[:policy])
+# Check to see if we're running the latest released version
+if !options["suppress_update_status"]
+  update = SSHScan::Update.new
+  if update.newer_gem_available?
+    options["logger"].warn("You're NOT using the latest version of ssh_scan, try 'gem update ssh_scan' to get the latest")
+  else
+    if update.errors.size > 0
+      update.errors.each do |error|
+        options["logger"].error(error)
+      end
+    else
+      options["logger"].info("You're using the latest version of ssh_scan #{SSHScan::VERSION}")
+    end
+  end
+end
+
+options["policy_file"] = SSHScan::Policy.from_file(options["policy"])
 
 # Perform scan and get results
 scan_engine = SSHScan::ScanEngine.new()
@@ -155,7 +222,7 @@ results = scan_engine.scan(options)
 
 puts JSON.pretty_generate(results)
 
-if options[:unit_test] == true
+if options["unit_test"] == true
   results.each do |result|
     if result["compliance"] &&
        result["compliance"][:compliant] == false

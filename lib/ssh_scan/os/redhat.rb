@@ -8,6 +8,10 @@ module SSHScan
       def cpe
         "o:redhat:redhat"
       end
+
+      def version
+        nil
+      end
     end
   end
 end

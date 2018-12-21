@@ -25,6 +25,18 @@ module SSHScan
       rescue Errno::ECONNREFUSED => e
         @error = SSHScan::Error::ConnectionRefused.new(e.message)
         @sock = nil
+      rescue Errno::ENETUNREACH => e
+        @error = SSHScan::Error::ConnectionRefused.new(e.message)
+        @sock = nil
+       rescue Errno::ECONNRESET => e
+        @error = SSHScan::Error::ConnectionRefused.new(e.message)
+        @sock = nil
+      rescue Errno::EACCES => e
+        @error = SSHScan::Error::ConnectionRefused.new(e.message)
+        @sock = nil
+      rescue Errno::EHOSTUNREACH => e
+        @error = SSHScan::Error::ConnectionRefused.new(e.message)
+        @sock = nil
       else
         @raw_server_banner = @sock.gets
 
@@ -52,27 +64,39 @@ module SSHScan
       end
 
       # Assemble and print results
-      result[:server_banner] = @server_banner
+      result[:server_banner] = @server_banner.to_s
       result[:ssh_version] = @server_banner.ssh_version
       result[:os] = @server_banner.os_guess.common
       result[:os_cpe] = @server_banner.os_guess.cpe
       result[:ssh_lib] = @server_banner.ssh_lib_guess.common
       result[:ssh_lib_cpe] = @server_banner.ssh_lib_guess.cpe
 
-      @sock.write(kex_init_raw)
-      resp = @sock.read(4)
+      begin
+        @sock.write(kex_init_raw)
+        resp = @sock.read(4)
 
-      if resp.nil?
-        @error = SSHScan::Error::NoKexResponse.new("service did not respond to our kex init request")
+        if resp.nil?
+          result[:error] = SSHScan::Error::NoKexResponse.new("service did not respond to our kex init request")
+          @sock = nil
+          return result
+        end
+
+        resp += @sock.read(resp.unpack("N").first)
+        @sock.close
+
+        kex_exchange_init = SSHScan::KeyExchangeInit.read(resp)
+        result.merge!(kex_exchange_init.to_hash)
+      rescue Errno::ETIMEDOUT => e
+        @error = SSHScan::Error::ConnectTimeout.new(e.message)
         @sock = nil
-        return result
+      rescue Errno::ECONNREFUSED,
+             Errno::ENETUNREACH,
+             Errno::ECONNRESET,
+             Errno::EACCES,
+             Errno::EHOSTUNREACH => e
+        result[:error] = SSHScan::Error::NoKexResponse.new("service did not respond to our kex init request")
+        @sock = nil
       end
-      
-      resp += @sock.read(resp.unpack("N").first)
-      @sock.close
-
-      kex_exchange_init = SSHScan::KeyExchangeInit.read(resp)
-      result.merge!(kex_exchange_init.to_hash)
 
       return result
     end

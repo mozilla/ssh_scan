@@ -89,6 +89,8 @@ module SSHScan
     end
 
     def out_of_policy_auth_methods
+      return [] if @result["auth_methods"].nil?
+
       target_auth_methods = @result["auth_methods"]
       outliers = []
 
@@ -102,6 +104,16 @@ module SSHScan
       return outliers
     end
 
+    def out_of_policy_ssh_version
+      target_ssh_version = @result[:ssh_version]
+      if @policy.ssh_version
+        if target_ssh_version < @policy.ssh_version
+          return true
+        end
+      end
+      return false
+    end
+
     def compliant?
       out_of_policy_encryption.empty? &&
       out_of_policy_macs.empty? &&
@@ -111,7 +123,8 @@ module SSHScan
       missing_policy_macs.empty? &&
       missing_policy_kex.empty? &&
       missing_policy_compression.empty? &&
-      out_of_policy_auth_methods.empty?
+      out_of_policy_auth_methods.empty? &&
+      out_of_policy_ssh_version
     end
 
     def recommendations
@@ -129,6 +142,10 @@ module SSHScan
       recommendations << "Remove these Encryption Ciphers: #{out_of_policy_encryption.join(", ")}" unless out_of_policy_encryption.empty?
       recommendations << "Remove these Compression Algos: #{out_of_policy_compression.join(", ")}" unless out_of_policy_compression.empty?
       recommendations << "Remove these Authentication Methods: #{out_of_policy_auth_methods.join(", ")}" unless out_of_policy_auth_methods.empty?
+
+      # Update these items to be compliant
+      recommendations << "Update your ssh version to: #{@policy.ssh_version}" if out_of_policy_ssh_version
+
       return recommendations
     end
 

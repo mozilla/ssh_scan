@@ -3,9 +3,13 @@ require 'string_ext'
 
 module SSHScan
   class TargetParser
-    def enumerateIPRange(ip, port = "22")
+    def enumerateIPRange(ip,port)
       if ip.fqdn?
-        socket = ip.concat(":").concat(port.to_s)
+        if port.nil?
+          socket = ip
+        else
+          socket = ip.concat(":").concat(port.to_s)
+        end
         return [socket]
       else
         if ip.include? "-"
@@ -14,17 +18,25 @@ module SSHScan
           lower = NetAddr::CIDR.create(octets.join('.') + "." + range[0])
           upper = NetAddr::CIDR.create(octets.join('.') + "." + range[1])
           ip_array = NetAddr.range(lower, upper,:Inclusive => true)
-          ip_array.map! { |ip| ip.concat(":").concat(port.to_s) }
+          if !port.nil?
+            ip_array.map! { |ip| ip.concat(":").concat(port.to_s) }
+          end
           return ip_array
         elsif ip.include? "/"
           cidr = NetAddr::CIDR.create(ip)
           ip_array = cidr.enumerate
           ip_array.delete(cidr.network)
           ip_array.delete(cidr.last)
-          ip_array.map! { |ip| ip.concat(":").concat(port.to_s) }
+          if !port.nil?
+            ip_array.map! { |ip| ip.concat(":").concat(port.to_s) }
+          end
           return ip_array
         else
-          socket = ip.concat(":").concat(port.to_s)
+          if port.nil?
+            socket = ip
+          else
+            socket = ip.concat(":").concat(port.to_s)
+          end
           return [socket]
         end
       end

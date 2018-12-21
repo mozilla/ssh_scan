@@ -1,0 +1,12 @@
+#!/usr/bin/env ruby
+$:.unshift File.join(File.dirname(__FILE__), "../lib")
+
+require 'ssh_scan'
+
+opts = {
+  "server" => "192.168.10.37",
+  "port" => 8000
+}
+
+worker = SSHScan::Worker.new({:server => "192.168.10.37", :port => 8000})
+worker.run!
