@@ -10,7 +10,7 @@ WORKDIR /app
 RUN apk --update add openssh-client
 
 RUN apk --update add --virtual build-dependencies ruby-dev build-base && \
-    gem install bundler --no-document --no-rdoc && \
+    gem install bundler && \
     bundle install && \
     apk del build-dependencies && \
     rm -rf /var/cache/apk/*
