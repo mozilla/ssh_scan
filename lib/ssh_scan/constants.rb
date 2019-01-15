@@ -50,43 +50,5 @@ d6374722c6165733235362d63747200000021686d61632d6d6435\
 00021686d61632d6d64352c686d61632d736861312c686d61632d\
 726970656d64313630000000046e6f6e65000000046e6f6e65000\
 000000000000000000000006e05b3b4".freeze
-
-    CONTRIBUTE_JSON = {
-      :name => "ssh_scan api",
-      :description => "An api for performing ssh compliance \
-and policy scanning",
-      :repository => {
-        :url => "https://github.com/mozilla/ssh_scan",
-        :tests => "https://travis-ci.org/mozilla/ssh_scan",
-      },
-      :participate => {
-        :home => "https://github.com/mozilla/ssh_scan",
-        :docs => "https://github.com/mozilla/ssh_scan",
-        :irc => "irc://irc.mozilla.org/#infosec",
-        :irc_contacts => [
-          "claudijd",
-          "pwnbus",
-          "kang",
-        ],
-        :gitter => "https://gitter.im/mozilla-ssh_scan/Lobby",
-        :gitter_contacts => [
-          "claudijd",
-          "pwnbus",
-          "kang",
-          "jinankjain",
-          "agaurav77"
-        ],
-      },
-      :bugs => {
-        :list => "https://github.com/mozilla/ssh_scan/issues",
-      },
-      :keywords => [
-        "ruby",
-        "sinatra",
-      ],
-      :urls => {
-        :dev => "https://sshscan.rubidus.com",
-      }
-    }.freeze
   end
 end
