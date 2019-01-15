@@ -1,7 +1,8 @@
 require 'socket'
 require 'ssh_scan/client'
 require 'ssh_scan/crypto'
-#require 'ssh_scan/fingerprint_database'
+require 'ssh_scan/fingerprint_database'
+require 'ssh_scan/subprocess'
 require 'net/ssh'
 require 'logger'
 require 'open3'
@@ -122,17 +123,10 @@ module SSHScan
 
       output = ""
 
-      begin
-        Timeout::timeout(timeout) {
-          stdin, stdout, stderr, wait_thr = Open3.popen3('ssh-keyscan', '-t', 'rsa,dsa', '-p', port.to_s, target)
-          output = stdout.gets(nil) if port.nil?
-          stdout.close
-          output = stderr.gets(nil) if !port.nil?
-          stderr.close
-          exit_code = wait_thr.value
-        }
-      rescue Timeout::Error
-        #nop
+      cmd = ['ssh-keyscan', '-t', 'rsa,dsa', '-p', port.to_s, target].join(" ")
+
+      Utils::Subprocess.new(cmd) do |stdout, stderr, thread|
+        output += stdout
       end
 
       host_keys = output.split
