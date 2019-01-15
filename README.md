@@ -3,7 +3,6 @@
 [![Build Status](https://secure.travis-ci.org/mozilla/ssh_scan.png)](http://travis-ci.org/mozilla/ssh_scan)
 [![Code Climate](https://codeclimate.com/github/mozilla/ssh_scan.png)](https://codeclimate.com/github/mozilla/ssh_scan)
 [![Gem Version](https://badge.fury.io/rb/ssh_scan.svg)](https://badge.fury.io/rb/ssh_scan)
-[![Join the chat at https://gitter.im/mozilla-ssh_scan/Lobby](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/mozilla-ssh_scan/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Coverage Status](https://coveralls.io/repos/github/mozilla/ssh_scan/badge.svg?branch=master)](https://coveralls.io/github/mozilla/ssh_scan?branch=master)
 
 A SSH configuration and policy scanner
