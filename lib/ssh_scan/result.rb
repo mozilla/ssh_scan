@@ -8,7 +8,7 @@ module SSHScan
   class Result
     def initialize()
       @version = SSHScan::VERSION
-      @fingerprints = nil
+      @keys = nil
       @duplicate_host_key_ips = Set.new()
       @compliance = {}
     end
@@ -157,12 +157,12 @@ module SSHScan
       @auth_methods = auth_methods
     end
 
-    def fingerprints=(fingerprints)
-      @fingerprints = fingerprints
+    def keys=(keys)
+      @keys = keys
     end
 
-    def fingerprints
-      @fingerprints
+    def keys
+      @keys
     end
 
     def duplicate_host_key_ips=(duplicate_host_key_ips)
@@ -249,7 +249,7 @@ module SSHScan
       	"languages_client_to_server" => self.languages_client_to_server,
       	"languages_server_to_client" => self.languages_server_to_client,
       	"auth_methods" => self.auth_methods,
-        "fingerprints" => self.fingerprints,
+        "keys" => self.keys,
         "duplicate_host_key_ips" => self.duplicate_host_key_ips,
       	"compliance" => @compliance,
         "start_time" => self.start_time,
