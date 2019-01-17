@@ -126,7 +126,9 @@ module SSHScan
       cmd = ['ssh-keyscan', '-t', 'rsa,dsa', '-p', port.to_s, target].join(" ")
 
       Utils::Subprocess.new(cmd) do |stdout, stderr, thread|
-        output += stdout
+        if stdout
+          output += stdout
+        end
       end
 
       host_keys = output.split
