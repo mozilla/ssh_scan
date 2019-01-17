@@ -250,7 +250,7 @@ module SSHScan
       	"languages_server_to_client" => self.languages_server_to_client,
       	"auth_methods" => self.auth_methods,
         "keys" => self.keys,
-        "duplicate_host_key_ips" => self.duplicate_host_key_ips,
+        "duplicate_host_key_ips" => self.duplicate_host_key_ips.uniq,
       	"compliance" => @compliance,
         "start_time" => self.start_time,
         "end_time" => self.end_time,
