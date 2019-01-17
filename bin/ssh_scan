@@ -8,6 +8,7 @@ require 'netaddr'
 require 'optparse'
 require 'ssh_scan'
 require 'logger'
+require 'yaml'
 
 #Default options
 options = {
@@ -18,7 +19,8 @@ options = {
   "threads" => 5,
   "verbosity" => nil,
   "logger" => Logger.new(STDERR),
-  "fingerprint_database" => ENV['HOME']+'/.ssh_scan_fingerprints.yml'
+  "fingerprint_database" => ENV['HOME']+'/.ssh_scan_fingerprints.yml',
+  "output_type" => "json"
 }
 
 # Reorder arguments before parsing
@@ -105,6 +107,11 @@ scan") do |file|
   opts.on("-o", "--output [FilePath]",
           "File to write JSON output to") do |file|
     $stdout.reopen(file, "w")
+  end
+
+  opts.on("--output-type [json, yaml]",
+          "Format to write stdout to json or yaml") do |output_type|
+    options["output_type"] = output_type
   end
 
   opts.on("-p", "--port [PORT]", Array,
@@ -225,39 +232,17 @@ unless File.exist?(options["policy"])
   exit 1
 end
 
-# Check to see if we're running the latest released version
-#if !options["suppress_update_status"]
-#  update = SSHScan::Update.new
-#  if update.newer_gem_available?
-#    options["logger"].warn(
-#      "You're NOT using the latest version of ssh_scan, try 'gem update \
-#ssh_scan' to get the latest"
-#    )
-#  else
-#    if update.errors.any?
-#      update.errors.each do |error|
-#        options["logger"].error(error)
-#      end
-#    else
-#      options["logger"].info(
-#        "You're using the latest version of ssh_scan #{SSHScan::VERSION}"
-#      )
-#    end
-#  end
-#end
-
-# Limit scope of fingerprints DB to (per scan)
-# if options["fingerprint_database"] && File.exists?(options["fingerprint_database"])
-#   File.unlink(options["fingerprint_database"])
-# end
-
 options["policy_file"] = SSHScan::Policy.from_file(options["policy"])
 
 # Perform scan and get results
 scan_engine = SSHScan::ScanEngine.new()
 results = scan_engine.scan(options)
 
-puts JSON.pretty_generate(results)
+if options["output_type"] == "yaml"
+  puts YAML.dump(results)
+elsif options["output_type"] == "json"
+  puts JSON.pretty_generate(results)
+end
 
 if options["unit_test"] == true
   results.each do |result|
