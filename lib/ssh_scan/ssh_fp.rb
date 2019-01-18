@@ -22,6 +22,8 @@ module SSHScan
     def query(fqdn)
       sshfp_records = []
 
+      # Reference: https://stackoverflow.com/questions/28867626/how-to-use-resolvdnsresourcegeneric
+      # Note: this includes some fixes too, I'll post a direct link back to the SO article.
       Resolv::DNS.open do |dns|
          all_records = dns.getresources(fqdn, Resolv::DNS::Resource::IN::ANY ) rescue nil
          all_records.each do |rr|
