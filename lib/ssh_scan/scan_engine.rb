@@ -123,7 +123,7 @@ module SSHScan
 
       output = ""
 
-      cmd = ['ssh-keyscan', '-t', 'rsa,dsa', '-p', port.to_s, target].join(" ")
+      cmd = ['ssh-keyscan', '-t', 'rsa,dsa,ecdsa,ed25519', '-p', port.to_s, target].join(" ")
 
       Utils::Subprocess.new(cmd) do |stdout, stderr, thread|
         if stdout
@@ -141,6 +141,16 @@ module SSHScan
         end
 
         if host_keys[i].eql? "ssh-rsa"
+          key = SSHScan::Crypto::PublicKey.new([host_keys[i], host_keys[i + 1]].join(" "))
+          keys.merge!(key.to_hash)
+        end
+
+        if host_keys[i].eql? "ecdsa-sha2-nistp256"
+          key = SSHScan::Crypto::PublicKey.new([host_keys[i], host_keys[i + 1]].join(" "))
+          keys.merge!(key.to_hash)
+        end
+
+        if host_keys[i].eql? "ssh-ed25519"
           key = SSHScan::Crypto::PublicKey.new([host_keys[i], host_keys[i + 1]].join(" "))
           keys.merge!(key.to_hash)
         end
