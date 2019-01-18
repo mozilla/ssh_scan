@@ -226,8 +226,8 @@ module SSHScan
       sshfp = SSHScan::SshFp.new()
       results.each do |result|
         if !result.hostname.empty?
-          sshfps = sshfp.query(result.hostname)
-          result.ssh_fps = sshfps
+          dns_keys = sshfp.query(result.hostname)
+          result.dns_keys = dns_keys
         end
       end
 

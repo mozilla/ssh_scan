@@ -165,12 +165,12 @@ module SSHScan
       @keys = keys
     end
 
-    def ssh_fps
-      @ssh_fps
+    def dns_keys
+      @dns_keys
     end
 
-    def ssh_fps=(ssh_fps)
-      @ssh_fps = ssh_fps
+    def dns_keys=(dns_keys)
+      @dns_keys = dns_keys
     end
 
     def duplicate_host_key_ips=(duplicate_host_key_ips)
@@ -258,7 +258,7 @@ module SSHScan
       	"languages_server_to_client" => self.languages_server_to_client,
       	"auth_methods" => self.auth_methods,
         "keys" => self.keys,
-        "ssh_fps" => self.ssh_fps,
+        "dns_keys" => self.dns_keys,
         "duplicate_host_key_ips" => self.duplicate_host_key_ips.uniq,
       	"compliance" => @compliance,
         "start_time" => self.start_time,
