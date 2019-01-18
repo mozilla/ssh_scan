@@ -33,7 +33,7 @@ describe SSHScan::Result do
     expect(result.start_time).to be_nil
     expect(result.end_time).to be_nil
     expect(result.scan_duration).to be_nil
-    expect(result.keys).to be_nil
+    expect(result.keys).to eq([])
   end
 
   context "when setting IP" do 
