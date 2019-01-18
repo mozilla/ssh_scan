@@ -20,6 +20,10 @@ module SSHScan
           return "rsa"
         elsif @key_string.start_with?("ssh-dss")
           return "dsa"
+        elsif @key_string.start_with?("ecdsa-sha2-nistp256")
+          return "ecdsa-sha2-nistp256"
+        elsif @key_string.start_with?("ssh-ed25519")
+          return "ed25519"
         else
           return "unknown"
         end 

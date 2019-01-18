@@ -75,4 +75,61 @@ describe SSHScan::Crypto::PublicKey do
     end
   end
 
+  context "when parsing an ecdsa key string" do
+    it "should parse it and have the right values for each attribute" do
+      key_string = "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyN" +
+                   "TYAAAAIbmlzdHAyNTYAAABBBC4gXA5naQtjcKu90NJ7A4jQ1U" +
+                   "gxYGdnndJyr4PSZJ59qJUzkoH3VgdTlseXbIZHwO4k2gNcFpa" +
+                   "Mq5gqVRobAwU="
+      key = SSHScan::Crypto::PublicKey.new(key_string)
+      expect(key).to be_kind_of SSHScan::Crypto::PublicKey
+      expect(key.valid?).to be true
+      expect(key.type).to eq("ecdsa-sha2-nistp256")
+      expect(key.length).to be 520
+      expect(key.fingerprint_md5).to eq("be:04:32:74:c6:63:fa:24:c3:c6:78:c2:cd:d2:3e:f4")
+      expect(key.fingerprint_sha1).to eq("00:67:e3:4d:78:2f:65:94:87:bf:54:5a:1e:92:af:67:0b:8d:b5:2c")
+      expect(key.fingerprint_sha256).to eq("EZe8ZoSwAzDOLR45H2PZ1aGGfnt59ZLrL5bwnjQwTUI=")
+      expect(key.to_hash).to eq(
+        {
+          "ecdsa-sha2-nistp256" => {
+            "fingerprints" => {
+              "md5"=>"be:04:32:74:c6:63:fa:24:c3:c6:78:c2:cd:d2:3e:f4",
+              "sha1"=>"00:67:e3:4d:78:2f:65:94:87:bf:54:5a:1e:92:af:67:0b:8d:b5:2c",
+              "sha256"=>"EZe8ZoSwAzDOLR45H2PZ1aGGfnt59ZLrL5bwnjQwTUI="
+            },
+            "length" => 520,
+            "raw" => "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBC4gXA5naQtjcKu90NJ7A4jQ1UgxYGdnndJyr4PSZJ59qJUzkoH3VgdTlseXbIZHwO4k2gNcFpaMq5gqVRobAwU=",
+          }
+        }  
+      )
+    end
+  end
+
+  context "when parsing an ed25519 key string" do
+    it "should parse it and have the right values for each attribute" do
+      key_string = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINO+ybidO9DGOb1dDwyVvGcrCD/wILFWTYtWUQZVxXwH"
+      key = SSHScan::Crypto::PublicKey.new(key_string)
+      expect(key).to be_kind_of SSHScan::Crypto::PublicKey
+      expect(key.valid?).to be true
+      expect(key.type).to eq("ed25519")
+      expect(key.length).to be 256
+      expect(key.fingerprint_md5).to eq("0f:db:50:54:15:22:b3:6f:31:7c:ee:22:23:77:bc:77")
+      expect(key.fingerprint_sha1).to eq("32:d1:e8:50:ae:1c:cb:11:c5:09:fa:02:6e:f4:e8:dc:11:11:4c:48")
+      expect(key.fingerprint_sha256).to eq("p+P78wR61KZ4UvQZpr84EqslnRkhZ7txT1bN8vA/oHU=")
+      expect(key.to_hash).to eq(
+        {
+          "ed25519" => {
+            "fingerprints" => {
+              "md5"=>"0f:db:50:54:15:22:b3:6f:31:7c:ee:22:23:77:bc:77",
+              "sha1"=>"32:d1:e8:50:ae:1c:cb:11:c5:09:fa:02:6e:f4:e8:dc:11:11:4c:48",
+              "sha256"=>"p+P78wR61KZ4UvQZpr84EqslnRkhZ7txT1bN8vA/oHU="
+            },
+            "length" => 256,
+            "raw" => "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINO+ybidO9DGOb1dDwyVvGcrCD/wILFWTYtWUQZVxXwH",
+          }
+        }
+      )
+    end
+  end
+
 end
