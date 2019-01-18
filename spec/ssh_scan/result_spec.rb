@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'rspec'
+require 'ssh_scan/version'
 require 'ssh_scan/result'
 
 describe SSHScan::Result do
@@ -32,6 +33,7 @@ describe SSHScan::Result do
     expect(result.start_time).to be_nil
     expect(result.end_time).to be_nil
     expect(result.scan_duration).to be_nil
+    expect(result.keys).to be_nil
   end
 
   context "when setting IP" do 

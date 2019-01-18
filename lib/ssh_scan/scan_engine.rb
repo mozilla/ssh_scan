@@ -1,6 +1,6 @@
 require 'socket'
 require 'ssh_scan/client'
-require 'ssh_scan/crypto'
+require 'ssh_scan/public_key'
 require 'ssh_scan/fingerprint_database'
 require 'ssh_scan/subprocess'
 require 'net/ssh'
@@ -119,7 +119,7 @@ module SSHScan
       end
 
       # Figure out what rsa or dsa fingerprints exist
-      fingerprints = {}
+      keys = {}
 
       output = ""
 
@@ -136,31 +136,17 @@ module SSHScan
 
       for i in 0..host_keys_len
         if host_keys[i].eql? "ssh-dss"
-          pkey = SSHScan::Crypto::PublicKey.new(host_keys[i + 1])
-          fingerprints.merge!({
-            "dsa" => {
-              "known_bad" => pkey.bad_key?.to_s,
-              "md5" => pkey.fingerprint_md5,
-              "sha1" => pkey.fingerprint_sha1,
-              "sha256" => pkey.fingerprint_sha256,
-            }
-          })
+          key = SSHScan::Crypto::PublicKey.new([host_keys[i], host_keys[i + 1]].join(" "))
+          keys.merge!(key.to_hash)
         end
 
         if host_keys[i].eql? "ssh-rsa"
-          pkey = SSHScan::Crypto::PublicKey.new(host_keys[i + 1])
-          fingerprints.merge!({
-            "rsa" => {
-              "known_bad" => pkey.bad_key?.to_s,
-              "md5" => pkey.fingerprint_md5,
-              "sha1" => pkey.fingerprint_sha1,
-              "sha256" => pkey.fingerprint_sha256,
-            }
-          })
+          key = SSHScan::Crypto::PublicKey.new([host_keys[i], host_keys[i + 1]].join(" "))
+          keys.merge!(key.to_hash)
         end
       end
 
-      result.fingerprints = fingerprints
+      result.keys = keys
       result.set_end_time
 
       return result
@@ -200,12 +186,10 @@ module SSHScan
       results.each do |result|
         fingerprint_db.clear_fingerprints(result.ip)
 
-        if result.fingerprints
-          result.fingerprints.values.each do |host_key_algo|
-            host_key_algo.each do |fingerprint|
-              key, value = fingerprint
-              next if key == "known_bad"
-              fingerprint_db.add_fingerprint(value, result.ip)
+        if result.keys
+          result.keys.values.each do |host_key_algo|
+            host_key_algo['fingerprints'].values.each do |fingerprint|
+              fingerprint_db.add_fingerprint(fingerprint, result.ip)
             end
           end
         end
@@ -213,20 +197,17 @@ module SSHScan
 
       # Decorate all the results with duplicate keys
       results.each do |result|
-        if result.fingerprints
+        if result.keys
           ip = result.ip
           result.duplicate_host_key_ips = []
-          result.fingerprints.values.each do |host_key_algo|
-            host_key_algo.each do |fingerprint|
-              key, value = fingerprint
-              next if key == "known_bad"
-              fingerprint_db.find_fingerprints(value).each do |other_ip|
+          result.keys.values.each do |host_key_algo|
+            host_key_algo["fingerprints"].values.each do |fingerprint|
+              fingerprint_db.find_fingerprints(fingerprint).each do |other_ip|
                 next if ip == other_ip
                 result.duplicate_host_key_ips << other_ip
               end
             end
           end
-          result.duplicate_host_key_ips
         end
       end
 
