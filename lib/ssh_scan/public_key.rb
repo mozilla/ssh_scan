@@ -39,10 +39,11 @@ module SSHScan
 
       def fingerprint_sha1
         SSHKey.sha1_fingerprint(@key_string)
-      end    
+      end
 
       def fingerprint_sha256
-        SSHKey.sha256_fingerprint(@key_string)
+        # We're translating this to hex because the SSHKEY default isn't as useful for comparing with SSHFP records
+        Base64.decode64(SSHKey.sha256_fingerprint(@key_string)).hexify(:delim => ":")
       end
 
       def to_hash
