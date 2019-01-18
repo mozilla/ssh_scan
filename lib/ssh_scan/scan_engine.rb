@@ -3,6 +3,7 @@ require 'ssh_scan/client'
 require 'ssh_scan/public_key'
 require 'ssh_scan/fingerprint_database'
 require 'ssh_scan/subprocess'
+require 'ssh_scan/ssh_fp'
 require 'net/ssh'
 require 'logger'
 require 'open3'
@@ -218,6 +219,15 @@ module SSHScan
               end
             end
           end
+        end
+      end
+
+      # Decorate all the results with SSHFP records
+      sshfp = SSHScan::SshFp.new()
+      results.each do |result|
+        if !result.hostname.empty?
+          sshfps = sshfp.query(result.hostname)
+          result.ssh_fps = sshfps
         end
       end
 
