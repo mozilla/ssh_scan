@@ -20,7 +20,7 @@ options = {
   "verbosity" => nil,
   "logger" => Logger.new(STDERR),
   "fingerprint_database" => ENV['HOME']+'/.ssh_scan_fingerprints.yml',
-  "output_type" => "json"
+  "output_type" => nil
 }
 
 # Reorder arguments before parsing
@@ -106,7 +106,8 @@ scan") do |file|
 
   opts.on("-o", "--output [FilePath]",
           "File to write JSON output to") do |file|
-    $stdout.reopen(file, "w")
+    options["output"] = file
+    # $stdout.reopen(file, "w")
   end
 
   opts.on("--output-type [json, yaml]",
@@ -238,9 +239,23 @@ options["policy_file"] = SSHScan::Policy.from_file(options["policy"])
 scan_engine = SSHScan::ScanEngine.new()
 results = scan_engine.scan(options)
 
-if options["output_type"] == "yaml"
+if options["output_type"] == "yaml" && (options["output"].nil? || options["output"].empty?)
   puts YAML.dump(results)
-elsif options["output_type"] == "json"
+elsif options["output_type"] == "json" && (options["output"].nil? || options["output"].empty?)
+  puts JSON.pretty_generate(results)
+elsif (options["output_type"].nil? || options["output_type"].empty?) && options["output"].split(".").last.downcase == "yml"
+  open(options["output"], 'w') do |f|
+    f.puts YAML.dump(results)
+  end
+elsif (options["output_type"].nil? || options["output_type"].empty?) && options["output"].split(".").last.downcase == "json"
+  open(options["output"], 'w') do |f|
+    f.puts JSON.pretty_generate(results)
+  end
+elsif (options["output_type"].nil? || options["output_type"].empty?) && options["output"]
+  open(options["output"], 'w') do |f|
+    f.puts JSON.pretty_generate(results)
+  end
+else
   puts JSON.pretty_generate(results)
 end
 
