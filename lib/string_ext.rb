@@ -69,6 +69,31 @@ class String
     end
   end
 
+  # Stolen from: https://github.com/emonti/rbkb/blob/master/lib/rbkb/extends/string.rb
+  def hexify(opts={})
+    delim = opts[:delim]
+    pre = (opts[:prefix] || "")
+    suf = (opts[:suffix] || "")
+
+    if (rx=opts[:rx]) and not rx.kind_of? Regexp
+      raise "rx must be a regular expression for a character class"
+    end
+
+    hx = [("0".."9").to_a, ("a".."f").to_a].flatten
+
+    out=Array.new
+
+    self.each_byte do |c|
+      hc = if (rx and not rx.match c.chr)
+             c.chr
+           else
+             pre + (hx[(c >> 4)] + hx[(c & 0xf )]) + suf
+           end
+      out << (hc)
+    end
+    out.join(delim)
+  end
+
   def fqdn?
     begin
       resolve_fqdn

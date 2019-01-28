@@ -157,12 +157,20 @@ module SSHScan
       @auth_methods = auth_methods
     end
 
+    def keys
+      @keys || []
+    end
+
     def keys=(keys)
       @keys = keys
     end
 
-    def keys
-      @keys
+    def dns_keys
+      @dns_keys
+    end
+
+    def dns_keys=(dns_keys)
+      @dns_keys = dns_keys
     end
 
     def duplicate_host_key_ips=(duplicate_host_key_ips)
@@ -250,6 +258,7 @@ module SSHScan
       	"languages_server_to_client" => self.languages_server_to_client,
       	"auth_methods" => self.auth_methods,
         "keys" => self.keys,
+        "dns_keys" => self.dns_keys,
         "duplicate_host_key_ips" => self.duplicate_host_key_ips.uniq,
       	"compliance" => @compliance,
         "start_time" => self.start_time,
