@@ -243,11 +243,11 @@ if options["output_type"] == "yaml" && (options["output"].nil? || options["outpu
   puts YAML.dump(results)
 elsif options["output_type"] == "json" && (options["output"].nil? || options["output"].empty?)
   puts JSON.pretty_generate(results)
-elsif (options["output_type"].nil? || options["output_type"].empty?) && options["output"].split(".").last.downcase == "yml"
+elsif (options["output_type"].nil? || options["output_type"].empty?) && (!options["output"].nil? && options["output"].split(".").last.downcase == "yml")
   open(options["output"], 'w') do |f|
     f.puts YAML.dump(results)
   end
-elsif (options["output_type"].nil? || options["output_type"].empty?) && options["output"].split(".").last.downcase == "json"
+elsif (options["output_type"].nil? || options["output_type"].empty?) && (!options["output"].nil? && options["output"].split(".").last.downcase == "json")
   open(options["output"], 'w') do |f|
     f.puts JSON.pretty_generate(results)
   end
