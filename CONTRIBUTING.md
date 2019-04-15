@@ -27,9 +27,9 @@ inclusion, but sending a pull request is much more awesome.
 
 If you want your pull requests to be accepted, please follow the following guidelines:
 
-- [**Add tests!**](http://rspec.info/) Your patch won't be accepted (or will be delayed) if it doesn't have tests.
+- [**Add tests!**](https://rspec.info/) Your patch won't be accepted (or will be delayed) if it doesn't have tests.
 
-- [**Document any change in behaviour**](http://yardoc.org/) Make sure the README and any other
+- [**Document any change in behaviour**](https://yardoc.org/) Make sure the README and any other
   relevant documentation are kept up-to-date.
 
 - [**Create topic branches**](https://github.com/dchelimsky/rspec/wiki/Topic-Branches) Don't ask us to pull from your master branch.
@@ -37,7 +37,7 @@ If you want your pull requests to be accepted, please follow the following guide
 - [**One pull request per feature**](https://help.github.com/articles/using-pull-requests) If you want to do more than one thing, send
   multiple pull requests.
 
-- [**Send coherent history**](http://stackoverflow.com/questions/6934752/git-combining-multiple-commits-before-pushing) Make sure each individual commit in your pull
+- [**Send coherent history**](https://stackoverflow.com/questions/6934752/git-combining-multiple-commits-before-pushing) Make sure each individual commit in your pull
   request is meaningful. If you had to make multiple intermediate commits while
   developing, please squash them before sending them to us.
 
