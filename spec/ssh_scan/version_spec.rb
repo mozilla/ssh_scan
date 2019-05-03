@@ -14,7 +14,7 @@ describe SSHScan::VERSION do
   it "SSHScan::VERSION should have a number between 1-20 for each octet" do
     SSHScan::VERSION.split('.').each do |octet|
       expect(octet.to_i).to be >= 0
-      expect(octet.to_i).to be <= 40
+      expect(octet.to_i).to be <= 60
     end
   end
 end
