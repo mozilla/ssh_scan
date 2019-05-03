@@ -158,7 +158,7 @@ module SSHScan
     end
 
     def keys
-      @keys || []
+      @keys || {}
     end
 
     def keys=(keys)
