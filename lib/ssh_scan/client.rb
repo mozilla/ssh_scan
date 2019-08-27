@@ -70,6 +70,9 @@ module SSHScan
       rescue Errno::EHOSTUNREACH => e
         @error = SSHScan::Error::ConnectionRefused.new(e.message)
         @sock = nil
+      rescue Errno::ENOPROTOOPT => e
+        @error = SSHScan::Error::ConnectionRefused.new(e.message)
+        @sock = nil
       else
         if @raw_server_banner.nil?
           @error = SSHScan::Error::NoBanner.new(
