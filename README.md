@@ -89,7 +89,7 @@ Examples:
 
 ## ssh_scan as a service/api?
 
-This project is soley for ssh_scan engine/command-line usage.
+This project is solely for ssh_scan engine/command-line usage.
 
 If you would like to run ssh_scan as a service, please refer to [the ssh_scan_api project](https://github.com/mozilla/ssh_scan_api)
 
