@@ -53,7 +53,7 @@ Usage: ssh_scan [options]"
           "IP/Ranges/Hostname to scan") do |sockets|
     sockets.each do |socket|
       ip, port = socket.chomp.split(':')
-      options["sockets"] += target_parser.enumerateIPRange(ip, port)
+      options["sockets"] += target_parser.enumerateIPRange(ip)
     end
   end
 
@@ -67,7 +67,7 @@ scan") do |file|
     File.open(file).each do |line|
       line.chomp.split(',').each do |socket|
         ip, port = socket.chomp.split(':')
-        options["sockets"] += target_parser.enumerateIPRange(ip, port)
+        options["sockets"] += target_parser.enumerateIPRange(ip)
       end
     end
   end
@@ -98,9 +98,7 @@ scan") do |file|
     parsed_json = JSON.parse(json)
     parsed_json.each do |host|
       options["sockets"] += target_parser.enumerateIPRange(
-        host['ip'],
-        host['port']
-      )
+        host['ip'])
     end
   end
 
@@ -126,7 +124,7 @@ scan") do |file|
  allowed. Please fix this and try again"
           exit 1
         end
-        temp += target_parser.enumerateIPRange(ip, port)
+        temp += target_parser.enumerateIPRange(ip)
       end
     end
     options["sockets"] = temp

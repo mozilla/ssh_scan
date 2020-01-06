@@ -8,11 +8,9 @@ module SSHScan
     # @param ip [String] IP address
     # @param port [Fixnum] port
     # @return [Array] array of enumerated addresses
-    def enumerateIPRange(ip,port)
-      port = 22 if port.nil?
-
+    def enumerateIPRange(ip)
       if ip.fqdn?
-        socket = ip.concat(":").concat(port.to_s)
+        socket = ip
         return [socket]
       else
         if ip.include? "/"
@@ -27,16 +25,12 @@ module SSHScan
 
           sock_array = []
           1.upto(ip_net.len - 2) do |i|
-            sock_array << ip_net.nth(i).to_s.concat(":" + port.to_s)
+            sock_array << ip_net.nth(i).to_s
           end
 
           return sock_array
         else
-          if port.nil?
-            socket = ip
-          else
-            socket = ip.concat(":").concat(port.to_s)
-          end
+          socket = ip
           return [socket]
         end
       end
