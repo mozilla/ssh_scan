@@ -9,37 +9,28 @@ module SSHScan
     # @param port [Fixnum] port
     # @return [Array] array of enumerated addresses
     def enumerateIPRange(ip,port)
+      port = 22 if port.nil?
+
       if ip.fqdn?
-        if port.nil?
-          socket = ip
-        else
-          socket = ip.concat(":").concat(port.to_s)
-        end
+        socket = ip.concat(":").concat(port.to_s)
         return [socket]
       else
-        if ip.include? "-"
-          octets = ip.split('.')
-          range = octets.pop.split('-')
-          lower = NetAddr::CIDR.create(octets.join('.') + "." + range[0])
-          upper = NetAddr::CIDR.create(octets.join('.') + "." + range[1])
-          ip_array = NetAddr.range(lower, upper,:Inclusive => true)
-          if !port.nil?
-            ip_array.map! { |i| i.concat(":").concat(port.to_s) }
-          end
-          return ip_array
-        elsif ip.include? "/"
+        if ip.include? "/"
+          ip_net = nil
+
+          # Attempt to parse as v4
           begin
-            cidr = NetAddr::CIDR.create(ip)
-          rescue
+            ip_net = NetAddr::IPv4Net.parse(ip)
+          rescue ValidationError
             raise ArgumentError, "Invalid target: #{ip}"
           end
-          ip_array = cidr.enumerate
-          ip_array.delete(cidr.network)
-          ip_array.delete(cidr.last)
-          if !port.nil?
-            ip_array.map! { |i| i.concat(":").concat(port.to_s) }
+
+          sock_array = []
+          1.upto(ip_net.len - 2) do |i|
+            sock_array << ip_net.nth(i).to_s.concat(":" + port.to_s)
           end
-          return ip_array
+
+          return sock_array
         else
           if port.nil?
             socket = ip
