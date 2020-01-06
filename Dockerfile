@@ -9,10 +9,11 @@ WORKDIR /app
 # required for ssh-keyscan
 RUN apk --update add openssh-client
 
-RUN apk --update add --virtual build-dependencies ruby-dev build-base && \
-    gem install bundler && \
+ENV GEM_HOME /usr/local/bundle/ruby/$RUBY_VERSION
+
+RUN apk --update add --virtual build-dependencies build-base && \
     bundle install && \
-    apk del build-dependencies && \
+    apk del build-dependencies build-base && \
     rm -rf /var/cache/apk/*
 
 CMD /app/bin/ssh_scan
