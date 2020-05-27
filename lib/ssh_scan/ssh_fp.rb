@@ -22,7 +22,7 @@ module SSHScan
     def query(fqdn)
       sshfp_records = []
 
-      # try up to 3 times to resolve ssh_fp's
+      # try up to 5 times to resolve ssh_fp's
       5.times do
 
         # Reference: https://stackoverflow.com/questions/28867626/how-to-use-resolvdnsresourcegeneric
