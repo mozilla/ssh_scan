@@ -7,6 +7,7 @@ describe SSHScan::SshFp do
     it "should query the record and return fptype, algo, and hex" do
       fqdn = "myserverplace.de"
       sshfp = SSHScan::SshFp.new()
+
       expect(sshfp.query(fqdn)).to eq(
         [
           { "algo"=>"ed25519",
