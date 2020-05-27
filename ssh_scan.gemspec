@@ -33,6 +33,8 @@ Gem::Specification.new do |s|
   s.add_dependency('bindata', '2.4.3')
   s.add_dependency('netaddr', '1.5.1')
   s.add_dependency('net-ssh', '5.2.0')
+  s.add_dependency('ed25519', '1.2.4')
+  s.add_dependency('bcrypt_pbkdf', '1.0.1')
   s.add_dependency('sshkey')
   s.add_development_dependency('pry', '0.11.3')
   s.add_development_dependency('rspec', '3.7.0')
