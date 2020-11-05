@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 docker build -t mozilla/ssh_scan .
 
 if [[ "$TRAVIS_BRANCH" == "master" ]]; then
