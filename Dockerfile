@@ -1,4 +1,4 @@
-FROM ruby:alpine
+FROM ruby:2.7.2-alpine3.12
 MAINTAINER Jonathan Claudius
 ENV PROJECT=github.com/mozilla/ssh_scan
 
