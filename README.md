@@ -83,7 +83,6 @@ Examples:
   ssh_scan -t 192.168.1.1 --unit-test -P custom_policy.yml
 ```
 
-- See here for [example video](https://asciinema.org/a/7pliiw5zqhj7eqvz7q437u6vx)
 - See here for [example output](https://github.com/mozilla/ssh_scan/blob/master/examples/192.168.1.1.json)
 - See here for [example policies](https://github.com/mozilla/ssh_scan/blob/master/config/policies)
 
