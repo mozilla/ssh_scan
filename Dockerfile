@@ -2,9 +2,8 @@ FROM ruby:2.7.2-alpine3.12
 MAINTAINER Jonathan Claudius
 ENV PROJECT=github.com/mozilla/ssh_scan
 
-RUN mkdir /app
-ADD . /app
 WORKDIR /app
+ADD . /app
 
 # required for ssh-keyscan
 RUN apk --update add openssh-client
@@ -16,4 +15,4 @@ RUN apk --update add --virtual build-dependencies build-base && \
     apk del build-dependencies build-base && \
     rm -rf /var/cache/apk/*
 
-CMD /app/bin/ssh_scan
+ENTRYPOINT [ "/app/bin/ssh_scan" ]
