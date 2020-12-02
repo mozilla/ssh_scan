@@ -15,4 +15,4 @@ RUN apk --update add --virtual build-dependencies build-base && \
     apk del build-dependencies build-base && \
     rm -rf /var/cache/apk/*
 
-CMD /app/bin/ssh_scan
+ENTRYPOINT [ "/app/bin/ssh_scan" ]
