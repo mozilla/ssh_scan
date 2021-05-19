@@ -11,37 +11,44 @@ matrix:
       - LABEL=unit_tests
     after_success:
       - coveralls
-  - rvm: 2.5.8
+  - rvm: 2.6.7
     env:
       - LABEL=unit_tests
-  - rvm: 2.6.6
+  - rvm: 2.7.3
     env:
       - LABEL=unit_tests
-  - rvm: 2.7.2
+  - rvm: 3.0.1
     env:
       - LABEL=unit_tests
-  - rvm: 2.5.8
+  - rvm: 2.6.7
     env:
       - LABEL=gem_integration_tests
     script:
       - gem install ssh_scan
       - chmod 755 ./spec/ssh_scan/integration.sh
       - ./spec/ssh_scan/integration.sh
-  - rvm: 2.6.6
+  - rvm: 2.7.3
     env:
       - LABEL=gem_integration_tests
     script:
       - gem install ssh_scan
       - chmod 755 ./spec/ssh_scan/integration.sh
       - ./spec/ssh_scan/integration.sh
-  - rvm: 2.7.2
+  - rvm: 3.0.1
+    env:
+      - LABEL=gem_integration_tests
+    script:
+      - gem install ssh_scan
+      - chmod 755 ./spec/ssh_scan/integration.sh
+      - ./spec/ssh_scan/integration.sh
+  - rvm: 3.0.1
     env:
       - LABEL=src_integration_tests
     script:
       - bundle install
       - chmod 755 ./spec/ssh_scan/integration.sh
       - ./spec/ssh_scan/integration.sh
-  - rvm: 2.7.2
+  - rvm: 3.0.1
     env:
       - LABEL=docker_integration_tests
     services:
@@ -49,7 +56,7 @@ matrix:
     script:
       - docker build -t mozilla/ssh_scan .
       - docker run -it mozilla/ssh_scan /app/spec/ssh_scan/integration.sh
-  - rvm: 2.7.2
+  - rvm: 3.0.1
     env:
       - LABEL=docker_build_and_push
     services:
