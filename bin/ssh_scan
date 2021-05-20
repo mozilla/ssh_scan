@@ -4,7 +4,6 @@
 $:.unshift File.join(File.dirname(__FILE__), "../lib")
 
 require 'json'
-require 'netaddr'
 require 'optparse'
 require 'ssh_scan'
 require 'logger'
