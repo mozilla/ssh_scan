@@ -31,7 +31,7 @@ Gem::Specification.new do |s|
   s.metadata["yard.run"] = "yri" # use "yard" to build full HTML docs
 
   s.add_dependency('bindata', '2.4.3')
-  s.add_dependency('netaddr', '1.5.1')
+  s.add_dependency('netaddr', '2.0.4')
   s.add_dependency('net-ssh', '5.2.0')
   s.add_dependency('ed25519', '1.2.4')
   s.add_dependency('bcrypt_pbkdf', '1.0.1')
