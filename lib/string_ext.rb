@@ -55,7 +55,11 @@ class String
   end
 
   def resolve_fqdn
-    TCPSocket.gethostbyname(self)[3]
+    begin
+      IPSocket.getaddress(self)
+    rescue SocketError
+      nil # Can return anything you want here
+    end
   end
 
   def resolve_ptr(timeout = 3)
