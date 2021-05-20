@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Path setting slight of hand
-# $:.unshift File.join(File.dirname(__FILE__), "../lib")
+$:.unshift File.join(File.dirname(__FILE__), "../lib")
 
 require 'json'
 require 'optparse'
