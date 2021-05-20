@@ -41,7 +41,7 @@ matrix:
       - gem install ssh_scan
       - chmod 755 ./spec/ssh_scan/integration.sh
       - ./spec/ssh_scan/integration.sh
-  - rvm: 3.0.1
+  - rvm: 2.7.3
     env:
       - LABEL=src_integration_tests
     script:
