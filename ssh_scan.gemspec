@@ -32,7 +32,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency('bindata', '2.4.3')
   s.add_dependency('netaddr', '2.0.4')
-  s.add_dependency('net-ssh', '5.2.0')
+  s.add_dependency('net-ssh', '6.0.2')
   s.add_dependency('ed25519', '1.2.4')
   s.add_dependency('bcrypt_pbkdf', '1.0.1')
   s.add_dependency('sshkey')
