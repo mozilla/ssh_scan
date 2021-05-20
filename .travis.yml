@@ -6,20 +6,6 @@ before_install:
   - git submodule update --init --recursive
 matrix:
   include:
-  - rvm: ruby-head
-    env:
-      - LABEL=unit_tests
-    after_success:
-      - coveralls
-  - rvm: 2.6.7
-    env:
-      - LABEL=unit_tests
-  - rvm: 2.7.3
-    env:
-      - LABEL=unit_tests
-  - rvm: 3.0.1
-    env:
-      - LABEL=unit_tests
   - rvm: 2.6.7
     env:
       - LABEL=gem_integration_tests
