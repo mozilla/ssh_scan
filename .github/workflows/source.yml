@@ -29,6 +29,8 @@ jobs:
       with:
         ruby-version: ${{ matrix.ruby-version }}
         bundler-cache: true
+    - name: Setup dependancies
+      run: bundle install
     - name: Set permissions for execution
       run: chmod 755 ./spec/ssh_scan/integration.sh
     - name: Ruby Integration Tests
