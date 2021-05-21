@@ -1,9 +1,9 @@
-name: Ruby
+name: Gem
 
 on: [ push ]
 
 jobs:
-  test:
+  integration-tests:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -15,5 +15,9 @@ jobs:
       with:
         ruby-version: ${{ matrix.ruby-version }}
         bundler-cache: true
-    - name: Run tests
-      run: bundle exec rake
+    - name: Install ssh_scan gem
+      run: gem install ssh_scan
+    - name: Set permissions for execution
+      run: chmod 755 ./spec/ssh_scan/integration.sh
+    - name: Ruby Integration Tests
+      run: ./spec/ssh_scan/integration.sh

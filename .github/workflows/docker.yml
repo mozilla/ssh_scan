@@ -1,0 +1,19 @@
+name: Docker
+
+on: [ push ]
+
+jobs:
+  integration-tests:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Source
+    - uses: actions/checkout@v2
+    - name: Build container image
+        uses: docker/build-push-action@v2
+        with:
+          push: false
+          tags: |
+            ${{ github.repository }} .
+    - name: Run integration tests
+      run: docker run -it mozilla/ssh_scan /app/spec/ssh_scan/integration.sh
+
