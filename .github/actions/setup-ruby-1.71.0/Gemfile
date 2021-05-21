@@ -3,4 +3,4 @@ source 'https://rubygems.org'
 
 gem "rake"
 gem "path"
-gem "json", "2.2.0"
+gem "json", ">= 2.3.0"
