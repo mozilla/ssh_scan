@@ -1,0 +1,27 @@
+name: Docker
+
+on: [push, pull_request]
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ruby-version: ['2.6', '2.7', '3.0']
+    steps:
+    - name: Run unit tests
+      run: docker run -t mozilla/ssh_scan bundle exec rake 
+  integration-tests:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Source
+      uses: actions/checkout@v2
+    - name: Build container image
+      uses: docker/build-push-action@v2
+      with:
+        push: false
+        tags: |
+          ${{ github.repository }}
+    - name: Run integration tests
+      run: docker run -t mozilla/ssh_scan /app/spec/ssh_scan/integration.sh
+

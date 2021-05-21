@@ -37,7 +37,7 @@ else
 fi
 
 # Integration Test #3 (Basic + File Output)
-$SSH_SCAN_BINARY -t github.com -p 22 -o output.json
+$SSH_SCAN_BINARY -t ssh.mozilla.com -p 22 -o output.json
 if [ $? -eq 0 ]
 then
   echo "Integration Test #3: Pass (Basic + File Output)"
@@ -49,7 +49,7 @@ fi
 # Integration Test #4 (Basic + File Input)
 echo "ssh.mozilla.com" >> input.txt
 echo "github.com" >> input.txt
-$SSH_SCAN_BINARY -t github.com -p 22 -f input.txt > /dev/null
+$SSH_SCAN_BINARY -t ssh.mozilla.com -p 22 -f input.txt > /dev/null
 if [ $? -eq 0 ]
 then
   echo "Integration Test #4: Pass (Basic + File Input)"
@@ -59,7 +59,7 @@ else
 fi
 
 # Integration Test #5 (File Input + File Output Rescan)
-$SSH_SCAN_BINARY -t github.com -p 22 -o output.json
+$SSH_SCAN_BINARY -t ssh.mozilla.com -p 22 -o output.json
 $SSH_SCAN_BINARY -O output.json -o rescan_output.json
 if [ $? -eq 0 ]
 then

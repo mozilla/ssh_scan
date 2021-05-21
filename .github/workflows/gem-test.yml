@@ -1,9 +1,9 @@
-name: Ruby
+name: Gem
 
-on: [ push ]
+on: [push, pull_request]
 
 jobs:
-  test:
+  integration-tests:
     runs-on: ubuntu-latest
     strategy:
       matrix:

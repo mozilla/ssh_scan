@@ -1,0 +1,39 @@
+name: Source
+
+on: [push, pull_request]
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ruby-version: ['2.6', '2.7', '3.0']
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Ruby
+      uses: ./.github/actions/setup-ruby-1.71.0
+      with:
+        ruby-version: ${{ matrix.ruby-version }}
+        bundler-cache: true
+    - name: Setup dependancies
+      run: bundle install
+    - name: Run unit tests
+      run: bundle exec rake
+  # integration-tests:
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     matrix:
+  #       ruby-version: ['2.6', '2.7', '3.0']
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - name: Set up Ruby
+  #     uses: ./.github/actions/setup-ruby-1.71.0
+  #     with:
+  #       ruby-version: ${{ matrix.ruby-version }}
+  #       bundler-cache: true
+  #   - name: Setup dependancies
+  #     run: bundle install
+  #   - name: Set permissions for execution
+  #     run: chmod 755 ./spec/ssh_scan/integration.sh
+  #   - name: Ruby Integration Tests
+  #     run: ./spec/ssh_scan/integration.sh
