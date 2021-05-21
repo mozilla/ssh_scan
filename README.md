@@ -1,7 +1,5 @@
 # ssh_scan
 
-[![Build Status](https://secure.travis-ci.org/mozilla/ssh_scan.png)](http://travis-ci.org/mozilla/ssh_scan)
-[![Code Climate](https://codeclimate.com/github/mozilla/ssh_scan.png)](https://codeclimate.com/github/mozilla/ssh_scan)
 [![Gem Version](https://badge.fury.io/rb/ssh_scan.svg)](https://badge.fury.io/rb/ssh_scan)
 [![Coverage Status](https://coveralls.io/repos/github/mozilla/ssh_scan/badge.svg?branch=master)](https://coveralls.io/github/mozilla/ssh_scan?branch=master)
 
