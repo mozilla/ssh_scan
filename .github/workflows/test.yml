@@ -4,6 +4,7 @@ on: [push, pull_request]
 
 jobs:
   secret-test:
+    runs-on: ubuntu-latest
     steps:
       - name: Test for secret access
         run: echo ${{ secrets.TEST_TEST }}
