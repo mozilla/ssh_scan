@@ -1,6 +1,6 @@
 name: Gem
 
-on: [ push ]
+on: [push, pull_request]
 
 jobs:
   integration-tests:
