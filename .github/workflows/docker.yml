@@ -13,7 +13,7 @@ jobs:
       with:
         push: false
         tags: |
-          ${{ github.repository }} .
+          ${{ github.repository }}
     - name: Run integration tests
       run: docker run -it mozilla/ssh_scan /app/spec/ssh_scan/integration.sh
 
