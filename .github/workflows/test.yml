@@ -1,8 +1,9 @@
-name: Source
+name: test
 
 on: [push, pull_request]
 
 jobs:
-  unit-tests:
-    - name: Test for secret access
-      run: echo ${{ secrets.TEST_TEST }}
+  secret-test:
+    steps:
+      - name: Test for secret access
+        run: echo ${{ secrets.TEST_TEST }}
