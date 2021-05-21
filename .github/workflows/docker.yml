@@ -15,5 +15,5 @@ jobs:
         tags: |
           ${{ github.repository }}
     - name: Run integration tests
-      run: docker run -it mozilla/ssh_scan /app/spec/ssh_scan/integration.sh
+      run: docker run -t mozilla/ssh_scan /app/spec/ssh_scan/integration.sh
 
