@@ -5,6 +5,13 @@
 
 A SSH configuration and policy scanner
 
+⚠️ Deprecation Notice ⚠️
+-------------------------
+
+Mozilla is no longer maintaining the Mozilla Enterprise Defense Platform (MozDef) project.
+
+Please fork it to continue development.
+
 ## Key Benefits
 
 - **Minimal Dependencies** - Uses native Ruby and BinData to do its work, no heavy dependencies.
