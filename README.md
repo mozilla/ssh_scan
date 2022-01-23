@@ -8,7 +8,7 @@ A SSH configuration and policy scanner
 ⚠️ Deprecation Notice ⚠️
 -------------------------
 
-Mozilla is no longer maintaining the Mozilla Enterprise Defense Platform (MozDef) project.
+Mozilla is no longer maintaining the SSH Scan project.
 
 Please fork it to continue development.
 
